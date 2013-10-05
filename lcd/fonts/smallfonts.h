@@ -1,6 +1,6 @@
 /**************************************************************************/
 /*! 
-    @file     usbconfig.h
+    @file     smallfonts.h
     @author   K. Townsend (microBuilder.eu)
     @date     22 March 2010
     @version  0.10
@@ -35,33 +35,18 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /**************************************************************************/
+#ifndef __SMALLFONTS_H_
+#define __SMALLFONTS_H_
 
-#ifndef _USBCONFIG_H_
-#define _USBCONFIG_H_
+#include "lcd/fonts.h"
 
-#include "projectconfig.h"
+/* Partially based on original code for the KS0108 by Stephane Rey */
+/* Current version by Kevin Townsend */
 
-#define USB_VENDOR_ID 0x16c0	// Vendor ID
-#define USB_PROD_ID   0x08ac	// Product ID
-#define USB_DEVICE    0x0100	// Device ID
-
-#define WBVAL(x) ((x) & 0xFF),(((x) >> 8) & 0xFF)
-
-#define USB_DEVICE_DESC_SIZE        (sizeof(USB_DEVICE_DESCRIPTOR))
-#define USB_CONFIGUARTION_DESC_SIZE (sizeof(USB_CONFIGURATION_DESCRIPTOR))
-#define USB_INTERFACE_DESC_SIZE     (sizeof(USB_INTERFACE_DESCRIPTOR))
-#define USB_ENDPOINT_DESC_SIZE      (sizeof(USB_ENDPOINT_DESCRIPTOR))
-
-#define HID_DESC_OFFSET              0x0012
-#define HID_DESC_SIZE               (sizeof(HID_DESCRIPTOR))
-#define HID_REPORT_DESC_SIZE        (sizeof(HID_ReportDescriptor))
-
-extern const uint8_t USB_DeviceDescriptor[];
-extern const uint8_t USB_ConfigDescriptor[];
-extern const uint8_t USB_HIDStringDescriptor[];
-extern const uint8_t USB_MSCStringDescriptor[];
-
-extern const uint8_t HID_ReportDescriptor[];
-extern const uint16_t HID_ReportDescSize;
+extern const struct FONT_DEF Font_3x6;
+extern const struct FONT_DEF Font_5x8;
+extern const struct FONT_DEF Font_7x8;
+extern const struct FONT_DEF Font_8x8;
+extern const struct FONT_DEF Font_8x8Thin;
 
 #endif

@@ -113,7 +113,7 @@ OBJS += samsung_20T202DA2JA.o
 
 # ChaN FatFS and SD card support
 VPATH += drivers/fatfs
-OBJS += ff.o mmc.o
+OBJS += ff.o #mmc.o
 
 # Motors
 VPATH += drivers/motor/stepper
@@ -166,9 +166,16 @@ VPATH += core/usbhid-rom core/wdt core/usbcdc core/pwm core/iap
 VPATH += core/libc
 OBJS += stdio.o string.o
 OBJS += adc.o cpu.o cmd.o gpio.o i2c.o pmu.o ssp.o systick.o timer16.o
-OBJS += timer32.o uart.o uart_buf.o usbconfig.o usbhid.o
+OBJS += timer32.o uart.o uart_buf.o usbconfig.o usbhid.o usbmsc.o
 OBJS += wdt.o cdcuser.o cdc_buf.o usbcore.o usbdesc.o usbhw.o usbuser.o 
 OBJS += sysinit.o pwm.o iap.o
+
+
+VPATH += lcd
+OBJS += display.o
+
+VPATH += dataflash
+OBJS += at45db041d.o iobase.o diskio.o
 
 ##########################################################################
 # GNU GCC compiler prefix and location
@@ -212,10 +219,10 @@ OBJS += $(TARGET)_handlers.o LPC1xxx_startup.o
 # Compiler settings, parameters and flags
 ##########################################################################
 ifeq (TRUE,$(DEBUGBUILD))
-  CFLAGS  = -c -g -O0 $(INCLUDE_PATHS) -Wall -mthumb -ffunction-sections -fdata-sections -fmessage-length=0 -mcpu=$(CPU_TYPE) -DTARGET=$(TARGET) -fno-builtin $(OPTDEFINES)
+  CFLAGS  = -c -g -O0 $(INCLUDE_PATHS) -Wall -mthumb -ffunction-sections -fdata-sections -fmessage-length=0 -mcpu=$(CPU_TYPE) -DTARGET=$(TARGET) -fno-builtin $(OPTDEFINES) -std=c99
   ASFLAGS = -c -g -O0 $(INCLUDE_PATHS) -Wall -mthumb -ffunction-sections -fdata-sections -fmessage-length=0 -mcpu=$(CPU_TYPE) -D__ASSEMBLY__ -x assembler-with-cpp
 else
-  CFLAGS  = -c -g -Os $(INCLUDE_PATHS) -Wall -mthumb -ffunction-sections -fdata-sections -fmessage-length=0 -mcpu=$(CPU_TYPE) -DTARGET=$(TARGET) -fno-builtin $(OPTDEFINES)
+  CFLAGS  = -c -g -Os $(INCLUDE_PATHS) -Wall -mthumb -ffunction-sections -fdata-sections -fmessage-length=0 -mcpu=$(CPU_TYPE) -DTARGET=$(TARGET) -fno-builtin $(OPTDEFINES) -std=c99
   ASFLAGS = -c -g -Os $(INCLUDE_PATHS) -Wall -mthumb -ffunction-sections -fdata-sections -fmessage-length=0 -mcpu=$(CPU_TYPE) -D__ASSEMBLY__ -x assembler-with-cpp
 endif
 

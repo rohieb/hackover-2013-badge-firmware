@@ -1,9 +1,7 @@
 /**************************************************************************/
 /*! 
-    @file     usbconfig.h
+    @file     usbhid.h
     @author   K. Townsend (microBuilder.eu)
-    @date     22 March 2010
-    @version  0.10
 
     @section LICENSE
 
@@ -36,32 +34,17 @@
 */
 /**************************************************************************/
 
-#ifndef _USBCONFIG_H_
-#define _USBCONFIG_H_
+#ifndef _USBMSC_H_
+#define _USBMSC_H_
 
 #include "projectconfig.h"
 
-#define USB_VENDOR_ID 0x16c0	// Vendor ID
-#define USB_PROD_ID   0x08ac	// Product ID
-#define USB_DEVICE    0x0100	// Device ID
-
-#define WBVAL(x) ((x) & 0xFF),(((x) >> 8) & 0xFF)
-
-#define USB_DEVICE_DESC_SIZE        (sizeof(USB_DEVICE_DESCRIPTOR))
-#define USB_CONFIGUARTION_DESC_SIZE (sizeof(USB_CONFIGURATION_DESCRIPTOR))
-#define USB_INTERFACE_DESC_SIZE     (sizeof(USB_INTERFACE_DESCRIPTOR))
-#define USB_ENDPOINT_DESC_SIZE      (sizeof(USB_ENDPOINT_DESCRIPTOR))
-
-#define HID_DESC_OFFSET              0x0012
-#define HID_DESC_SIZE               (sizeof(HID_DESCRIPTOR))
-#define HID_REPORT_DESC_SIZE        (sizeof(HID_ReportDescriptor))
-
-extern const uint8_t USB_DeviceDescriptor[];
-extern const uint8_t USB_ConfigDescriptor[];
-extern const uint8_t USB_HIDStringDescriptor[];
-extern const uint8_t USB_MSCStringDescriptor[];
-
-extern const uint8_t HID_ReportDescriptor[];
-extern const uint16_t HID_ReportDescSize;
+#define USB_MSC_ENABLEFLAG (1<<0)
+#define USB_CDC_ENABLEFLAG (1<<1)
+extern char usbMSCenabled;
+void usbMSCWrite(uint32_t offset, uint8_t src[], uint32_t length);
+void usbMSCRead(uint32_t offset, uint8_t dst[], uint32_t length);
+void usbMSCInit(void);
+void usbMSCOff(void);
 
 #endif

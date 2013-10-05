@@ -121,8 +121,8 @@
         LPC1343 LPCXpresso board
 
     -----------------------------------------------------------------------*/
-    #define CFG_BRD_LPC1343_REFDESIGN
-    // #define CFG_BRD_LPC1343_REFDESIGN_MINIMAL
+// #define CFG_BRD_LPC1343_REFDESIGN
+#define CFG_BRD_LPC1343_REFDESIGN_MINIMAL
     // #define CFG_BRD_LPC1343_TFTLCDSTANDALONE_USB
     // #define CFG_BRD_LPC1343_TFTLCDSTANDALONE_UART
     // #define CFG_BRD_LPC1343_802154USBSTICK
@@ -617,6 +617,9 @@
                               CDC (see 'puts' in systeminit.c).
 
     -----------------------------------------------------------------------*/
+#define CFG_USBMSC (1)
+
+
     #define CFG_USB_VID                   (0x239A)
     #define CFG_USB_PID                   (0x1002)
 	

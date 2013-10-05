@@ -53,40 +53,40 @@ const uint8_t USB_HIDStringDescriptor[] =
   /* Index 0x04: Manufacturer */
   0x1C,                              /* bLength */
   USB_STRING_DESCRIPTOR_TYPE,        /* bDescriptorType */
-  'm',0,
-  'i',0,
-  'c',0,
-  'r',0,
-  'o',0,
-  'B',0,
-  'u',0,
-  'i',0,
-  'l',0,
-  'd',0,
-  'e',0,
-  'r',0,
+  'C',0,
+  'C',0,
+  'C',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
   ' ',0,
   /* Index 0x20: Product */
   0x28,                              /* bLength */
   USB_STRING_DESCRIPTOR_TYPE,        /* bDescriptorType */
-  'L',0,
-  'P',0,
-  'C',0,
-  '1',0,
-  '3',0,
-  '4',0,
-  '3',0,
-  ' ',0,
-  'R',0,
-  'e',0,
-  'f',0,
-  '.',0,
-  ' ',0,
-  'B',0,
-  'o',0,
-  'a',0,
   'r',0,
-  'd',0,
+  '0',0,
+  'k',0,
+  'e',0,
+  't',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
   ' ',0,
   /* Index 0x48: Serial Number */
   0x1A,                              /* bLength */
@@ -112,4 +112,75 @@ const uint8_t USB_HIDStringDescriptor[] =
   ' ',0,
   ' ',0,
   ' ',0,
+};
+
+/* USB String Descriptor (optional) */
+const uint8_t USB_MSCStringDescriptor[] = 
+{
+  /* Index 0x00: LANGID Codes */
+  0x04,                              /* bLength */
+  USB_STRING_DESCRIPTOR_TYPE,        /* bDescriptorType */
+  WBVAL(0x0409), /* US English */    /* wLANGID */
+  /* Index 0x04: Manufacturer */
+  0x1C,                              /* bLength */
+  USB_STRING_DESCRIPTOR_TYPE,        /* bDescriptorType */
+  'C',0,
+  'C',0,
+  'C',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  /* Index 0x20: Product */
+  0x28,                              /* bLength */
+  USB_STRING_DESCRIPTOR_TYPE,        /* bDescriptorType */
+  'r',0,
+  '0',0,
+  'k',0,
+  'e',0,
+  't',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  ' ',0,
+  /* Index 0x48: Serial Number */
+  0x1A,                              /* bLength */
+  USB_STRING_DESCRIPTOR_TYPE,        /* bDescriptorType */
+  '0',0,
+  '0',0,
+  '0',0,
+  '0',0,
+  '0',0,
+  '0',0,
+  '0',0,
+  '0',0,
+  '0',0,
+  '0',0,
+  '0',0,
+  '0',0,
+  /* Index 0x62: Interface 0, Alternate Setting 0 */
+  0x0E,                              /* bLength */
+  USB_STRING_DESCRIPTOR_TYPE,        /* bDescriptorType */
+  'M',0,
+  'e',0,
+  'm',0,
+  'o',0,
+  'r',0,
+  'y',0,
 };
