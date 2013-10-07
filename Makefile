@@ -12,9 +12,6 @@ SRAM = 8K
 # if you don't want to use the USB features, just use 0 here.
 SRAM_USB = 384
 
-VPATH = 
-OBJS = main.o
-
 ##########################################################################
 # Debug settings
 ##########################################################################
@@ -33,149 +30,216 @@ OPTDEFINES = -D __NEWLIB__
 # Project-specific files 
 ##########################################################################
 
-VPATH += project
-OBJS += commands.o
+SRCS = \
+  badge/main.c \
+  badge/ui/display.c \
+  badge/ui/sprite.c
 
-VPATH += project/commands
-OBJS += cmd_chibi_addr.o cmd_chibi_tx.o
-OBJS += cmd_i2ceeprom_read.o cmd_i2ceeprom_write.o cmd_lm75b_gettemp.o
-OBJS += cmd_reset.o cmd_sd_dir.o cmd_sysinfo.o cmd_uart.o 
-OBJS += cmd_roundedcorner.o cmd_pwm.o
+SRCS += \
+  dataflash/at45db041d.c \
+  dataflash/iobase.c \
+  dataflash/diskio.c
 
-VPATH += project/commands/drawing
-OBJS += cmd_backlight.o cmd_bmp.o cmd_button.o cmd_calibrate.o
-OBJS += cmd_circle.o cmd_clear.o cmd_line.o cmd_orientation.o
-OBJS += cmd_pixel.o cmd_progress.o cmd_rectangle.o cmd_text.o
-OBJS += cmd_textw.o cmd_tsthreshhold.o cmd_tswait.o cmd_triangle.o
+SRCS += \
+  project/commands.c
+
+SRCS += \
+  project/commands/cmd_chibi_addr.c \
+  project/commands/cmd_chibi_tx.c \
+  project/commands/cmd_i2ceeprom_read.c \
+  project/commands/cmd_i2ceeprom_write.c \
+  project/commands/cmd_lm75b_gettemp.c \
+  project/commands/cmd_reset.c \
+  project/commands/cmd_sd_dir.c \
+  project/commands/cmd_sysinfo.c \
+  project/commands/cmd_uart.c \
+  project/commands/cmd_pwm.c
+
+SRCS += \
+  project/commands/drawing/cmd_backlight.c \
+  project/commands/drawing/cmd_bmp.c \
+  project/commands/drawing/cmd_button.c \
+  project/commands/drawing/cmd_calibrate.c \
+  project/commands/drawing/cmd_circle.c \
+  project/commands/drawing/cmd_clear.c \
+  project/commands/drawing/cmd_line.c \
+  project/commands/drawing/cmd_orientation.c \
+  project/commands/drawing/cmd_pixel.c \
+  project/commands/drawing/cmd_progress.c \
+  project/commands/drawing/cmd_rectangle.c \
+  project/commands/drawing/cmd_roundedcorner.c \
+  project/commands/drawing/cmd_text.c \
+  project/commands/drawing/cmd_textw.c \
+  project/commands/drawing/cmd_tsthreshhold.c \
+  project/commands/drawing/cmd_tswait.c \
+  project/commands/drawing/cmd_triangle.c
 
 ##########################################################################
 # Optional driver files 
 ##########################################################################
 
 # Chibi Light-Weight Wireless Stack (AT86RF212)
-VPATH += drivers/rf/chibi
-OBJS += chb.o chb_buf.o chb_drvr.o chb_eeprom.o chb_spi.o
+SRCS += \
+  drivers/rf/chibi/chb.c \
+  drivers/rf/chibi/chb_buf.c \
+  drivers/rf/chibi/chb_drvr.c \
+  drivers/rf/chibi/chb_eeprom.c \
+  drivers/rf/chibi/chb_spi.c
 
 # 4K EEPROM
-VPATH += drivers/storage/eeprom drivers/storage/eeprom/mcp24aa
-OBJS += eeprom.o mcp24aa.o
+SRCS += \
+  drivers/storage/eeprom/eeprom.c \
+  drivers/storage/eeprom/mcp24aa/mcp24aa.c
 
 # LM75B temperature sensor
-VPATH += drivers/sensors/lm75b
-OBJS += lm75b.o
+SRCS += \
+  drivers/sensors/lm75b/lm75b.c
 
 # ISL12022M RTC
-VPATH += drivers/rtc/isl12022m
-OBJS += isl12022m.o
+SRCS += \
+  drivers/rtc/isl12022m/isl12022m.c
 
 # TFT LCD support
-VPATH += drivers/displays/tft drivers/displays/tft/hw 
-OBJS += drawing.o touchscreen.o colors.o theme.o bmp.o
+SRCS += \
+  drivers/displays/tft/drawing.c \
+  drivers/displays/tft/touchscreen.c \
+  drivers/displays/tft/colors.c \
+  drivers/displays/tft/theme.c \
+  drivers/displays/tft/bmp.c
 
 # GUI Controls
-VPATH += drivers/displays/tft/controls
-OBJS += button.o hsbchart.o huechart.o label.o
-OBJS += labelcentered.o progressbar.o
+SRCS += \
+  drivers/displays/tft/controls/button.c \
+  drivers/displays/tft/controls/hsbchart.c \
+  drivers/displays/tft/controls/huechart.c \
+  drivers/displays/tft/controls/label.c \
+  drivers/displays/tft/controls/labelcentered.c \
+  drivers/displays/tft/controls/progressbar.c
 
 # Bitmap (non-AA) fonts
-VPATH += drivers/displays/tft/fonts
-OBJS += fonts.o 
-OBJS += dejavusans9.o dejavusansbold9.o dejavusanscondensed9.o
-OBJS += dejavusansmono8.o dejavusansmonobold8.o
-OBJS += verdana9.o verdana14.o verdanabold14.o 
+SRCS += \
+  drivers/displays/tft/fonts.c \
+  drivers/displays/tft/fonts/dejavusans9.c \
+  drivers/displays/tft/fonts/dejavusansbold9.c \
+  drivers/displays/tft/fonts/dejavusanscondensed9.c \
+  drivers/displays/tft/fonts/dejavusansmono8.c \
+  drivers/displays/tft/fonts/dejavusansmonobold8.c \
+  drivers/displays/tft/fonts/verdana9.c \
+  drivers/displays/tft/fonts/verdana14.c \
+  drivers/displays/tft/fonts/verdanabold14.c
 
 # Anti-aliased fonts
-VPATH += drivers/displays/tft/aafonts/aa2 drivers/displays/tft/aafonts/aa4
-OBJS += aafonts.o 
-OBJS += DejaVuSansCondensed14_AA2.o DejaVuSansCondensedBold14_AA2.o
-OBJS += DejaVuSansMono10_AA2.o DejaVuSansMono13_AA2.o DejaVuSansMono14_AA2.o
+SRCS += \
+  drivers/displays/tft/aafonts.c \
+  drivers/displays/tft/aafonts/aa2/DejaVuSansCondensed14_AA2.c \
+  drivers/displays/tft/aafonts/aa2/DejaVuSansCondensedBold14_AA2.c \
+  drivers/displays/tft/aafonts/aa2/DejaVuSansMono10_AA2.c \
+  drivers/displays/tft/aafonts/aa2/DejaVuSansMono13_AA2.c \
+  drivers/displays/tft/aafonts/aa2/DejaVuSansMono14_AA2.c
 
 # LCD Driver (Only one can be included at a time!)
-# OBJS += hx8340b.o
-# OBJS += hx8347d.o
-OBJS += ILI9328.o
-# OBJS += ILI9325.o
-# OBJS += ssd1331.o
-# OBJS += ssd1351.o
-# OBJS += st7735.o
-# OBJS += st7783.o
+# SRCS += drivers/displays/tft/hw/hx8340b.c
+# SRCS += drivers/displays/tft/hw/hx8347d.c
+# SRCS += drivers/displays/tft/hw/ILI9328.c
+# SRCS += drivers/displays/tft/hw/ILI9325.c
+# SRCS += drivers/displays/tft/hw/ssd1331.c
+# SRCS += drivers/displays/tft/hw/ssd1351.c
+# SRCS += drivers/displays/tft/hw/st7735.c
+# SRCS += drivers/displays/tft/hw/st7783.c
 
 # Bitmap/Monochrome LCD support (ST7565, SSD1306, etc.)
-VPATH += drivers/displays
-VPATH += drivers/displays/bitmap/sharpmem
-VPATH += drivers/displays/bitmap/st7565
-VPATH += drivers/displays/bitmap/ssd1306
-OBJS += smallfonts.o sharpmem.o st7565.o ssd1306.o
+SRCS += \
+  drivers/displays/smallfonts.c \
+  drivers/displays/bitmap/sharpmem/sharpmem.c \
+  drivers/displays/bitmap/st7565/st7565.c \
+  drivers/displays/bitmap/ssd1306/ssd1306.c
 
 #Character Displays (VFD text displays, etc.)
-VPATH += drivers/displays/character/samsung_20T202DA2JA
-OBJS += samsung_20T202DA2JA.o
+SRCS += \
+  drivers/displays/character/samsung_20T202DA2JA/samsung_20T202DA2JA.c
 
 # ChaN FatFS and SD card support
-VPATH += drivers/fatfs
-OBJS += ff.o #mmc.o
+SRCS += \
+  drivers/fatfs/ff.c 
+# drivers/fatfs/mmc.c
 
 # Motors
-VPATH += drivers/motor/stepper
-OBJS += stepper.o
+SRCS += \
+  drivers/motor/stepper/stepper.c
 
 # RSA Encryption/Descryption
-VPATH += drivers/rsa
-OBJS += rsa.o
+SRCS += \
+  drivers/rsa/rsa.c
 
 # DAC
-VPATH += drivers/dac/mcp4725 drivers/dac/mcp4901
-OBJS += mcp4725.o mcp4901.o
+SRCS += \
+  drivers/dac/mcp4725/mcp4725.c \
+  drivers/dac/mcp4901/mcp4901.c
 
 # RFID/NFC
-VPATH += drivers/rf/pn532 drivers/rf/pn532/helpers
-OBJS += pn532.o pn532_bus_i2c.o pn532_bus_uart.o
-OBJS += pn532_mifare_classic.o pn532_mifare_ultralight.o
+SRCS += \
+  drivers/rf/pn532/pn532.c \
+  drivers/rf/pn532/pn532_bus_i2c.c \
+  drivers/rf/pn532/pn532_bus_uart.c \
+  drivers/rf/pn532/helpers/pn532_mifare_classic.c \
+  drivers/rf/pn532/helpers/pn532_mifare_ultralight.c
 
 # TAOS Light Sensors
-VPATH += drivers/sensors/tcs3414 drivers/sensors/tsl2561
-OBJS += tcs3414.o tsl2561.o
+SRCS += \
+  drivers/sensors/tcs3414/tcs3414.c \
+  drivers/sensors/tsl2561/tsl2561.c
 
 # SPI Flash
-VPATH += drivers/storage/spiflash/w25q16bv
-OBJS += w25q16bv.o
+SRCS += \
+  drivers/storage/spiflash/w25q16bv/w25q16bv.c
 
 # FM Radio
-VPATH += drivers/audio/tea5767
-OBJS += tea5767.o
+SRCS += \
+  drivers/audio/tea5767/tea5767.c
 
 # IN219 Current Sensor
-VPATH += drivers/sensors/ina219
-OBJS += ina219.o
+SRCS += \
+  drivers/sensors/ina219/ina219.c
 
 # MPL115A2 Barometric Pressure Sensor
-VPATH += drivers/sensors/mpl115a2
-OBJS += mpl115a2.o
+SRCS += \
+  drivers/sensors/mpl115a2/mpl115a2.c
 
 # ADS1015 12-bit ADC
-VPATH += drivers/adc/ads1015
-OBJS += ads1015.o
+SRCS += \
+  drivers/adc/ads1015/ads1015.c
 
 ##########################################################################
 # Library files 
 ##########################################################################
 
-VPATH += core core/adc core/cmd core/cpu core/gpio core/i2c core/pmu
-VPATH += core/ssp core/systick core/timer16 core/timer32 core/uart
-VPATH += core/usbhid-rom core/wdt core/usbcdc core/pwm core/iap
-VPATH += core/libc
-OBJS += stdio.o string.o
-OBJS += adc.o cpu.o cmd.o gpio.o i2c.o pmu.o ssp.o systick.o timer16.o
-OBJS += timer32.o uart.o uart_buf.o usbconfig.o usbhid.o usbmsc.o
-OBJS += wdt.o cdcuser.o cdc_buf.o usbcore.o usbdesc.o usbhw.o usbuser.o 
-OBJS += sysinit.o pwm.o iap.o
-
-
-VPATH += lcd
-OBJS += display.o sprite.o
-
-VPATH += dataflash
-OBJS += at45db041d.o iobase.o diskio.o
+SRCS += \
+  core/adc/adc.c \
+  core/cmd/cmd.c \
+  core/cpu/cpu.c \
+  core/gpio/gpio.c \
+  core/i2c/i2c.c \
+  core/iap/iap.c \
+  core/libc/stdio.c \
+  core/libc/string.c \
+  core/pmu/pmu.c \
+  core/pwm/pwm.c \
+  core/ssp/ssp.c \
+  core/systick/systick.c \
+  core/timer16/timer16.c \
+  core/timer32/timer32.c \
+  core/uart/uart_buf.c \
+  core/uart/uart.c \
+  core/usbcdc/cdc_buf.c \
+  core/usbcdc/cdcuser.c \
+  core/usbcdc/usbcore.c \
+  core/usbcdc/usbdesc.c \
+  core/usbcdc/usbhw.c \
+  core/usbcdc/usbuser.c \
+  core/usbhid-rom/usbconfig.c \
+  core/usbhid-rom/usbhid.c \
+  core/usbhid-rom/usbmsc.c \
+  core/wdt/wdt.c
 
 ##########################################################################
 # GNU GCC compiler prefix and location
@@ -212,8 +276,13 @@ else
 endif
 
 CPU_TYPE = cortex-$(CORTEX_TYPE)
-VPATH += lpc1xxx
-OBJS += $(TARGET)_handlers.o LPC1xxx_startup.o
+
+SRCS += \
+  lpc1xxx/$(TARGET)_handlers.c \
+  lpc1xxx/LPC1xxx_startup.c
+
+OBJS = $(SRCS:%.c=%.o)
+DEPS = $(SRCS:%.c=%.dep)
 
 ##########################################################################
 # Compiler settings, parameters and flags
@@ -230,30 +299,40 @@ LDFLAGS = -nostartfiles -mthumb -mcpu=$(CPU_TYPE) -Wl,--gc-sections
 LDLIBS  = -lm
 OCFLAGS = --strip-unneeded
 
-all: firmware
+all: dep size $(OUTFILE).bin $(OUTFILE).hex
 
-%.o : %.c
-	$(CC) $(CFLAGS) -o $@ $<
+dep: $(DEPS)
 
-%.o : %.s
-	$(AS) $(ASFLAGS) -o $@ $<
+$(DEPS) : %.dep : %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MM $< -MT $@ -MT $(<:%.c=%.o) -MF $@
 
-firmware: $(OBJS) $(SYS_OBJS)
+sinclude $(DEPS)
+
+$(LD_TEMP): 
 	-@echo "MEMORY" > $(LD_TEMP)
 	-@echo "{" >> $(LD_TEMP)
 	-@echo "  flash(rx): ORIGIN = 0x00000000, LENGTH = $(FLASH)" >> $(LD_TEMP)
 	-@echo "  sram(rwx): ORIGIN = 0x10000000+$(SRAM_USB), LENGTH = $(SRAM)-$(SRAM_USB)" >> $(LD_TEMP)
 	-@echo "}" >> $(LD_TEMP)
 	-@echo "INCLUDE $(LD_SCRIPT)" >> $(LD_TEMP)
+
+$(OUTFILE).elf: $(OBJS) $(LD_TEMP)
 	$(LD) $(LDFLAGS) -T $(LD_TEMP) -o $(OUTFILE).elf $(OBJS) $(LDLIBS)
-	-@echo ""
-	$(SIZE) $(OUTFILE).elf
-	-@echo ""
+
+$(OUTFILE).bin: $(OUTFILE).elf
 	$(OBJCOPY) $(OCFLAGS) -O binary $(OUTFILE).elf $(OUTFILE).bin
-	$(OBJCOPY) $(OCFLAGS) -O binary $(OUTFILE).elf $(OUTFILE).bin
+	$(LPCRC) $(OUTFILE).bin
+
+$(OUTFILE).hex: $(OUTFILE).elf
 	$(OBJCOPY) $(OCFLAGS) -O ihex $(OUTFILE).elf $(OUTFILE).hex
-	-@echo ""
-	$(LPCRC) firmware.bin
+
+size: $(OUTFILE).elf
+	$(SIZE) $(OUTFILE).elf
 
 clean:
 	rm -f $(OBJS) $(LD_TEMP) $(OUTFILE).elf $(OUTFILE).bin $(OUTFILE).hex
+
+distclean: clean
+	rm -f $(DEPS)
+
+.PHONY: all dep size clean distclean
