@@ -172,7 +172,7 @@ OBJS += sysinit.o pwm.o iap.o
 
 
 VPATH += lcd
-OBJS += display.o
+OBJS += display.o sprite.o
 
 VPATH += dataflash
 OBJS += at45db041d.o iobase.o diskio.o

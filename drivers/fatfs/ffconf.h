@@ -15,19 +15,19 @@
 / Function and Buffer Configurations
 /----------------------------------------------------------------------------*/
 
-#define	_FS_TINY	1		/* 0 or 1 */
+#define _FS_TINY        1               /* 0 or 1 */
 /* When _FS_TINY is set to 1, FatFs uses the sector buffer in the file system
 /  object instead of the sector buffer in the individual file object for file
 /  data transfer. This reduces memory consumption 512 bytes each file object. */
 
 
-#define _FS_READONLY	CFG_SDCARD_READONLY // 0	/* 0 or 1 */
+#define _FS_READONLY    1 //CFG_SDCARD_READONLY // 0    /* 0 or 1 */
 /* Setting _FS_READONLY to 1 defines read only configuration. This removes
 /  writing functions, f_write, f_sync, f_unlink, f_mkdir, f_chmod, f_rename,
 /  f_truncate and useless f_getfree. */
 
 
-#define _FS_MINIMIZE	0	/* 0, 1, 2 or 3 */
+#define _FS_MINIMIZE    1       /* 0, 1, 2 or 3 */
 /* The _FS_MINIMIZE option defines minimization level to remove some functions.
 /
 /   0: Full function.
@@ -37,15 +37,15 @@
 /   3: f_lseek is removed in addition to level 2. */
 
 
-#define	_USE_STRFUNC	0	/* 0, 1 or 2 */
+#define _USE_STRFUNC    0       /* 0, 1 or 2 */
 /* To enable string functions, set _USE_STRFUNC to 1 or 2. */
 
 
-#define	_USE_MKFS	0		/* 0 or 1 */
+#define _USE_MKFS       0               /* 0 or 1 */
 /* To enable f_mkfs function, set _USE_MKFS to 1 and set _FS_READONLY to 0 */
 
 
-#define	_USE_FORWARD	0	/* 0 or 1 */
+#define _USE_FORWARD    0       /* 0 or 1 */
 /* To enable f_forward function, set _USE_FORWARD to 1 and set _FS_TINY to 1. */
 
 
@@ -54,7 +54,7 @@
 / Locale and Namespace Configurations
 /----------------------------------------------------------------------------*/
 
-#define _CODE_PAGE	858
+#define _CODE_PAGE      1
 /* The _CODE_PAGE specifies the OEM code page to be used on the target system.
 /  Incorrect setting of the code page can cause a file open failure.
 /
@@ -83,12 +83,12 @@
 /   857  - Turkish (OEM)
 /   862  - Hebrew (OEM)
 /   874  - Thai (OEM, Windows)
-/	1    - ASCII only (Valid for non LFN cfg.)
+/       1    - ASCII only (Valid for non LFN cfg.)
 */
 
 
-#define	_USE_LFN	0		/* 0, 1 or 2 */
-#define	_MAX_LFN	64		/* Maximum LFN length to handle (12 to 255) */
+#define _USE_LFN        0               /* 0, 1 or 2 */
+#define _MAX_LFN        255             /* Maximum LFN length to handle (12 to 255) */
 /* The _USE_LFN option switches the LFN support.
 /
 /   0: Disable LFN. _MAX_LFN and _LFN_UNICODE have no effect.
@@ -100,13 +100,13 @@
 /  to the project. */
 
 
-#define	_LFN_UNICODE	0	/* 0 or 1 */
+#define _LFN_UNICODE    0       /* 0 or 1 */
 /* To switch the character code set on FatFs API to Unicode,
 /  enable LFN feature and set _LFN_UNICODE to 1.
 */
 
 
-#define _FS_RPATH	0		/* 0 or 1 */
+#define _FS_RPATH       1               /* 0 or 1 */
 /* When _FS_RPATH is set to 1, relative path feature is enabled and f_chdir,
 /  f_chdrive function are available.
 /  Note that output of the f_readdir fnction is affected by this option. */
@@ -117,11 +117,11 @@
 / Physical Drive Configurations
 /----------------------------------------------------------------------------*/
 
-#define _DRIVES		1
+#define _DRIVES         1
 /* Number of volumes (logical drives) to be used. */
 
 
-#define	_MAX_SS		512		/* 512, 1024, 2048 or 4096 */
+#define _MAX_SS         512             /* 512, 1024, 2048 or 4096 */
 /* Maximum sector size to be handled.
 /  Always set 512 for memory card and hard disk but a larger value may be
 /  required for floppy disk (512/1024) and optical disk (512/2048).
@@ -129,7 +129,7 @@
 /  to the disk_ioctl function. */
 
 
-#define	_MULTI_PARTITION	0	/* 0 or 1 */
+#define _MULTI_PARTITION        0       /* 0 or 1 */
 /* When _MULTI_PARTITION is set to 0, each volume is bound to the same physical
 / drive number and can mount only first primaly partition. When it is set to 1,
 / each volume is tied to the partitions listed in Drives[]. */
@@ -140,7 +140,7 @@
 / System Configurations
 /----------------------------------------------------------------------------*/
 
-#define _WORD_ACCESS	0	/* 0 or 1 */
+#define _WORD_ACCESS    1       /* 0 or 1 */
 /* The _WORD_ACCESS option defines which access method is used to the word
 /  data on the FAT volume.
 /
@@ -153,9 +153,9 @@
 /  performance and code size. */
 
 
-#define _FS_REENTRANT	0		/* 0 or 1 */
-#define _FS_TIMEOUT		1000	/* Timeout period in unit of time ticks */
-#define	_SYNC_t			HANDLE	/* O/S dependent type of sync object. e.g. HANDLE, OS_EVENT*, ID and etc.. */
+#define _FS_REENTRANT   0               /* 0 or 1 */
+#define _FS_TIMEOUT             1000    /* Timeout period in unit of time ticks */
+#define _SYNC_t                 HANDLE  /* O/S dependent type of sync object. e.g. HANDLE, OS_EVENT*, ID and etc.. */
 /* The _FS_REENTRANT option switches the reentrancy of the FatFs module.
 /
 /   0: Disable reentrancy. _SYNC_t and _FS_TIMEOUT have no effect.
