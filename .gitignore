@@ -3,4 +3,5 @@
 *.hex
 *.elf
 *.ld
+*.dep
 lpcrc

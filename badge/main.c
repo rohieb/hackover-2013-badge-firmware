@@ -51,33 +51,51 @@
   #include "core/cmd/cmd.h"
 #endif
 
-#include "lcd/display.h"
-#include "lcd/sprite.h"
+#include "ui/display.h"
+#include "ui/sprite.h"
 
 #include "r0ketports.h"
 #include "drivers/fatfs/ff.h"
+
+enum {
+  BADGE_BTN_UP    =  1,
+  BADGE_BTN_LEFT  =  2,
+  BADGE_BTN_DOWN  =  4,
+  BADGE_BTN_RIGHT =  8,
+  BADGE_BTN_A     = 16,
+  BADGE_BTN_B     = 32,
+  BADGE_BTN_MID   = 64
+};
 
 uint8_t getInputRaw(void) {
     uint8_t result = BTN_NONE;
 
     if (gpioGetValue(RB_BTN3)==0) {
-        result |= BTN_UP;
+        result |= BADGE_BTN_UP;
     }
 
     if (gpioGetValue(RB_BTN2)==0) {
-        result |= BTN_DOWN;
+        result |= BADGE_BTN_DOWN;
     }
 
     if (gpioGetValue(RB_BTN4)==0) {
-        result |= BTN_ENTER;
+        result |= BADGE_BTN_MID;
     }
 
     if (gpioGetValue(RB_BTN0)==0) {
-        result |= BTN_LEFT;
+        result |= BADGE_BTN_LEFT;
     }
 
     if (gpioGetValue(RB_BTN1)==0) {
-        result |= BTN_RIGHT;
+        result |= BADGE_BTN_RIGHT;
+    }
+
+    if(gpioGetValue(RB_HB3) == 0) {
+      result |= BADGE_BTN_A;
+    }
+
+    if(gpioGetValue(RB_HB4) == 0 || gpioGetValue(RB_HB5) == 0) {
+      result |= BADGE_BTN_B;
     }
 
     return result;
@@ -124,11 +142,11 @@ void rbInit() {
     gpioSetValue(USB_CONNECT, 1);
 
     static uint8_t ports[] = { RB_BTN0, RB_BTN1, RB_BTN2, RB_BTN3, RB_BTN4,
-                        RB_LED0, RB_LED1, RB_LED2,
-                        RB_SPI_SS0, RB_SPI_SS1, RB_SPI_SS2,
-                        RB_SPI_SS3, RB_SPI_SS4, RB_SPI_SS5,
-                        RB_HB0, RB_HB1, RB_HB2,
-                        RB_HB3, RB_HB4, RB_HB5};
+                               RB_LED0, RB_LED1, RB_LED2,
+                               RB_HB3, RB_HB4, RB_SPI_SS2,
+                               RB_SPI_SS3, RB_SPI_SS4, RB_SPI_SS5,
+                               RB_HB0, RB_HB1, RB_HB2,
+                               RB_HB3, RB_HB4, RB_HB5};
 
     volatile uint32_t * regs[] = {&RB_BTN0_IO, &RB_BTN1_IO, &RB_BTN2_IO,
                                   &RB_BTN3_IO, &RB_BTN4_IO};
@@ -198,13 +216,27 @@ int main(void)
 
   cpuInit();
   systickInit(CFG_SYSTICK_DELAY_IN_MS);
-  //gpioInit();
-  // pmuInit();
-  //  adcInit();
+
+  //pmuInit();
+  //adcInit();
   rbInit();
 
   badge_display_init();
+
   gpioSetDir(0, 11, gpioDirection_Output);
+
+//  usbMSCInit();
+
+  RB_HB3_IO&= ~IOCON_PIO0_2_FUNC_MASK;
+  RB_HB3_IO|=  IOCON_PIO0_2_FUNC_GPIO;
+  gpioSetDir(RB_HB3, gpioDirection_Input);
+  gpioSetPullup(&RB_HB3_IO, gpioPullupMode_PullUp);
+
+  RB_HB4_IO&= ~IOCON_PIO1_4_FUNC_MASK;
+  RB_HB4_IO|=  IOCON_PIO1_4_FUNC_GPIO;
+  gpioSetDir(RB_HB4, gpioDirection_Input);
+  gpioSetPullup(&RB_HB4_IO, gpioPullupMode_PullUp);
+
 
   badge_framebuffer fb = {
     {
@@ -268,8 +300,6 @@ int main(void)
 
   //  badge_framebuffer_flush(&fb);
 
-  usbMSCInit();
-
   int res = 0;
   FATFS fatvol;
 
@@ -304,10 +334,13 @@ int main(void)
 
     badge_sprite const sp = { 4, 4, (uint8_t const *) "\xff\xff" };
 
-    if(buttons & BTN_UP)    { badge_framebuffer_blt(&fb, 30, 10, &sp, 0); }
-    if(buttons & BTN_DOWN)  { badge_framebuffer_blt(&fb, 30, 50, &sp, 0); }
-    if(buttons & BTN_LEFT)  { badge_framebuffer_blt(&fb, 10, 30, &sp, 0); }
-    if(buttons & BTN_RIGHT) { badge_framebuffer_blt(&fb, 50, 30, &sp, 0); }
+    if(buttons & BADGE_BTN_UP)    { badge_framebuffer_blt(&fb, 30, 10, &sp, 0); }
+    if(buttons & BADGE_BTN_DOWN)  { badge_framebuffer_blt(&fb, 30, 50, &sp, 0); }
+    if(buttons & BADGE_BTN_LEFT)  { badge_framebuffer_blt(&fb, 10, 30, &sp, 0); }
+    if(buttons & BADGE_BTN_RIGHT) { badge_framebuffer_blt(&fb, 50, 30, &sp, 0); }
+    if(buttons & BADGE_BTN_MID)   { badge_framebuffer_blt(&fb, 30, 30, &sp, 0); }
+    if(buttons & BADGE_BTN_A)     { badge_framebuffer_blt(&fb, 70, 10, &sp, 0); }
+    if(buttons & BADGE_BTN_B)     { badge_framebuffer_blt(&fb, 70, 50, &sp, 0); }
 
     badge_framebuffer_flush(&fb);
 
