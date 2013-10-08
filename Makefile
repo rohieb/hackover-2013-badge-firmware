@@ -18,7 +18,7 @@ SRAM_USB = 384
 
 # Set DEBUGBUILD to 'TRUE' for full debugging (larger, slower binaries), 
 # or to 'FALSE' for release builds (smallest, fastest binaries)
-DEBUGBUILD = FALSE
+DEBUGBUILD = TRUE
 
 ##########################################################################
 # IDE Flags (Keeps various IDEs happy)

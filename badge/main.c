@@ -59,6 +59,8 @@
 #include "r0ketports.h"
 #include "drivers/fatfs/ff.h"
 
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof*(arr))
+
 void backlightInit(void) {
   /* Enable the clock for CT16B1 */
   SCB_SYSAHBCLKCTRL |= (SCB_SYSAHBCLKCTRL_CT16B1);
@@ -97,65 +99,64 @@ void rbInit() {
     gpioSetDir(USB_CONNECT, gpioDirection_Output);
     gpioSetValue(USB_CONNECT, 1);
 
-    static uint8_t ports[] = { RB_BTN0, RB_BTN1, RB_BTN2, RB_BTN3, RB_BTN4,
-                               RB_LED0, RB_LED1, RB_LED2,
-                               RB_HB3, RB_HB4, RB_SPI_SS2,
-                               RB_SPI_SS3, RB_SPI_SS4, RB_SPI_SS5,
-                               RB_HB0, RB_HB1, RB_HB2,
-                               RB_HB3, RB_HB4, RB_HB5};
+    struct {
+      int port;
+      int pin;
+      uint32_t volatile *reg;
+    } const input_pins[] = {
+      { RB_BTN0, &RB_BTN0_IO },
+      { RB_BTN1, &RB_BTN1_IO },
+      { RB_BTN2, &RB_BTN2_IO },
+      { RB_BTN3, &RB_BTN3_IO },
+      { RB_BTN4, &RB_BTN4_IO },
+      { RB_HB3 , &RB_HB3_IO  },
+      { RB_HB4 , &RB_HB4_IO  },
+      { RB_PWR_CHRG, &RB_PWR_CHRG_IO }
+    };
+    
+    //    RB_HB3_IO = IOCON_PIO0_2_FUNC_GPIO | IOCON_PIO0_2_MODE_PULLUP | 0xc0;    
 
-    volatile uint32_t * regs[] = {&RB_BTN0_IO, &RB_BTN1_IO, &RB_BTN2_IO,
-                                  &RB_BTN3_IO, &RB_BTN4_IO};
-
-    int i = 0;
-    while( i<10 ){
-        gpioSetDir(ports[i], ports[i+1], gpioDirection_Input);
-        gpioSetPullup(regs[i/2], gpioPullupMode_PullUp);
-        i+=2;
+    for(int i = 0; i < ARRAY_SIZE(input_pins); ++i) {
+        gpioSetDir(input_pins[i].port, input_pins[i].pin, gpioDirection_Input);
+        gpioSetPullup(input_pins[i].reg, gpioPullupMode_PullUp);
     }
 
-    // prepate chrg_stat
-    gpioSetDir(RB_PWR_CHRG, gpioDirection_Input);
-    gpioSetPullup (&RB_PWR_CHRG_IO, gpioPullupMode_PullUp);
-
+    // LED3 zur Bestimmung der Umgebungshelligkeit.
     gpioSetDir(RB_LED3, gpioDirection_Input);
-    IOCON_PIO1_11 = 0x41;
+    RB_LED3_IO = (RB_LED3_IO & IOCON_PIO1_11_FUNC_MASK) | IOCON_PIO1_11_FUNC_AD7;
 
     // prepare LEDs
     IOCON_JTAG_TDI_PIO0_11 &= ~IOCON_JTAG_TDI_PIO0_11_FUNC_MASK;
-    IOCON_JTAG_TDI_PIO0_11 |= IOCON_JTAG_TDI_PIO0_11_FUNC_GPIO;
+    IOCON_JTAG_TDI_PIO0_11 |=  IOCON_JTAG_TDI_PIO0_11_FUNC_GPIO;
 
-    while( i<16 ){
-        gpioSetDir(ports[i],ports[i+1], gpioDirection_Output);
-        gpioSetValue (ports[i], ports[i+1], 0);
-        i+=2;
+    struct {
+      int port;
+      int pin;
+      int value;
+    } const output_pins[] = {
+      { RB_LED0   , 0 },
+      { RB_LED1   , 0 },
+      { RB_LED2   , 0 },
+      { RB_SPI_SS2, 1 },
+      { RB_SPI_SS3, 1 },
+      { RB_SPI_SS4, 1 },
+      { RB_SPI_SS5, 1 },
+      { RB_LCD_BL , 0 }
+    };
+
+    for(int i = 0; i < ARRAY_SIZE(output_pins); ++i) {
+        gpioSetDir  (output_pins[i].port, output_pins[i].pin, gpioDirection_Output);
+        gpioSetValue(output_pins[i].port, output_pins[i].pin, output_pins[i].value);
     }
-
-    // Set LED3 to ?
-    IOCON_PIO1_11 = 0x41;
-
-    // prepare lcd
-    // TODO FIXME more init needed ?
-    gpioSetDir(RB_LCD_BL, gpioDirection_Output);
-    gpioSetValue (RB_LCD_BL, 0);
 
     // Set P0.0 to GPIO
-    RB_PWR_LCDBL_IO&= ~RB_PWR_LCDBL_IO_FUNC_MASK;
-    RB_PWR_LCDBL_IO|= RB_PWR_LCDBL_IO_FUNC_GPIO;
-    gpioSetDir(RB_PWR_LCDBL, gpioDirection_Input);
+    RB_PWR_LCDBL_IO &= ~RB_PWR_LCDBL_IO_FUNC_MASK;
+    RB_PWR_LCDBL_IO |=  RB_PWR_LCDBL_IO_FUNC_GPIO;
+
+    gpioSetDir   ( RB_PWR_LCDBL   , gpioDirection_Input);
     gpioSetPullup(&RB_PWR_LCDBL_IO, gpioPullupMode_Inactive);
 
-    // prepare SPI/SS
-    // TODO FIXME init miso/mosi/sck somehow ?
-    // prepare hackerbus
-    while(i<sizeof(ports)){
-        gpioSetDir(ports[i],ports[i+1], gpioDirection_Output);
-        gpioSetValue (ports[i], ports[i+1], 1);
-        i+=2;
-    }
-
     backlightInit();
-    //font=&Font_7x8;
 }
 
 

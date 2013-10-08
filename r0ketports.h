@@ -3,13 +3,13 @@
 
 // LED
 #define RB_LED0			0,11
-
+#define RB_LED0_IO              IOCON_PIO0_11
 #define RB_LED1			1,7
-
+#define RB_LED1_IO              IOCON_PIO1_7
 #define RB_LED2			1,6
-
+#define RB_LED2_IO              IOCON_PIO1_6
 #define RB_LED3			1,11
-
+#define RB_LED3_IO              IOCON_PIO1_11
 
 // Infrared
 //#define RB_IROUT		1,5
