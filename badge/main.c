@@ -54,6 +54,7 @@
 #include "ui/display.h"
 #include "ui/sprite.h"
 #include "ui/event.h"
+#include "jumpnrun/jumpnrun.h"
 
 #include "r0ketports.h"
 #include "drivers/fatfs/ff.h"
@@ -175,6 +176,7 @@ int main(void)
 //  pmuInit();
 //  adcInit();
   rbInit();
+  usbMSCInit();
 
   badge_display_init();
 
@@ -212,6 +214,13 @@ int main(void)
 
   badge_event_start();
 
+  for(;;) {
+    if(JUMPNRUN_ERROR == jumpnrun_play("smb.lvl")) {
+      break;
+    }
+  }
+
+/*
   uint8_t buttons = 0;
 
   for(uint8_t i = 0; ; ++i) {
@@ -239,6 +248,7 @@ int main(void)
     }
     }
   }
+*/
 
   return 0;
 }
