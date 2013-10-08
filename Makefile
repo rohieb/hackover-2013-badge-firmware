@@ -33,8 +33,8 @@ OPTDEFINES = -D __NEWLIB__
 SRCS = \
   badge/main.c \
   badge/ui/display.c \
+  badge/ui/event.c \
   badge/ui/sprite.c
-
 SRCS += \
   dataflash/at45db041d.c \
   dataflash/iobase.c \
