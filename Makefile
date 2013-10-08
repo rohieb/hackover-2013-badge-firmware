@@ -260,6 +260,8 @@ SIZE = $(CROSS_COMPILE)size
 OBJCOPY = $(CROSS_COMPILE)objcopy
 OBJDUMP = $(CROSS_COMPILE)objdump
 OUTFILE = firmware
+
+CC_FOR_BUILD = gcc
 LPCRC = ./lpcrc
 
 ##########################################################################
@@ -311,7 +313,7 @@ all: dep size $(OUTFILE).bin $(OUTFILE).hex
 dep: $(DEPS)
 
 $(DEPS) : %.dep : %.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -MM $< -MT $@ -MT $(<:%.c=%.o) -MF $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MM $< -MT $@ -MT $(@:%.dep=%.o) -MF $@
 
 sinclude $(DEPS)
 
@@ -326,7 +328,7 @@ $(LD_TEMP):
 $(OUTFILE).elf: $(OBJS) $(LD_TEMP)
 	$(LD) $(LDFLAGS) -T $(LD_TEMP) -o $(OUTFILE).elf $(OBJS) $(LDLIBS)
 
-$(OUTFILE).bin: $(OUTFILE).elf
+$(OUTFILE).bin: $(OUTFILE).elf $(LPCRC)
 	$(OBJCOPY) $(OCFLAGS) -O binary $(OUTFILE).elf $(OUTFILE).bin
 	$(LPCRC) $(OUTFILE).bin
 
@@ -340,6 +342,21 @@ clean:
 	rm -f $(OBJS) $(LD_TEMP) $(OUTFILE).elf $(OUTFILE).bin $(OUTFILE).hex
 
 distclean: clean
-	rm -f $(DEPS)
+	rm -f $(DEPS) $(LPCRC)
 
 .PHONY: all dep size clean distclean
+
+CFLAGS_FOR_BUILD = -Wall -Wextra -std=c99 -O0 -g
+
+LPCRC_SRCS = tools/lpcrc/lpcrc.c
+LPCRC_OBJS = $(LPCRC_SRCS:%.c=%.o)
+LPCRC_DEPS = $(LPCRC_SRCS:%.c=%.dep)
+
+$(LPCRC_DEPS) : %.dep : %.c
+	$(CC_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) $(CFLAGS_FOR_BUILD) -MM $< -MT $@ -MT $(@:%.dep=%.o) -MF $@
+
+$(LPCRC_OBJS): %.o : %.c
+	$(CC_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) $(CFLAGS_FOR_BUILD) -o $@ -c $<
+
+$(LPCRC):  $(LPCRC_OBJS)
+	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) -o $@ $+ $(LDLIBS_FOR_BUILD)
