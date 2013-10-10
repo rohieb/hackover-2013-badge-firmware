@@ -45,6 +45,7 @@
 #include "core/pmu/pmu.h"
 #include "core/wdt/wdt.h"
 #include "core/gpio/gpio.h"
+#include "core/ssp/ssp.h"
 #include "core/systick/systick.h"
 #include "core/usbhid-rom/usbmsc.h"
 
@@ -175,9 +176,10 @@ void rbInit() {
     int pin;
     int value;
   } const output_pins[] = {
-    { RB_PWR_GOOD, 0 },
-    { USB_CONNECT, 1 },
-    { RB_LCD_CS  , 1 },
+    { RB_PWR_GOOD , 0 },
+    { USB_CONNECT , 1 },
+    { RB_LCD_CS   , 1 },
+    { RB_SPI_CS_DF, 1 },
 #if !HW_IS_PROTOTYPE
     { RB_SPI_SS2 , 1 },
     { RB_SPI_SS3 , 1 },
@@ -292,8 +294,22 @@ int main(void)
     }
     case BADGE_EVENT_GAME_TICK: {
       badge_sprite const sp = { 4, 4, (uint8_t const *) "\xff\xff" };
-      badge_framebuffer fb = { { { 0xcc } } };
+      badge_framebuffer fb = { { { 0x80 } } };
 
+      SSP_SSP0CR0 =
+	SSP_SSP0CR0_DSS_8BIT     // Data size = 8-bit
+	| SSP_SSP0CR0_FRF_SPI    // Frame format = SPI
+	| SSP_SSP0CR0_SCR_8;
+
+      gpioSetValue(RB_SPI_CS_DF, 0);
+
+      uint8_t st;
+      sspSend(0, "\x05", 1);
+      sspReceive(0, &st, 1);
+
+      gpioSetValue(RB_SPI_CS_DF, 1);
+
+      fb.data[0][1] = st;
       /*
       for(int i = 0; i < 9 * 96; ++i) {
 	fb.data[0][i] = 0xbb;
