@@ -104,12 +104,13 @@ void badge_display_init(void) {
    * 10: set x address (upper bits): X[6-4] = 0
    */
   static uint8_t const initseq[]= { 0xE2, 0xAF, // Display ON
-                                    //      0xA1,       // Mirror-X
+				    //0xA1,       // Mirror-X
                                     0xc8, // mirror-y
                                     0xa7, // invert (1 = black)
                                     0xA4, 0x2F,
+				    // 0x9f, 0x24
                                     0xB0, 0x10,
-                                    0x9f, 0x24 };
+  };
   for(uint8_t i = 0; i < sizeof(initseq); ++i){
     lcd_write_command(initseq[i]);
     systickDelay(5);
@@ -126,7 +127,7 @@ void badge_framebuffer_flush(badge_framebuffer const *fb) {
   lcd_write_command(0x00);
 
 
-  for(int i = 0; i < 9 * 96; ++i) {
+  for(int i = 0; i < BADGE_DISPLAY_STRIPE_COUNT * BADGE_DISPLAY_WIDTH; ++i) {
     lcd_write_data(fb->data[0][i]);
   }
 

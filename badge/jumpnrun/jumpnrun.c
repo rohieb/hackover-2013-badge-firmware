@@ -148,7 +148,7 @@ static void jumpnrun_apply_movement(jumpnrun_level      const *lv,
 
   if(state->jumpable_frames == 0) {
     // intentionally left blank.
-  } else if(badge_event_current_input_state() & BADGE_EVENT_KEY_UP) {
+  } else if(badge_event_current_input_state() & BADGE_EVENT_KEY_BTN_A) {
     state->inertia.y = fixed_point_sub(state->inertia.y, accel_vert);
     // fixed_point_neg(move_max.y)
     --state->jumpable_frames;
@@ -284,7 +284,7 @@ uint8_t jumpnrun_play(char const *lvname) {
         uint8_t new_state = badge_event_new_input_state(ev);
         uint8_t new_buttons = new_state & (old_state ^ new_state);
 
-        if((new_buttons & BADGE_EVENT_KEY_UP) && gs.touching_ground) {
+        if((new_buttons & BADGE_EVENT_KEY_BTN_B) && gs.touching_ground) {
           gs.jumpable_frames = 8;
         }
 

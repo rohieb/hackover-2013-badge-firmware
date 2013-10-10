@@ -64,8 +64,14 @@
 
 void backlightInit(void) {
 #if HW_IS_PROTOTYPE
+
+
   // prototype uses WDT CLKOUT to drive the LCD backlight
   // init without a reset
+
+  IOCON_PIO0_1 &= ~(IOCON_PIO0_1_FUNC_MASK);
+  IOCON_PIO0_1 |=   IOCON_PIO0_1_FUNC_CLKOUT;
+
   wdtInit(false);
 
   // use the WDT clock as the default WDT frequency is best frequency
@@ -80,13 +86,17 @@ void backlightInit(void) {
 
   // divide by 30, to get almost 10 kHz
   SCB_CLKOUTCLKDIV = 30;
+
+
 #else
+
+
   /* Enable the clock for CT16B1 */
   SCB_SYSAHBCLKCTRL |= (SCB_SYSAHBCLKCTRL_CT16B1);
 
   /* Configure PIO1.9 as Timer1_16 MAT0 Output */
   IOCON_PIO1_9 &= ~IOCON_PIO1_9_FUNC_MASK;
-  IOCON_PIO1_9 |= IOCON_PIO1_9_FUNC_CT16B1_MAT0;
+  IOCON_PIO1_9 |=  IOCON_PIO1_9_FUNC_CT16B1_MAT0;
 
   /* Set default duty cycle (MR1) */
   TMR_TMR16B1MR0 = 0; //(0xFFFF * (100 - brightness)) / 100;
@@ -103,6 +113,8 @@ void backlightInit(void) {
   // Enable Step-UP
   gpioSetDir(RB_PWR_LCDBL, gpioDirection_Output);
   gpioSetValue(RB_PWR_LCDBL, 0);
+
+
 #endif
 }
 
@@ -118,31 +130,34 @@ void rbInit() {
     int port;
     int pin;
     uint32_t volatile *reg;
+    gpioPullupMode_t mode;
   } const input_pins[] = {
-    { RB_BTN0    , &RB_BTN0_IO     },
-    { RB_BTN1    , &RB_BTN1_IO     },
-    { RB_BTN2    , &RB_BTN2_IO     },
-    { RB_BTN3    , &RB_BTN3_IO     },
-    { RB_BTN4    , &RB_BTN4_IO     },
 #if HW_IS_PROTOTYPE
-    { RB_BTN_A   , &RB_BTN_A_IO    },
-    { RB_BTN_B   , &RB_BTN_B_IO    },
+    { RB_BTN0    , &RB_BTN0_IO    , gpioPullupMode_PullDown },
+    { RB_BTN1    , &RB_BTN1_IO    , gpioPullupMode_PullDown },
+    { RB_BTN2    , &RB_BTN2_IO    , gpioPullupMode_PullDown },
+    { RB_BTN3    , &RB_BTN3_IO    , gpioPullupMode_PullDown },
+    { RB_BTN4    , &RB_BTN4_IO    , gpioPullupMode_PullDown },
+    { RB_BTN_A   , &RB_BTN_A_IO   , gpioPullupMode_PullDown },
+    { RB_BTN_B   , &RB_BTN_B_IO   , gpioPullupMode_PullDown },
 #else
-    { RB_HB0     , &RB_HB0_IO      },
-    { RB_HB1     , &RB_HB1_IO      },
-    { RB_PWR_CHRG, &RB_PWR_CHRG_IO }
+    { RB_BTN0    , &RB_BTN0_IO    , gpioPullupMode_PullUp },
+    { RB_BTN1    , &RB_BTN1_IO    , gpioPullupMode_PullUp },
+    { RB_BTN2    , &RB_BTN2_IO    , gpioPullupMode_PullUp },
+    { RB_BTN3    , &RB_BTN3_IO    , gpioPullupMode_PullUp },
+    { RB_BTN4    , &RB_BTN4_IO    , gpioPullupMode_PullUp },
+    { RB_HB0     , &RB_HB0_IO     , gpioPullupMode_PullUp },
+    { RB_HB1     , &RB_HB1_IO     , gpioPullupMode_PullUp },
+    { RB_PWR_CHRG, &RB_PWR_CHRG_IO, gpioPullupMode_PullUp }
 #endif
   };
     
   for(int i = 0; i < ARRAY_SIZE(input_pins); ++i) {
     gpioSetDir(input_pins[i].port, input_pins[i].pin, gpioDirection_Input);
-    gpioSetPullup(input_pins[i].reg, gpioPullupMode_PullUp);
+    gpioSetPullup(input_pins[i].reg, input_pins[i].mode);
   }
 
 #if HW_IS_PROTOTYPE
-  IOCON_PIO0_1 &= ~(IOCON_PIO0_1_FUNC_MASK);
-  IOCON_PIO0_1 |=   IOCON_PIO0_1_FUNC_CLKOUT;
-
   IOCON_JTAG_TMS_PIO1_0 &= ~(IOCON_JTAG_TMS_PIO1_0_FUNC_MASK);
   IOCON_JTAG_TMS_PIO1_0 |=   IOCON_JTAG_TMS_PIO1_0_FUNC_GPIO;
 #else
@@ -162,12 +177,12 @@ void rbInit() {
   } const output_pins[] = {
     { RB_PWR_GOOD, 0 },
     { USB_CONNECT, 1 },
+    { RB_LCD_CS  , 1 },
+#if !HW_IS_PROTOTYPE
     { RB_SPI_SS2 , 1 },
     { RB_SPI_SS3 , 1 },
     { RB_SPI_SS4 , 1 },
     { RB_SPI_SS5 , 1 },
-    { RB_LCD_CS  , 1 },
-#if !HW_IS_PROTOTYPE
     { RB_LED0    , 0 },
     { RB_LED1    , 0 },
     { RB_LED2    , 0 },
@@ -219,8 +234,10 @@ int main(void)
 
   badge_display_init();
 
+  /*
   gpioSetDir(0, 11, gpioDirection_Output);
   gpioSetValue(0, 11, 0);
+
 
   {
     badge_framebuffer fb;
@@ -250,23 +267,23 @@ int main(void)
 
     badge_framebuffer_flush(&fb);
   }
+  */
 
-  for(;;);
-
-  /*
   badge_event_start();
-
+  /*
   for(;;) {
     if(JUMPNRUN_ERROR == jumpnrun_play("smb.lvl")) {
       break;
     }
   }
+  */
 
-/*
   uint8_t buttons = 0;
 
   for(uint8_t i = 0; ; ++i) {
     badge_event_t event = badge_event_wait();
+
+    //    SCB_CLKOUTCLKDIV = i;
 
     switch(badge_event_type(event)) {
     case BADGE_EVENT_USER_INPUT: {
@@ -275,7 +292,13 @@ int main(void)
     }
     case BADGE_EVENT_GAME_TICK: {
       badge_sprite const sp = { 4, 4, (uint8_t const *) "\xff\xff" };
-      badge_framebuffer fb = { { { 0 } } };
+      badge_framebuffer fb = { { { 0xcc } } };
+
+      /*
+      for(int i = 0; i < 9 * 96; ++i) {
+	fb.data[0][i] = 0xbb;
+      }
+      */
 
       if(buttons & BADGE_EVENT_KEY_UP)    { badge_framebuffer_blt(&fb, 30, 10, &sp, 0); }
       if(buttons & BADGE_EVENT_KEY_DOWN)  { badge_framebuffer_blt(&fb, 30, 50, &sp, 0); }
@@ -290,7 +313,6 @@ int main(void)
     }
     }
   }
-*/
 
   return 0;
 }

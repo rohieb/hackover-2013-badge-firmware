@@ -26,20 +26,20 @@
 // TODO
 // FIXME:
 // order of buttons is without sense!
-#define RB_BTN0			    1,5
-#define RB_BTN0_IO		    IOCON_PIO0_1
+#define RB_BTN1			    1,5
+#define RB_BTN1_IO		    IOCON_PIO1_5
 
-#define RB_BTN1			    1,6
-#define RB_BTN1_IO		    IOCON_PIO2_9
+#define RB_BTN2			    1,6
+#define RB_BTN2_IO		    IOCON_PIO1_6
 
-#define RB_BTN2			    3,2
-#define RB_BTN2_IO		    IOCON_PIO2_6
+#define RB_BTN3			    3,2
+#define RB_BTN3_IO		    IOCON_PIO3_2
 
-#define RB_BTN3			    3,3
-#define RB_BTN3_IO		    IOCON_PIO3_3
+#define RB_BTN0			    3,3
+#define RB_BTN0_IO		    IOCON_PIO3_3
 
-#define RB_BTN4			    2,7
-#define RB_BTN4_IO		    IOCON_PIO2_7
+#define RB_BTN4			    1,7
+#define RB_BTN4_IO		    IOCON_PIO1_7
 
 // A and B buttons on the hackover badge only
 #define RB_BTN_A            1,11
@@ -79,11 +79,15 @@
 #define RB_LCD_CS	        1,0
 #define RB_LCD_RST		    1,1
 
+#define RB_SPI_CS_DF  0,7
+
 #else
 
 #define RB_LCD_BL		    1,9
 #define RB_LCD_CS		    2,1
 #define RB_LCD_RST		2,2
+
+#define RB_SPI_CS_DF	    2,0
 
 #endif
 
@@ -100,8 +104,6 @@
 #define RB_SPI_MOSI		    0,9
 
 #define RB_SPI_SCK		    2,11
-
-#define RB_SPI_CS_DF	    2,0
 
 #define RB_SPI_SS0		    2,5
 

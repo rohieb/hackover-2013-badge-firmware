@@ -16,15 +16,22 @@ enum {
 static uint8_t badge_input_raw(void) {
     uint8_t result = BTN_NONE;
 
+#if HW_IS_PROTOTYPE
+    if (gpioGetValue(RB_BTN3 ) == 1) { result |= BADGE_EVENT_KEY_UP    ; }
+    if (gpioGetValue(RB_BTN2 ) == 1) { result |= BADGE_EVENT_KEY_DOWN  ; }
+    if (gpioGetValue(RB_BTN4 ) == 1) { result |= BADGE_EVENT_KEY_CENTER; }
+    if (gpioGetValue(RB_BTN0 ) == 1) { result |= BADGE_EVENT_KEY_LEFT  ; }
+    if (gpioGetValue(RB_BTN1 ) == 1) { result |= BADGE_EVENT_KEY_RIGHT ; }
+    if (gpioGetValue(RB_BTN_A) == 1) { result |= BADGE_EVENT_KEY_BTN_A ; }
+    if (gpioGetValue(RB_BTN_B) == 1) { result |= BADGE_EVENT_KEY_BTN_B ; }
+#else
     if (gpioGetValue(RB_BTN3) == 0) { result |= BADGE_EVENT_KEY_UP    ; }
     if (gpioGetValue(RB_BTN2) == 0) { result |= BADGE_EVENT_KEY_DOWN  ; }
     if (gpioGetValue(RB_BTN4) == 0) { result |= BADGE_EVENT_KEY_CENTER; }
     if (gpioGetValue(RB_BTN0) == 0) { result |= BADGE_EVENT_KEY_LEFT  ; }
     if (gpioGetValue(RB_BTN1) == 0) { result |= BADGE_EVENT_KEY_RIGHT ; }
-    // TODO: Knöpfe.
-#if !HARDWARE_IS_PROTOTYPE
-    if (gpioGetValue(RB_HB0)  == 0) { result |= BADGE_EVENT_KEY_UP    ; }
-    if (gpioGetValue(RB_HB1)  == 0) { result |= BADGE_EVENT_KEY_UP    ; }
+    if (gpioGetValue(RB_HB0 ) == 0) { result |= BADGE_EVENT_KEY_BTN_A ; }
+    if (gpioGetValue(RB_HB1 ) == 0) { result |= BADGE_EVENT_KEY_BTN_B ; }
 #endif
 
     return result;
