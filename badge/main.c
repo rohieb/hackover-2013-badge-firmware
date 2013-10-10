@@ -43,6 +43,7 @@
 #include "core/adc/adc.h"
 #include "core/cpu/cpu.h"
 #include "core/pmu/pmu.h"
+#include "core/wdt/wdt.h"
 #include "core/gpio/gpio.h"
 #include "core/systick/systick.h"
 #include "core/usbhid-rom/usbmsc.h"
@@ -62,6 +63,24 @@
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof*(arr))
 
 void backlightInit(void) {
+#if HW_IS_PROTOTYPE
+  // prototype uses WDT CLKOUT to drive the LCD backlight
+  // init without a reset
+  wdtInit(false);
+
+  // use the WDT clock as the default WDT frequency is best frequency
+  // XXX this register value is missing in lpc1343.h
+#define SCB_CLKOUTCLKSEL_SOURCE_WDTCLOCK          ((unsigned int) 0x00000002) // Use the WDT clock
+
+  SCB_CLKOUTCLKSEL = SCB_CLKOUTCLKSEL_SOURCE_WDTCLOCK;
+
+  // toggle from LOW to HIGH to update source
+  SCB_CLKOUTCLKUEN = SCB_CLKOUTCLKUEN_DISABLE;
+  SCB_CLKOUTCLKUEN = SCB_CLKOUTCLKUEN_UPDATE;
+
+  // divide by 30, to get almost 10 kHz
+  SCB_CLKOUTCLKDIV = 30;
+#else
   /* Enable the clock for CT16B1 */
   SCB_SYSAHBCLKCTRL |= (SCB_SYSAHBCLKCTRL_CT16B1);
 
@@ -84,13 +103,16 @@ void backlightInit(void) {
   // Enable Step-UP
   gpioSetDir(RB_PWR_LCDBL, gpioDirection_Output);
   gpioSetValue(RB_PWR_LCDBL, 0);
+#endif
 }
 
 void rbInit() {
+#if !HW_IS_PROTOTYPE
   RB_HB0_IO &= ~IOCON_SWDIO_PIO1_3_FUNC_MASK;
   RB_HB0_IO |=  IOCON_SWDIO_PIO1_3_FUNC_GPIO;
   RB_HB1_IO &= ~IOCON_JTAG_TCK_PIO0_10_FUNC_MASK;
   RB_HB1_IO |=  IOCON_JTAG_TCK_PIO0_10_FUNC_GPIO;
+#endif
 
   struct {
     int port;
@@ -102,9 +124,14 @@ void rbInit() {
     { RB_BTN2    , &RB_BTN2_IO     },
     { RB_BTN3    , &RB_BTN3_IO     },
     { RB_BTN4    , &RB_BTN4_IO     },
+#if HW_IS_PROTOTYPE
+    { RB_BTN_A   , &RB_BTN_A_IO    },
+    { RB_BTN_B   , &RB_BTN_B_IO    },
+#else
     { RB_HB0     , &RB_HB0_IO      },
     { RB_HB1     , &RB_HB1_IO      },
     { RB_PWR_CHRG, &RB_PWR_CHRG_IO }
+#endif
   };
     
   for(int i = 0; i < ARRAY_SIZE(input_pins); ++i) {
@@ -112,6 +139,13 @@ void rbInit() {
     gpioSetPullup(input_pins[i].reg, gpioPullupMode_PullUp);
   }
 
+#if HW_IS_PROTOTYPE
+  IOCON_PIO0_1 &= ~(IOCON_PIO0_1_FUNC_MASK);
+  IOCON_PIO0_1 |=   IOCON_PIO0_1_FUNC_CLKOUT;
+
+  IOCON_JTAG_TMS_PIO1_0 &= ~(IOCON_JTAG_TMS_PIO1_0_FUNC_MASK);
+  IOCON_JTAG_TMS_PIO1_0 |=   IOCON_JTAG_TMS_PIO1_0_FUNC_GPIO;
+#else
   // LED3 zur Bestimmung der Umgebungshelligkeit.
   gpioSetDir(RB_LED3, gpioDirection_Input);
   RB_LED3_IO = (RB_LED3_IO & IOCON_PIO1_11_FUNC_MASK) | IOCON_PIO1_11_FUNC_AD7;
@@ -119,6 +153,7 @@ void rbInit() {
   // prepare LEDs
   IOCON_JTAG_TDI_PIO0_11 &= ~IOCON_JTAG_TDI_PIO0_11_FUNC_MASK;
   IOCON_JTAG_TDI_PIO0_11 |=  IOCON_JTAG_TDI_PIO0_11_FUNC_GPIO;
+#endif
 
   struct {
     int port;
@@ -127,18 +162,21 @@ void rbInit() {
   } const output_pins[] = {
     { RB_PWR_GOOD, 0 },
     { USB_CONNECT, 1 },
-    { RB_LED0    , 0 },
-    { RB_LED1    , 0 },
-    { RB_LED2    , 0 },
     { RB_SPI_SS2 , 1 },
     { RB_SPI_SS3 , 1 },
     { RB_SPI_SS4 , 1 },
     { RB_SPI_SS5 , 1 },
+    { RB_LCD_CS  , 1 },
+#if !HW_IS_PROTOTYPE
+    { RB_LED0    , 0 },
+    { RB_LED1    , 0 },
+    { RB_LED2    , 0 },
     { RB_LCD_BL  , 0 },
     { RB_HB2     , 1 },
     { RB_HB3     , 1 },
     { RB_HB4     , 1 },
     { RB_HB5     , 1 }
+#endif
   };
 
   for(int i = 0; i < ARRAY_SIZE(output_pins); ++i) {
@@ -146,12 +184,14 @@ void rbInit() {
     gpioSetValue(output_pins[i].port, output_pins[i].pin, output_pins[i].value);
   }
 
+#if !HW_IS_PROTOTYPE
   // Set P0.0 to GPIO
   RB_PWR_LCDBL_IO &= ~RB_PWR_LCDBL_IO_FUNC_MASK;
   RB_PWR_LCDBL_IO |=  RB_PWR_LCDBL_IO_FUNC_GPIO;
 
   gpioSetDir   ( RB_PWR_LCDBL   , gpioDirection_Input);
   gpioSetPullup(&RB_PWR_LCDBL_IO, gpioPullupMode_Inactive);
+#endif
 
   backlightInit();
 }
@@ -175,7 +215,7 @@ int main(void)
   // adcInit();
   rbInit();
 
-  usbMSCInit();
+  //  usbMSCInit();
 
   badge_display_init();
 
@@ -211,6 +251,9 @@ int main(void)
     badge_framebuffer_flush(&fb);
   }
 
+  for(;;);
+
+  /*
   badge_event_start();
 
   for(;;) {
