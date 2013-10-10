@@ -87,6 +87,11 @@ void backlightInit(void) {
 }
 
 void rbInit() {
+  RB_HB0_IO &= ~IOCON_SWDIO_PIO1_3_FUNC_MASK;
+  RB_HB0_IO |=  IOCON_SWDIO_PIO1_3_FUNC_GPIO;
+  RB_HB1_IO &= ~IOCON_JTAG_TCK_PIO0_10_FUNC_MASK;
+  RB_HB1_IO |=  IOCON_JTAG_TCK_PIO0_10_FUNC_GPIO;
+
   struct {
     int port;
     int pin;
@@ -97,8 +102,8 @@ void rbInit() {
     { RB_BTN2    , &RB_BTN2_IO     },
     { RB_BTN3    , &RB_BTN3_IO     },
     { RB_BTN4    , &RB_BTN4_IO     },
-    { RB_HB3     , &RB_HB3_IO      },
-    { RB_HB4     , &RB_HB4_IO      },
+    { RB_HB0     , &RB_HB0_IO      },
+    { RB_HB1     , &RB_HB1_IO      },
     { RB_PWR_CHRG, &RB_PWR_CHRG_IO }
   };
     
@@ -130,9 +135,9 @@ void rbInit() {
     { RB_SPI_SS4 , 1 },
     { RB_SPI_SS5 , 1 },
     { RB_LCD_BL  , 0 },
-    { RB_HB0     , 1 },
-    { RB_HB1     , 1 },
     { RB_HB2     , 1 },
+    { RB_HB3     , 1 },
+    { RB_HB4     , 1 },
     { RB_HB5     , 1 }
   };
 
@@ -166,9 +171,10 @@ int main(void)
   cpuInit();
   systickInit(CFG_SYSTICK_DELAY_IN_MS);
 
-//  pmuInit();
-//  adcInit();
+  // pmuInit();
+  // adcInit();
   rbInit();
+
   usbMSCInit();
 
   badge_display_init();

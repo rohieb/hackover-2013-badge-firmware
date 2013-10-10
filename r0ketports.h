@@ -86,10 +86,10 @@
 
 // Hackerbus
 #define RB_HB0			1,3
-#define RB_HB0_IO		IOCON_PIO1_3
+#define RB_HB0_IO		IOCON_SWDIO_PIO1_3
 
 #define RB_HB1			0,10
-#define RB_HB1_IO		IOCON_PIO0_10
+#define RB_HB1_IO		IOCON_JTAG_TCK_PIO0_10
 
 #define RB_HB2			1,1
 #define RB_HB2_IO		IOCON_PIO1_1

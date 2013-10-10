@@ -22,8 +22,8 @@ static uint8_t badge_input_raw(void) {
     if (gpioGetValue(RB_BTN0) == 0) { result |= BADGE_EVENT_KEY_LEFT  ; }
     if (gpioGetValue(RB_BTN1) == 0) { result |= BADGE_EVENT_KEY_RIGHT ; }
     // TODO: Knöpfe.
-    if (gpioGetValue(RB_HB3)  == 0) { result |= BADGE_EVENT_KEY_UP    ; }
-    if (gpioGetValue(RB_HB4)  == 0) { result |= BADGE_EVENT_KEY_UP    ; }
+    if (gpioGetValue(RB_HB0)  == 0) { result |= BADGE_EVENT_KEY_UP    ; }
+    if (gpioGetValue(RB_HB1)  == 0) { result |= BADGE_EVENT_KEY_UP    ; }
 
     return result;
 }
