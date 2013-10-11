@@ -43,9 +43,10 @@ SRCS = \
   badge/ui/sprite.c
 
 SRCS += \
-  dataflash/at45db041d.c \
   dataflash/iobase.c \
-  dataflash/diskio.c
+  dataflash/diskio.c \
+  dataflash/at25df041a.c
+#  dataflash/at45db041d.c
 
 SRCS += \
   project/commands.c
