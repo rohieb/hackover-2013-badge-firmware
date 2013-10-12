@@ -21,7 +21,7 @@
 /  data transfer. This reduces memory consumption 512 bytes each file object. */
 
 
-#define _FS_READONLY    1 //CFG_SDCARD_READONLY // 0    /* 0 or 1 */
+#define _FS_READONLY    0 //CFG_SDCARD_READONLY // 0    /* 0 or 1 */
 /* Setting _FS_READONLY to 1 defines read only configuration. This removes
 /  writing functions, f_write, f_sync, f_unlink, f_mkdir, f_chmod, f_rename,
 /  f_truncate and useless f_getfree. */
@@ -41,7 +41,7 @@
 /* To enable string functions, set _USE_STRFUNC to 1 or 2. */
 
 
-#define _USE_MKFS       0               /* 0 or 1 */
+#define _USE_MKFS       1               /* 0 or 1 */
 /* To enable f_mkfs function, set _USE_MKFS to 1 and set _FS_READONLY to 0 */
 
 

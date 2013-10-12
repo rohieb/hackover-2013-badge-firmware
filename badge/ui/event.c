@@ -2,7 +2,12 @@
 
 #include <core/gpio/gpio.h>
 #include <core/timer32/timer32.h>
+
+#ifdef R0KET
 #include <r0ketports.h>
+#else
+#include <badge/pinconfig.h>
+#endif
 
 // We depend on input being popped often, so no queue.
 static badge_event_t volatile event_buffer;
@@ -14,27 +19,27 @@ enum {
 };
 
 static uint8_t badge_input_raw(void) {
-    uint8_t result = BTN_NONE;
+  uint8_t result = 0;
 
-#if HW_IS_PROTOTYPE
-    if (gpioGetValue(RB_BTN3 ) == 1) { result |= BADGE_EVENT_KEY_UP    ; }
-    if (gpioGetValue(RB_BTN2 ) == 1) { result |= BADGE_EVENT_KEY_DOWN  ; }
-    if (gpioGetValue(RB_BTN4 ) == 1) { result |= BADGE_EVENT_KEY_CENTER; }
-    if (gpioGetValue(RB_BTN0 ) == 1) { result |= BADGE_EVENT_KEY_LEFT  ; }
-    if (gpioGetValue(RB_BTN1 ) == 1) { result |= BADGE_EVENT_KEY_RIGHT ; }
-    if (gpioGetValue(RB_BTN_A) == 1) { result |= BADGE_EVENT_KEY_BTN_A ; }
-    if (gpioGetValue(RB_BTN_B) == 1) { result |= BADGE_EVENT_KEY_BTN_B ; }
+#ifdef R0KET
+  if (gpioGetValue(RB_BTN3) == 0) { result |= BADGE_EVENT_KEY_UP    ; }
+  if (gpioGetValue(RB_BTN2) == 0) { result |= BADGE_EVENT_KEY_DOWN  ; }
+  if (gpioGetValue(RB_BTN4) == 0) { result |= BADGE_EVENT_KEY_CENTER; }
+  if (gpioGetValue(RB_BTN0) == 0) { result |= BADGE_EVENT_KEY_LEFT  ; }
+  if (gpioGetValue(RB_BTN1) == 0) { result |= BADGE_EVENT_KEY_RIGHT ; }
+  if (gpioGetValue(RB_HB0 ) == 0) { result |= BADGE_EVENT_KEY_BTN_A ; }
+  if (gpioGetValue(RB_HB1 ) == 0) { result |= BADGE_EVENT_KEY_BTN_B ; }
 #else
-    if (gpioGetValue(RB_BTN3) == 0) { result |= BADGE_EVENT_KEY_UP    ; }
-    if (gpioGetValue(RB_BTN2) == 0) { result |= BADGE_EVENT_KEY_DOWN  ; }
-    if (gpioGetValue(RB_BTN4) == 0) { result |= BADGE_EVENT_KEY_CENTER; }
-    if (gpioGetValue(RB_BTN0) == 0) { result |= BADGE_EVENT_KEY_LEFT  ; }
-    if (gpioGetValue(RB_BTN1) == 0) { result |= BADGE_EVENT_KEY_RIGHT ; }
-    if (gpioGetValue(RB_HB0 ) == 0) { result |= BADGE_EVENT_KEY_BTN_A ; }
-    if (gpioGetValue(RB_HB1 ) == 0) { result |= BADGE_EVENT_KEY_BTN_B ; }
+  if (gpioGetValue(HOB_PORT(HOB_BTN_UP    ), HOB_PIN(HOB_BTN_UP    )) == 1) { result |= BADGE_EVENT_KEY_UP    ; }
+  if (gpioGetValue(HOB_PORT(HOB_BTN_DOWN  ), HOB_PIN(HOB_BTN_DOWN  )) == 1) { result |= BADGE_EVENT_KEY_DOWN  ; }
+  if (gpioGetValue(HOB_PORT(HOB_BTN_CENTER), HOB_PIN(HOB_BTN_CENTER)) == 1) { result |= BADGE_EVENT_KEY_CENTER; }
+  if (gpioGetValue(HOB_PORT(HOB_BTN_LEFT  ), HOB_PIN(HOB_BTN_LEFT  )) == 1) { result |= BADGE_EVENT_KEY_LEFT  ; }
+  if (gpioGetValue(HOB_PORT(HOB_BTN_RIGHT ), HOB_PIN(HOB_BTN_RIGHT )) == 1) { result |= BADGE_EVENT_KEY_RIGHT ; }
+  if (gpioGetValue(HOB_PORT(HOB_BTN_A     ), HOB_PIN(HOB_BTN_A     )) == 1) { result |= BADGE_EVENT_KEY_BTN_A ; }
+  if (gpioGetValue(HOB_PORT(HOB_BTN_B     ), HOB_PIN(HOB_BTN_B     )) == 1) { result |= BADGE_EVENT_KEY_BTN_B ; }
 #endif
 
-    return result;
+  return result;
 }
 
 uint8_t badge_event_current_input_state(void) {

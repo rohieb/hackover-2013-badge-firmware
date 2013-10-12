@@ -3,7 +3,12 @@
 #include "iobase.h"
 #include "core/ssp/ssp.h"
 
+#ifdef R0KET
 #include <r0ketports.h>
+#else
+#include <badge/pinconfig.h>
+#define RB_SPI_CS_DF HOB_PORT(HOB_DATAFLASH_CS), HOB_PIN(HOB_DATAFLASH_CS)
+#endif
 
 /* Opcodes */
 #define OP_POWERDOWN      (0xB9)

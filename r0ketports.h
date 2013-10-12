@@ -1,7 +1,7 @@
 #ifndef INCLUDED_R0KET_PORTS_H
 #define INCLUDED_R0KET_PORTS_H
 
-#define HW_IS_PROTOTYPE 1
+#ifdef R0KET
 
 // LED
 #define RB_LED0			    0,11
@@ -21,35 +21,6 @@
 
 
 // Buttons
-#if HW_IS_PROTOTYPE
-
-// TODO
-// FIXME:
-// order of buttons is without sense!
-#define RB_BTN1			    1,5
-#define RB_BTN1_IO		    IOCON_PIO1_5
-
-#define RB_BTN2			    1,6
-#define RB_BTN2_IO		    IOCON_PIO1_6
-
-#define RB_BTN3			    3,2
-#define RB_BTN3_IO		    IOCON_PIO3_2
-
-#define RB_BTN0			    3,3
-#define RB_BTN0_IO		    IOCON_PIO3_3
-
-#define RB_BTN4			    1,7
-#define RB_BTN4_IO		    IOCON_PIO1_7
-
-// A and B buttons on the hackover badge only
-#define RB_BTN_A            1,11
-#define RB_BTN_A_IO         IOCON_PIO1_11
-
-#define RB_BTN_B            1,4
-#define RB_BTN_B_IO         IOCON_PIO1_4
-
-#else
-
 // TODO: XXX
 // use alternate buttons for the board
 
@@ -68,29 +39,11 @@
 #define RB_BTN4			    2,7
 #define RB_BTN4_IO		    IOCON_PIO2_7
 
-
-#endif
-
-
-// LCD
-#if HW_IS_PROTOTYPE
-
-// backlight pin is used     in another way for prototype
-#define RB_LCD_CS	        1,0
-#define RB_LCD_RST		    1,1
-
-#define RB_SPI_CS_DF  0,7
-
-#else
-
 #define RB_LCD_BL		    1,9
 #define RB_LCD_CS		    2,1
 #define RB_LCD_RST		2,2
 
 #define RB_SPI_CS_DF	    2,0
-
-#endif
-
 
 // I2C
 #define RB_I2C_SCL		    0,4
@@ -150,26 +103,10 @@
 #define RB_HB5			    1,2
 #define RB_HB5_IO		    IOCON_PIO1_2
 
-// Funk
-#if HW_IS_PROTOTYPE
-
-#define RB_NRF_CE		    2,10
-#define RB_NRF_CE_IO		IOCON_PIO2_10
-#define RB_SPI_NRF_CS		2,9
-#define RB_SPI_NRF_CS_IO	IOCON_PIO2_9
-
-// TODO: this pin is new. support must be added for configuration in main.c
-#define RB_SPI_NRF_IRQ		2,2
-#define RB_SPI_NRF_IRQ_IO	IOCON_PIO2_2
-
-#else
-
 #define RB_NRF_CE		    1,5
 #define RB_NRF_CE_IO		IOCON_PIO1_5
 #define RB_SPI_NRF_CS		1,10
 #define RB_SPI_NRF_CS_IO	IOCON_PIO1_10
-
-#endif
 
 // Misc
 #define RB_BUSINT		    3,0
@@ -188,6 +125,8 @@
 #define BTN_LEFT (1<<2)
 #define BTN_RIGHT (1<<3)
 #define BTN_ENTER (1<<4)
+
+#endif
 
 #endif
 

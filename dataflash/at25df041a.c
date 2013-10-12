@@ -23,7 +23,7 @@ enum {
   OP_WRITE_ENABLE     = 0x06,
   OP_WRITE_DISABLE    = 0x04,
 
-  OP_SECTOR_PROTEXT   = 0x36,
+  OP_SECTOR_PROTECT   = 0x36,
   OP_SECTOR_UNPROTECT = 0x39,
   OP_SECTOR_STATUS    = 0x3c,
 
@@ -62,15 +62,32 @@ enum {
 
 static volatile DSTATUS status = STA_NOINIT;
 
-static void wait_for_ready() {
-  BYTE reg_status = 0xFF;
+BYTE dataflash_read_status_register(void) {
+  BYTE reg_status = 0xff;
 
   CS_LOW();
   xmit_spi(OP_STATUS_READ);
-  do {
-    rcvr_spi_m((uint8_t *) &reg_status);
-  } while (reg_status & STATUS_BSY);
+  rcvr_spi_m(&reg_status);
   CS_HIGH();
+
+  return reg_status;
+}
+
+/*
+static void dataflash_write_status_register(BYTE status) {
+  CS_LOW();
+  xmit_spi(OP_WRITE_ENABLE);
+  CS_HIGH();
+
+  CS_LOW();
+  xmit_spi(OP_STATUS_WRITE);
+  xmit_spi(status);
+  CS_HIGH();
+}
+*/
+static void wait_for_ready() {
+  while(dataflash_read_status_register() & STATUS_BSY)
+    ;
 }
 
 static void dataflash_powerdown() {
@@ -90,6 +107,9 @@ DSTATUS dataflash_initialize() {
 
   gpioSetDir(RB_SPI_CS_DF, gpioDirection_Output);
   dataflash_resume();
+
+  // BYTE status = dataflash_read_status_register();
+  //  dataflash_write_status_register((status & ~STATUS_SWP) | STATUS_SWP_NONE);
   status &= ~STA_NOINIT;
 
   return status;
@@ -105,11 +125,12 @@ DRESULT dataflash_random_read(BYTE *buff, DWORD offset, DWORD length) {
   if (offset + length > PAGE_MAX * PAGE_SIZE) return RES_PARERR;
 
   wait_for_ready();
+
   CS_LOW();
   xmit_spi(OP_READARRAY);
   xmit_spi((BYTE)(offset >> 16));
-  xmit_spi((BYTE)(offset >> 8));
-  xmit_spi((BYTE)offset);
+  xmit_spi((BYTE)(offset >>  8));
+  xmit_spi((BYTE) offset       );
   xmit_spi(0x00); // follow up with don't care byte
 
   do {
@@ -125,6 +146,73 @@ DRESULT dataflash_read(BYTE *buff, DWORD sector, BYTE count) {
 }
 
 #if _READONLY == 0
+static void dataflash_sector_protect(DWORD addr) {
+  wait_for_ready();
+
+  addr &= ~(PAGE_SIZE - 1);
+
+  CS_LOW();
+  xmit_spi(OP_WRITE_ENABLE);
+  CS_HIGH();
+
+  CS_LOW();
+  xmit_spi(OP_SECTOR_PROTECT);
+  xmit_spi((BYTE)(addr >> 16));
+  xmit_spi((BYTE)(addr >>  8));
+  xmit_spi((BYTE) addr       );      
+  CS_HIGH();
+
+  wait_for_ready();
+}
+
+static void dataflash_sector_unprotect(DWORD addr) {
+  wait_for_ready();
+
+  addr &= ~(PAGE_SIZE - 1);
+
+  CS_LOW();
+  xmit_spi(OP_WRITE_ENABLE);
+  CS_HIGH();
+
+  CS_LOW();
+  xmit_spi(OP_SECTOR_UNPROTECT);
+  xmit_spi((BYTE)(addr >> 16));
+  xmit_spi((BYTE)(addr >>  8));
+  xmit_spi((BYTE) addr       );      
+  CS_HIGH();
+
+  wait_for_ready();
+}
+
+static DRESULT dataflash_write_4k(const BYTE *buff, DWORD addr) {
+  addr &= ~4095u;
+
+  CS_LOW();
+  xmit_spi(OP_WRITE_ENABLE);
+  CS_HIGH();
+
+  CS_LOW();
+  xmit_spi(OP_ERASE_BLOCK_4K);
+  xmit_spi((BYTE)(addr >> 16));
+  xmit_spi((BYTE)(addr >>  8));
+  xmit_spi((BYTE) addr       );
+  CS_HIGH();
+
+  CS_LOW();
+  xmit_spi(OP_WRITE_ENABLE);
+  CS_HIGH();
+
+  CS_LOW();
+  xmit_spi(OP_PROGRAM_PAGE);
+  xmit_spi((BYTE)(addr >> 16));
+  xmit_spi((BYTE)(addr >>  8));
+  xmit_spi((BYTE) addr       );
+  for(int i = 0; i < 4096; ++i) {
+    xmit_spi(buff[i]);
+  }
+  CS_HIGH();
+}
+
 DRESULT dataflash_random_write(const BYTE *buff, DWORD offset, DWORD length) {
   if (!length) return RES_PARERR;
   if (status & STA_NOINIT) return RES_NOTRDY;
@@ -133,9 +221,13 @@ DRESULT dataflash_random_write(const BYTE *buff, DWORD offset, DWORD length) {
   do {
     wait_for_ready();
 
-    DWORD pageaddr = (offset / PAGE_SIZE) * PAGE_SIZE;
+    DWORD addr      = offset;
+    DWORD blockaddr = addr & ~4095u;
     DWORD remaining = PAGE_SIZE - offset % PAGE_SIZE;
 
+    BYTE blockbuf[4096];
+    dataflash_random_read(blockbuf, blockaddr, 4096);
+    
     if (remaining > length) {
       remaining = length;
     }
@@ -143,23 +235,26 @@ DRESULT dataflash_random_write(const BYTE *buff, DWORD offset, DWORD length) {
     length -= remaining;
     offset += remaining;
 
+    dataflash_sector_unprotect(addr);
+
     CS_LOW();
     xmit_spi(OP_WRITE_ENABLE);
     CS_HIGH();
 
-    // read page into the internal buffer
     CS_LOW();
     xmit_spi(OP_PROGRAM_PAGE);
-    xmit_spi((BYTE)(pageaddr >> 16));
-    xmit_spi((BYTE)(pageaddr >>  8));
-    xmit_spi((BYTE) pageaddr       );
-
+    xmit_spi((BYTE)(addr >> 16));
+    xmit_spi((BYTE)(addr >>  8));
+    xmit_spi((BYTE) addr       );
     do {
       xmit_spi(*buff++);
     } while (--remaining);
-
     CS_HIGH();
+
+    dataflash_sector_protect(addr);
   } while (length);
+
+  wait_for_ready();
 
   return RES_OK;
 }

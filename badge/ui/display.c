@@ -6,7 +6,25 @@
 #include <sysdefs.h>
 #include <lpc134x.h>
 
+#ifdef R0KET
+
 #include <r0ketports.h>
+
+#define CS_LOW()   gpioSetValue(RB_LCD_CS , 0)
+#define CS_HIGH()  gpioSetValue(RB_LCD_CS , 1)
+#define RST_LOW()  gpioSetValue(RB_LCD_RST, 0)
+#define RST_HIGH() gpioSetValue(RB_LCD_RST, 1)
+
+#else
+
+#include <badge/pinconfig.h>
+
+#define CS_LOW()   gpioSetValue(HOB_PORT(HOB_LCD_CS ), HOB_PIN(HOB_LCD_CS ), 0)
+#define CS_HIGH()  gpioSetValue(HOB_PORT(HOB_LCD_CS ), HOB_PIN(HOB_LCD_CS ), 1)
+#define RST_LOW()  gpioSetValue(HOB_PORT(HOB_LCD_RST), HOB_PIN(HOB_LCD_RST), 0)
+#define RST_HIGH() gpioSetValue(HOB_PORT(HOB_LCD_RST), HOB_PIN(HOB_LCD_RST), 1)
+
+#endif
 
 #ifdef CFG_USBMSC
 #include <core/usbhid-rom/usbmsc.h>
@@ -27,11 +45,12 @@ static void lcd_select() {
                          | SSP_SSP0CR0_FRF_SPI    // Frame format = SPI
                          | SSP_SSP0CR0_SCR_8);    // Serial clock rate = 8
   SSP_SSP0CR0 = configReg;
-  gpioSetValue(RB_LCD_CS, 0);
+
+  CS_LOW();
 }
 
 static void lcd_deselect() {
-  gpioSetValue(RB_LCD_CS, 1);
+  CS_HIGH();
   /* reset the bus to 8-Bit frames that everyone else uses */
   uint32_t configReg = ( SSP_SSP0CR0_DSS_8BIT     // Data size = 8-bit
                          | SSP_SSP0CR0_FRF_SPI    // Frame format = SPI
@@ -59,16 +78,13 @@ static void lcd_write_data   (uint8_t data) { lcd_write(0x0100 | data); }
 void badge_display_init(void) {
   sspInit(0, sspClockPolarity_Low, sspClockPhase_RisingEdge);
 
-  gpioSetValue(RB_LCD_CS , 1);
-  gpioSetValue(RB_LCD_RST, 1);
-
-  gpioSetDir  (RB_LCD_CS , gpioDirection_Output);
-  gpioSetDir  (RB_LCD_RST, gpioDirection_Output);
+  CS_HIGH();
+  RST_HIGH();
 
   systickDelay(100);
-  gpioSetValue(RB_LCD_RST, 0);
+  RST_LOW();
   systickDelay(100);
-  gpioSetValue(RB_LCD_RST, 1);
+  RST_HIGH();
   systickDelay(100);
   /*
   int id = lcdRead(220);

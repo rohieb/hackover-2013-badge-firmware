@@ -32,6 +32,7 @@ OPTDEFINES = -D __NEWLIB__
 
 SRCS = \
   badge/main.c \
+  badge/init.c \
   badge/jumpnrun/collision.c \
   badge/jumpnrun/enemies.c \
   badge/jumpnrun/items.c \
@@ -45,8 +46,7 @@ SRCS = \
 SRCS += \
   dataflash/iobase.c \
   dataflash/diskio.c \
-  dataflash/at25df041a.c
-#  dataflash/at45db041d.c
+  dataflash/at45db041d.c
 
 SRCS += \
   project/commands.c

@@ -11,4 +11,6 @@ DRESULT dataflash_write(const BYTE *buff, DWORD sector, BYTE count);
 DRESULT dataflash_random_write(const BYTE *buff, DWORD offset, DWORD length);
 DRESULT dataflash_ioctl(BYTE ctrl, void *buff);
 
+BYTE dataflash_read_status_register(void);
+
 #endif /* _AT45DB041D_H */
