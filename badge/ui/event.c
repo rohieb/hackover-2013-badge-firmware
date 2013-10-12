@@ -77,7 +77,7 @@ badge_event_t badge_event_wait(void) {
 }
 
 void badge_event_start(void) {
-  timer32Init(0, TIMER32_CCLK_10MS);
+  timer32Init(0, TIMER32_CCLK_10MS / 100 * 133);
   timer32SetIntHandler(badge_event_irq);
   timer32Enable(0);
 }

@@ -244,7 +244,7 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
   }
 
   state->inertia = state->inertia_mod;
-  state->tick_minor = (state->tick_minor + 1) % 4;
+  state->tick_minor = (state->tick_minor + 1) % 3;
 }
 
 uint8_t jumpnrun_play(char const *lvname) {
