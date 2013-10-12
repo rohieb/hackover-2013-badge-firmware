@@ -1,8 +1,8 @@
 #ifndef INCLUDED_JUMPNRUN_ITEMS_H
 #define INCLUDED_JUMPNRUN_ITEMS_H
 
-#include <badge/ui/sprite.h>
-#include <badge/util/rectangle.h>
+#include "../ui/sprite.h"
+#include "../util/rectangle.h"
 
 struct jumpnrun_game_state;
 

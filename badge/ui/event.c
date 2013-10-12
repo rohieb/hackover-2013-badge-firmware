@@ -18,15 +18,15 @@ enum {
   BADGE_EVENT_FLAG_TIMER = 2
 };
 
-static uint8_t badge_input_raw(void) {
+uint8_t badge_input_raw(void) {
   uint8_t result = 0;
 
 #ifdef R0KET
-  if (gpioGetValue(RB_BTN3) == 0) { result |= BADGE_EVENT_KEY_UP    ; }
-  if (gpioGetValue(RB_BTN2) == 0) { result |= BADGE_EVENT_KEY_DOWN  ; }
+  if (gpioGetValue(RB_BTN3) == 0) { result |= BADGE_EVENT_KEY_DOWN  ; }
+  if (gpioGetValue(RB_BTN2) == 0) { result |= BADGE_EVENT_KEY_UP    ; }
   if (gpioGetValue(RB_BTN4) == 0) { result |= BADGE_EVENT_KEY_CENTER; }
-  if (gpioGetValue(RB_BTN0) == 0) { result |= BADGE_EVENT_KEY_LEFT  ; }
-  if (gpioGetValue(RB_BTN1) == 0) { result |= BADGE_EVENT_KEY_RIGHT ; }
+  if (gpioGetValue(RB_BTN0) == 0) { result |= BADGE_EVENT_KEY_RIGHT ; }
+  if (gpioGetValue(RB_BTN1) == 0) { result |= BADGE_EVENT_KEY_LEFT  ; }
   if (gpioGetValue(RB_HB0 ) == 0) { result |= BADGE_EVENT_KEY_BTN_A ; }
   if (gpioGetValue(RB_HB1 ) == 0) { result |= BADGE_EVENT_KEY_BTN_B ; }
 #else
@@ -77,7 +77,7 @@ badge_event_t badge_event_wait(void) {
 }
 
 void badge_event_start(void) {
-  timer32Init(0, TIMER32_CCLK_10MS * 2);
+  timer32Init(0, TIMER32_CCLK_10MS);
   timer32SetIntHandler(badge_event_irq);
   timer32Enable(0);
 }

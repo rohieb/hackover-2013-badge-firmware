@@ -1,9 +1,9 @@
 #ifndef INCLUDED_JUMPNRUN_TILES_H
 #define INCLUDED_JUMPNRUN_TILES_H
 
-#include <badge/util/fixed_point.h>
-#include <badge/util/rectangle.h>
-#include <badge/ui/sprite.h>
+#include "../util/fixed_point.h"
+#include "../util/rectangle.h"
+#include "../ui/sprite.h"
 
 #include <stdint.h>
 

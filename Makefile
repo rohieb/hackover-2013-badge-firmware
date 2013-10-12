@@ -24,7 +24,7 @@ DEBUGBUILD = FALSE
 # IDE Flags (Keeps various IDEs happy)
 ##########################################################################
 
-OPTDEFINES = -D __NEWLIB__
+OPTDEFINES = -D __NEWLIB__ -DR0KET
 
 ##########################################################################
 # Project-specific files 

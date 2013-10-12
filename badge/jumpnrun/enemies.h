@@ -1,8 +1,8 @@
 #ifndef INCLUDED_JUMPNRUN_ENEMIES_H
 #define INCLUDED_JUMPNRUN_ENEMIES_H
 
-#include <badge/ui/sprite.h>
-#include <badge/util/rectangle.h>
+#include "../ui/sprite.h"
+#include "../util/rectangle.h"
 
 #include "tiles.h"
 
@@ -20,13 +20,13 @@ typedef struct jumpnrun_enemy_type {
   vec2d               spawn_inertia;
 
   void (*collision_tiles)(struct jumpnrun_enemy             *self,
-                          vec2d                             *desired_position,
-                          struct jumpnrun_level             *lv,
-                          struct jumpnrun_tile_range  const *visible_tiles);
+			  vec2d                             *desired_position,
+			  struct jumpnrun_level             *lv,
+			  struct jumpnrun_tile_range  const *visible_tiles);
   void (*collision_player)(struct jumpnrun_enemy      *self,
-                           struct jumpnrun_game_state *state);
+			   struct jumpnrun_game_state *state);
   void (*game_tick)(struct jumpnrun_enemy            *self,
-                    struct jumpnrun_game_state       *state,
+		    struct jumpnrun_game_state       *state,
                     struct jumpnrun_level            *lv,
                     struct jumpnrun_tile_range const *visible_tiles);
 } jumpnrun_enemy_type;
@@ -55,6 +55,7 @@ enum {
 
 enum {
   JUMPNRUN_ENEMY_TYPE_CAT,
+  JUMPNRUN_ENEMY_TYPE_MUSHROOM,
 
   JUMPNRUN_ENEMY_TYPE_COUNT
 };
@@ -62,8 +63,8 @@ enum {
 extern jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT];
 
 void jumpnrun_process_enemy(jumpnrun_enemy                   *self,
-                            badge_framebuffer                *fb,
-                            struct jumpnrun_game_state       *state,
-                            struct jumpnrun_level            *lv,
-                            struct jumpnrun_tile_range const *visible_tiles);
+			    badge_framebuffer                *fb,
+			    struct jumpnrun_game_state       *state,
+			    struct jumpnrun_level            *lv,
+			    struct jumpnrun_tile_range const *visible_tiles);
 #endif

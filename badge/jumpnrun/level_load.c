@@ -3,6 +3,8 @@
 #include "items.h"
 #include "enemies.h"
 
+#include <drivers/fatfs/ff.h>
+
 #include <stdio.h>
 
 typedef struct {

@@ -11,6 +11,15 @@ static badge_sprite const anim_cat[] = {
   { 8, 5, (uint8_t const *) "\xd7\x7d\xc6\x19\x25" }
 };
 
+static badge_sprite const anim_mushroom[] = {
+  { 7, 7, (uint8_t const *) "\x10\x0c\x9f\xcf\xc7\x40" },
+  { 7, 7, (uint8_t const *) "\x20\x18\x1e\x8f\x87\x81" },
+  { 7, 7, (uint8_t const *) "\x10\x0c\x9f\xcf\xc7\x40" },
+  { 7, 7, (uint8_t const *) "\x08\x86\xdf\xef\x67\x20" },
+  { 7, 7, (uint8_t const *) "\x04\xc3\xef\xf7\x33\x10" },
+  { 7, 7, (uint8_t const *) "\x04\xc3\xe7\xf3\x31\x10" }
+};
+
 void jumpnrun_process_enemy(jumpnrun_enemy                   *self,
 			    badge_framebuffer                *fb,
 			    struct jumpnrun_game_state       *state,
@@ -25,11 +34,14 @@ void jumpnrun_process_enemy(jumpnrun_enemy                   *self,
       self->flags &= ~JUMPNRUN_ENEMY_SPAWNED;
     } else {
       self->type->game_tick(self, state, lv, visible_tiles);
-      badge_framebuffer_blt(fb,
-			    fixed_point_cast_int(self->current_pos.x) - state->left,
-			    fixed_point_cast_int(self->current_pos.y),
-			    &self->type->animation_frames[self->current_frame],
-			    fixed_point_lt(self->inertia.x, FIXED_POINT(0, 0)) ? 0 : BADGE_BLT_MIRRORED);
+
+      if(state->tick_minor == 0) {
+	badge_framebuffer_blt(fb,
+			      fixed_point_cast_int(self->current_pos.x) - state->left,
+			      fixed_point_cast_int(self->current_pos.y),
+			      &self->type->animation_frames[self->current_frame],
+			      fixed_point_lt(self->inertia.x, FIXED_POINT(0, 0)) ? 0 : BADGE_BLT_MIRRORED);
+      }
     }
   } else if(self->flags & JUMPNRUN_ENEMY_UNAVAILABLE) { 
     if(state->left                                      > fixed_point_cast_int(self->spawn_pos.x) + spawn_margin ||
@@ -69,14 +81,20 @@ void enemy_collision_tiles_bounce_horiz(jumpnrun_enemy            *self,
   }
 }
 
-void enemy_collision_player_kill(jumpnrun_enemy      *self,
-				 jumpnrun_game_state *state)
+void enemy_collision_player_jumpable(jumpnrun_enemy      *self,
+				     jumpnrun_game_state *state)
 {
   rectangle rect_self   = rect_from_enemy(self);
   rectangle rect_hacker = hacker_rect_current(state);
 
   if(rectangle_intersect(&rect_self, &rect_hacker)) {
-    state->status = JUMPNRUN_DEAD;
+    if(fixed_point_gt(state->inertia.y, FIXED_POINT(0, 0))) {
+      self->flags &= ~JUMPNRUN_ENEMY_SPAWNED;
+      state->inertia_mod.y = FIXED_POINT(0, -250);
+      state->jumpable_frames = 8;
+    } else {
+      state->status = JUMPNRUN_DEAD;
+    }
   }
 }
 
@@ -105,10 +123,16 @@ void enemy_tick_cat(jumpnrun_enemy *self,
 }
 
 jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = {
-  { 2, ARRAY_SIZE(anim_cat), anim_cat,
-    { FIXED_POINT_I(0, -800), FIXED_POINT_I(0, 0) },
+  { 16, ARRAY_SIZE(anim_cat), anim_cat,
+    { FIXED_POINT_I(0, -100), FIXED_POINT_I(0, 0) },
     enemy_collision_tiles_bounce_horiz,
-    enemy_collision_player_kill,
+    enemy_collision_player_jumpable,
+    enemy_tick_cat
+  }, {
+    16, ARRAY_SIZE(anim_mushroom), anim_mushroom,
+    { FIXED_POINT_I(0, -50), FIXED_POINT_I(0, 0) },
+    enemy_collision_tiles_bounce_horiz,
+    enemy_collision_player_jumpable,
     enemy_tick_cat
   }
 };

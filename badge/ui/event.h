@@ -28,6 +28,7 @@ extern "C" {
   static inline uint8_t badge_event_old_input_state(badge_event_t event) { return (uint8_t) (event >> 2 & 0x7f); }
   static inline uint8_t badge_event_new_input_state(badge_event_t event) { return (uint8_t) (event >> 9       ); }
 
+  uint8_t badge_input_raw(void);
   uint8_t badge_event_current_input_state(void);
 
   static inline badge_event_t badge_event_new(uint8_t type, uint8_t old_input_state, uint8_t new_input_state) {

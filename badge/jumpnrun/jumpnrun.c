@@ -1,9 +1,10 @@
 #include "jumpnrun.h"
 #include "collision.h"
+#include "levels.h"
 
-#include <badge/ui/display.h>
-#include <badge/ui/event.h>
-#include <badge/ui/sprite.h>
+#include "../ui/display.h"
+#include "../ui/event.h"
+#include "../ui/sprite.h"
 
 #include <assert.h>
 #include <math.h>
@@ -13,11 +14,11 @@
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof*(arr))
 
 static vec2d       const gravity      = { FIXED_POINT_I(0,   0), FIXED_POINT_I(0,  56) };
-static vec2d       const move_max     = { FIXED_POINT_I(1, 200), FIXED_POINT_I(1, 300) };
-static fixed_point const accel_horiz  =   FIXED_POINT_I(0, 100);
+static vec2d       const move_max     = { FIXED_POINT_I(0, 600), FIXED_POINT_I(1, 300) };
+static fixed_point const accel_horiz  =   FIXED_POINT_I(0,  50);
 static fixed_point const accel_vert   =   FIXED_POINT_I(0, 250);
 static fixed_point const drag_factor  =   FIXED_POINT_I(0, 854);
-static fixed_point const speed_jump_x =   FIXED_POINT_I(1, 200);
+static fixed_point const speed_jump_x =   FIXED_POINT_I(0, 600);
 
 static badge_sprite const anim_hacker[] = {
   { 5, 8, (uint8_t const *) "\x1c\xff\xfd\x04\x04" },
@@ -158,9 +159,6 @@ static void jumpnrun_apply_movement(jumpnrun_level      const *lv,
 
   jumpnrun_passive_movement(&state->inertia);
 
-  state->inertia.x = fixed_point_min(fixed_point_max(fixed_point_neg(move_max.x), state->inertia.x), move_max.x);
-  state->inertia.y = fixed_point_min(fixed_point_max(fixed_point_neg(move_max.y), state->inertia.y), move_max.y);
-
   vec2d new_pos = vec2d_add(state->current_pos, state->inertia);
 
   if(fixed_point_lt(new_pos.x, FIXED_POINT(state->left, 0))) {
@@ -170,6 +168,7 @@ static void jumpnrun_apply_movement(jumpnrun_level      const *lv,
 
   rectangle hacker_rect_c = hacker_rect(&state->current_pos, state);
   collisions_tiles_displace(&new_pos, &hacker_rect_c, lv, tilerange, &state->inertia, &state->touching_ground);
+  state->inertia_mod = state->inertia;
 
   state->current_pos = new_pos;
 
@@ -237,37 +236,21 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
     } else {
       state->anim_frame = 0;
     }
+  } else {
+    for(size_t enemy_ix = 0; enemy_ix < lv->header.enemy_count; ++enemy_ix) {
+      jumpnrun_enemy *enemy = &lv->enemies[enemy_ix];
+      jumpnrun_process_enemy(enemy, NULL, state, lv, &tilerange);
+    }
   }
 
-  state->tick_minor = (state->tick_minor + 1) % 2;
+  state->inertia = state->inertia_mod;
+  state->tick_minor = (state->tick_minor + 1) % 4;
 }
 
 uint8_t jumpnrun_play(char const *lvname) {
   jumpnrun_level lv;
 
-  memset(&lv, 0, sizeof(lv));
-
-  // This part looks ugly. The reason it's done this way is that we don't know how much memory
-  // we need for the level before parsing its header, and that the VLAs we use to store it have
-  // block scope.
-  // Still, better than opening the whole dynamic memory can of worms.
-  FIL fd;
-  int err;
-
-  if(FR_OK != f_open(&fd, lvname, FA_OPEN_EXISTING | FA_READ)) { return JUMPNRUN_ERROR; }
-
-  if(0 != jumpnrun_load_level_header_from_file(&lv, &fd)) {
-    f_close(&fd);
-    return JUMPNRUN_ERROR;
-  }
-
-  JUMPNRUN_LEVEL_MAKE_SPACE(lv);
-  err = jumpnrun_load_level_from_file(&lv, &fd);
-
-  f_close(&fd);
-  if(err != 0) {
-    return JUMPNRUN_ERROR;
-  }
+  JUMPNRUN_LEVEL_LOAD(lv, lvname);
 
   jumpnrun_game_state gs;
   memset(&gs, 0, sizeof(gs));
@@ -284,7 +267,7 @@ uint8_t jumpnrun_play(char const *lvname) {
         uint8_t new_state = badge_event_new_input_state(ev);
         uint8_t new_buttons = new_state & (old_state ^ new_state);
 
-        if((new_buttons & BADGE_EVENT_KEY_BTN_B) && gs.touching_ground) {
+        if((new_buttons & BADGE_EVENT_KEY_BTN_A) && gs.touching_ground) {
           gs.jumpable_frames = 8;
         }
 

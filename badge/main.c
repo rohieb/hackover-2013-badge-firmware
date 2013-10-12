@@ -190,7 +190,6 @@ int main(void)
   badge_init();
 #endif
 
-  /*
   {
     //    f_mkfs(0, 1, 0);
     badge_framebuffer fb;
@@ -212,22 +211,20 @@ int main(void)
     }
 
     badge_framebuffer_flush(&fb);
-
   }
 
-  usbMSCInit();
-  for(;;);
-  */
+  if(badge_input_raw() & BADGE_EVENT_KEY_DOWN) {
+    usbMSCInit();
+    for(;;);
+  }
 
   badge_event_start();
 
-  /*
   for(;;) {
     if(JUMPNRUN_ERROR == jumpnrun_play("smb.lvl")) {
       break;
     }
   }
-  */
 
   uint8_t buttons = 0;
 

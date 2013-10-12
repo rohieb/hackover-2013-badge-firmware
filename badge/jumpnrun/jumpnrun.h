@@ -6,9 +6,9 @@
 #include "levels.h"
 #include "tiles.h"
 
-#include <badge/util/fixed_point.h>
-#include <badge/util/rectangle.h>
-#include <badge/ui/sprite.h>
+#include "../util/fixed_point.h"
+#include "../util/rectangle.h"
+#include "../ui/sprite.h"
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -28,6 +28,7 @@ enum {
 typedef struct jumpnrun_game_state {
   vec2d   current_pos;
   vec2d   inertia;
+  vec2d   inertia_mod;
   uint8_t status;
 
   uint8_t tick_minor;
