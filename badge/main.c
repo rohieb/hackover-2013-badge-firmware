@@ -203,11 +203,19 @@ int main(void)
   badge_init();
 #endif
 
-#ifdef HOB_REV2
-  gpioSetValue(HOB_PORT(HOB_LED_LEFT), HOB_PIN(HOB_LED_LEFT), 1);
-  systickDelay(1000);
-  gpioSetValue(HOB_PORT(HOB_LED_RIGHT), HOB_PIN(HOB_LED_RIGHT), 1);
-#endif
+  for(uint8_t i = 1; ; ++i) {
+    badge_framebuffer fb = { { { 0 } } };
+
+    fb.data[2][86] = 0xff;
+    fb.data[4][86] = 0xff;
+    for(uint8_t j = 0; j < i; j += 3) {
+      fb.data[3][j / 3] = 0xff;
+    }
+
+    SCB_CLKOUTCLKDIV = i;
+    badge_framebuffer_flush(&fb);
+    systickDelay(200);
+  }
 
   {
     //    f_mkfs(0, 1, 0);
