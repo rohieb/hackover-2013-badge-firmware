@@ -46,7 +46,6 @@ typedef struct jumpnrun_game_state {
 
 rectangle hacker_rect_current(jumpnrun_game_state const *state);
 
-
 void jumpnrun_passive_movement(vec2d *inertia);
 
 uint8_t jumpnrun_play(char const *lvname);

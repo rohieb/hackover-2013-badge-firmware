@@ -271,7 +271,7 @@ uint8_t jumpnrun_play(char const *lvname) {
         uint8_t new_buttons = new_state & (old_state ^ new_state);
 
         if((new_buttons & BADGE_EVENT_KEY_BTN_A) && gs.touching_ground) {
-          gs.jumpable_frames = 12;
+	  gs.jumpable_frames = 12;
         }
 
         break;
