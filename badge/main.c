@@ -104,6 +104,16 @@ void rbInit() {
     uint32_t volatile *reg;
     gpioPullupMode_t mode;
   } const input_pins[] = {
+#ifdef HOB_REV2
+    { RB_BTN0    , &RB_BTN0_IO    , gpioPullupMode_PullDown },
+    { RB_BTN1    , &RB_BTN1_IO    , gpioPullupMode_PullDown },
+    { RB_BTN2    , &RB_BTN2_IO    , gpioPullupMode_PullDown },
+    { RB_BTN3    , &RB_BTN3_IO    , gpioPullupMode_PullDown },
+    { RB_BTN4    , &RB_BTN4_IO    , gpioPullupMode_PullDown },
+    { RB_HB0     , &RB_HB0_IO     , gpioPullupMode_PullDown },
+    { RB_HB1     , &RB_HB1_IO     , gpioPullupMode_PullDown },
+    { RB_PWR_CHRG, &RB_PWR_CHRG_IO, gpioPullupMode_PullDown }
+#else
     { RB_BTN0    , &RB_BTN0_IO    , gpioPullupMode_PullUp },
     { RB_BTN1    , &RB_BTN1_IO    , gpioPullupMode_PullUp },
     { RB_BTN2    , &RB_BTN2_IO    , gpioPullupMode_PullUp },
@@ -112,6 +122,7 @@ void rbInit() {
     { RB_HB0     , &RB_HB0_IO     , gpioPullupMode_PullUp },
     { RB_HB1     , &RB_HB1_IO     , gpioPullupMode_PullUp },
     { RB_PWR_CHRG, &RB_PWR_CHRG_IO, gpioPullupMode_PullUp }
+#endif
   };
     
   for(int i = 0; i < ARRAY_SIZE(input_pins); ++i) {

@@ -90,7 +90,7 @@ void enemy_collision_player_jumpable(jumpnrun_enemy      *self,
   if(rectangle_intersect(&rect_self, &rect_hacker)) {
     if(fixed_point_gt(state->inertia.y, FIXED_POINT(0, 0))) {
       self->flags &= ~JUMPNRUN_ENEMY_SPAWNED;
-      state->inertia_mod.y = FIXED_POINT(0, -167);
+      state->inertia_mod.y = FIXED_POINT(0, -250);
       state->jumpable_frames = 12;
     } else {
       state->status = JUMPNRUN_DEAD;

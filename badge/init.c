@@ -9,6 +9,7 @@
 static void badge_init_backlight(void) {
   HOB_SET_PIN_FUNC(HOB_LCD_BACKLIGHT, CLKOUT);
 
+  //  wdtInit(false);
   SCB_CLKOUTCLKSEL = SCB_MAINCLKSEL_SOURCE_INTERNALOSC;
   SCB_CLKOUTCLKUEN = SCB_CLKOUTCLKUEN_DISABLE;
   SCB_CLKOUTCLKUEN = SCB_CLKOUTCLKUEN_UPDATE;
@@ -22,6 +23,14 @@ void badge_init(void) {
     gpioSetPullup(&HOB_IOCON(spec), (mode));				\
   } while(0)
 
+#ifdef HOB_REV2
+  INPUT_PIN_CONFIG(HOB_BTN_UP    , gpioPullupMode_PullUp);
+  INPUT_PIN_CONFIG(HOB_BTN_RIGHT , gpioPullupMode_PullUp);
+  INPUT_PIN_CONFIG(HOB_BTN_DOWN  , gpioPullupMode_PullUp);
+  INPUT_PIN_CONFIG(HOB_BTN_LEFT  , gpioPullupMode_PullUp);
+  INPUT_PIN_CONFIG(HOB_BTN_A     , gpioPullupMode_PullUp);
+  INPUT_PIN_CONFIG(HOB_BTN_B     , gpioPullupMode_PullUp);
+#else
   INPUT_PIN_CONFIG(HOB_BTN_UP    , gpioPullupMode_PullDown);
   INPUT_PIN_CONFIG(HOB_BTN_RIGHT , gpioPullupMode_PullDown);
   INPUT_PIN_CONFIG(HOB_BTN_DOWN  , gpioPullupMode_PullDown);
@@ -29,6 +38,8 @@ void badge_init(void) {
   INPUT_PIN_CONFIG(HOB_BTN_CENTER, gpioPullupMode_PullDown);
   INPUT_PIN_CONFIG(HOB_BTN_A     , gpioPullupMode_PullDown);
   INPUT_PIN_CONFIG(HOB_BTN_B     , gpioPullupMode_PullDown);
+#endif
+
 #undef INPUT_PIN_CONFIG
 
 #define OUTPUT_PIN_CONFIG(spec, value) do {				\
