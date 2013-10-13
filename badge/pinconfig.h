@@ -25,6 +25,9 @@
 #define HOB_USB_CONNECT   (0,  6)
 
 
+#define HOB_LED_LEFT      (2,  8)
+#define HOB_LED_RIGHT     (2,  6)
+
 #else
 
 #define HOB_BTN_UP        (3,  2)

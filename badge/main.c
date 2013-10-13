@@ -64,6 +64,8 @@
 
 #include "drivers/fatfs/ff.h"
 
+#include "badge/pinconfig.h"
+
 #ifdef R0KET
 
 #include "r0ketports.h"
@@ -199,6 +201,12 @@ int main(void)
   rbInit();
 #else
   badge_init();
+#endif
+
+#ifdef HOB_REV2
+  gpioSetValue(HOB_PORT(HOB_LED_LEFT), HOB_PIN(HOB_LED_LEFT), 1);
+  systickDelay(1000);
+  gpioSetValue(HOB_PORT(HOB_LED_RIGHT), HOB_PIN(HOB_LED_RIGHT), 1);
 #endif
 
   {
