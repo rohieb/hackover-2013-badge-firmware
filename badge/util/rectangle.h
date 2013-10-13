@@ -22,6 +22,8 @@ typedef struct {
   vec2d extent;
 } rectangle;
 
+static inline rectangle   rectangle_new(vec2d pos, vec2d extent) { rectangle r = { pos, extent }; return r; }
+
 static inline fixed_point rectangle_top   (rectangle const *r) { return r->pos.y; }
 static inline fixed_point rectangle_left  (rectangle const *r) { return r->pos.x; }
 static inline fixed_point rectangle_bottom(rectangle const *r) { return fixed_point_add(rectangle_top (r), r->extent.y); }
@@ -37,9 +39,12 @@ static inline vec2d rectangle_mid(rectangle const *r) {
   return v;
 }
 
-static inline void rectangle_move_to  (rectangle *r, vec2d new_pos) { r->pos = new_pos; }
-static inline void rectangle_move_to_x(rectangle *r, fixed_point    new_x  ) { r->pos.x = new_x; }
-static inline void rectangle_move_to_y(rectangle *r, fixed_point    new_y  ) { r->pos.x = new_y; }
+static inline void rectangle_move_to  (rectangle *r, vec2d       new_pos) { r->pos = new_pos; }
+static inline void rectangle_move_to_x(rectangle *r, fixed_point new_x  ) { r->pos.x = new_x; }
+static inline void rectangle_move_to_y(rectangle *r, fixed_point new_y  ) { r->pos.x = new_y; }
+
+static inline void rectangle_move_rel (rectangle *r, vec2d       vec    ) { r->pos = vec2d_add(r->pos, vec); }
+static inline void rectangle_expand   (rectangle *r, vec2d       extent ) { r->extent = extent; }
 
 static inline bool rectangle_intersect(rectangle const *r1,
 				       rectangle const *r2) {

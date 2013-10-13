@@ -5,13 +5,12 @@
 #include "../ui/display.h"
 #include "../ui/event.h"
 #include "../ui/sprite.h"
+#include "../util/util.h"
 
 #include <assert.h>
 #include <math.h>
 #include <stddef.h>
 #include <stdio.h>
-
-#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof*(arr))
 
 static vec2d       const gravity      = { FIXED_POINT_I(0,   0), FIXED_POINT_I(0,  56) };
 static vec2d       const move_max     = { FIXED_POINT_I(0, 600), FIXED_POINT_I(1, 300) };
@@ -19,6 +18,8 @@ static fixed_point const accel_horiz  =   FIXED_POINT_I(0,  50);
 static fixed_point const accel_vert   =   FIXED_POINT_I(0, 167);
 static fixed_point const drag_factor  =   FIXED_POINT_I(0, 854);
 static fixed_point const speed_jump_x =   FIXED_POINT_I(0, 600);
+
+static vec2d const hacker_extent = { FIXED_INT_I(5), FIXED_INT_I(8) };
 
 static badge_sprite const anim_hacker[] = {
   { 5, 8, (uint8_t const *) "\x1c\xff\xfd\x04\x04" },
@@ -53,23 +54,14 @@ static inline int imax(int x, int y) {
 
 static inline fixed_point hacker_left  (vec2d const *pos, jumpnrun_game_state const *state) { (void) state; return pos->x; }
 static inline fixed_point hacker_top   (vec2d const *pos, jumpnrun_game_state const *state) { (void) state; return pos->y; }
-static inline fixed_point hacker_right (vec2d const *pos, jumpnrun_game_state const *state) { return fixed_point_add(hacker_left(pos, state), FIXED_POINT(anim_hacker[state->anim_frame].width , 0)); }
-static inline fixed_point hacker_bottom(vec2d const *pos, jumpnrun_game_state const *state) { return fixed_point_add(hacker_top (pos, state), FIXED_POINT(anim_hacker[state->anim_frame].height, 0)); }
-
-static inline rectangle hacker_rect(vec2d const *pos,
-                                    jumpnrun_game_state const *state) {
-  return (rectangle) { { hacker_left(pos, state), hacker_top(pos, state) }, { FIXED_POINT(anim_hacker[state->anim_frame].width, 0), FIXED_POINT(anim_hacker[state->anim_frame].height, 0) } };
-}
-
-rectangle hacker_rect_current(jumpnrun_game_state const *state) {
-  return hacker_rect(&state->current_pos, state);
-}
+static inline fixed_point hacker_right (vec2d const *pos, jumpnrun_game_state const *state) { return fixed_point_add(hacker_left(pos, state), hacker_extent.x); }
+static inline fixed_point hacker_bottom(vec2d const *pos, jumpnrun_game_state const *state) { return fixed_point_add(hacker_top (pos, state), hacker_extent.y); }
 
 int jumpnrun_level_assert_left_side(jumpnrun_game_state const *state) {
   static int const lmargin = 20;
   static int const rmargin = 50;
 
-  int pos_cur = fixed_point_cast_int(state->current_pos.x);
+  int pos_cur = fixed_point_cast_int(state->player.current_box.pos.x);
   int pos_rel = pos_cur - state->left;
 
   if(pos_rel < lmargin) {
@@ -88,7 +80,7 @@ static int jumpnrun_bsearch_tile(jumpnrun_level const *lv, jumpnrun_game_state c
   while(len > 0) {
     int mid = front + len / 2;
 
-    if(fixed_point_lt(tile_right(&lv->tiles[mid]), FIXED_POINT(state->left - JUMPNRUN_MAX_SPAWN_MARGIN, 0))) {
+    if(fixed_point_lt(tile_right(&lv->tiles[mid]), FIXED_INT(state->left - JUMPNRUN_MAX_SPAWN_MARGIN))) {
       front = mid + 1;
       len -= len / 2 + 1;
     } else {
@@ -123,56 +115,54 @@ void jumpnrun_passive_movement(vec2d *inertia)
 
 static void jumpnrun_apply_movement(jumpnrun_level      const *lv,
                                     jumpnrun_tile_range const *tilerange,
-                                    jumpnrun_game_state       *state) {
+                                    jumpnrun_game_state       *state,
+				    vec2d                     *inertia_mod) {
   switch(badge_event_current_input_state() &
          (BADGE_EVENT_KEY_LEFT |
           BADGE_EVENT_KEY_RIGHT)) {
   case BADGE_EVENT_KEY_LEFT:
-    //    state->inertia.x = state->touching_ground ? fixed_point_sub(state->inertia.x, accel_horiz) : fixed_point_neg(speed_jump_x);
-    state->inertia.x = fixed_point_sub(state->inertia.x, accel_horiz);
+    //    state->player.inertia.x = state->player.touching_ground ? fixed_point_sub(state->player.inertia.x, accel_horiz) : fixed_point_neg(speed_jump_x);
+    state->player.inertia.x = fixed_point_sub(state->player.inertia.x, accel_horiz);
     state->anim_direction = BADGE_BLT_MIRRORED;
     break;
   case BADGE_EVENT_KEY_RIGHT:
-    //    state->inertia.x = state->touching_ground ? fixed_point_add(state->inertia.x, accel_horiz) : speed_jump_x;
-    state->inertia.x = fixed_point_add(state->inertia.x, accel_horiz);
+    //    state->player.inertia.x = state->player.touching_ground ? fixed_point_add(state->player.inertia.x, accel_horiz) : speed_jump_x;
+    state->player.inertia.x = fixed_point_add(state->player.inertia.x, accel_horiz);
     state->anim_direction = 0;
     break;
   default:
-    if(state->touching_ground) {
-      state->inertia.x = fixed_point_mul(state->inertia.x, drag_factor);
+    if(state->player.touching_ground) {
+      state->player.inertia.x = fixed_point_mul(state->player.inertia.x, drag_factor);
     } //else {
-      //state->inertia.x = FIXED_POINT(0, 0);
+      //state->player.inertia.x = FIXED_INT(0);
     //}
 
     break;
   }
 
-  if(state->jumpable_frames == 0) {
+  if(state->player.jumpable_frames == 0) {
     // intentionally left blank.
   } else if(badge_event_current_input_state() & BADGE_EVENT_KEY_BTN_A) {
-    state->inertia.y = fixed_point_sub(state->inertia.y, accel_vert);
-    // fixed_point_neg(move_max.y)
-    --state->jumpable_frames;
+    state->player.inertia.y = fixed_point_sub(state->player.inertia.y, accel_vert);
+    --state->player.jumpable_frames;
   } else {
-    state->jumpable_frames = 0;
+    state->player.jumpable_frames = 0;
   }
 
-  jumpnrun_passive_movement(&state->inertia);
+  jumpnrun_passive_movement(&state->player.inertia);
 
-  vec2d new_pos = vec2d_add(state->current_pos, state->inertia);
+  vec2d new_pos = vec2d_add(state->player.current_box.pos, state->player.inertia);
 
-  if(fixed_point_lt(new_pos.x, FIXED_POINT(state->left, 0))) {
-    new_pos.x = FIXED_POINT(state->left, 0);
-    state->inertia.x = FIXED_POINT(0, 0);
+  if(fixed_point_lt(new_pos.x, FIXED_INT(state->left))) {
+    new_pos.x = FIXED_INT(state->left);
+    state->player.inertia.x = FIXED_INT(0);
   }
 
-  rectangle hacker_rect_c = hacker_rect(&state->current_pos, state);
-  collisions_tiles_displace(&new_pos, &hacker_rect_c, lv, tilerange, &state->inertia, &state->touching_ground);
-  state->inertia_mod = state->inertia;
+  *inertia_mod = state->player.inertia;
+  collisions_tiles_displace(&new_pos, &state->player, lv, tilerange, inertia_mod);
+  state->player.inertia = *inertia_mod;
 
-  state->current_pos = new_pos;
-
-  if(fixed_point_gt(state->current_pos.y, FIXED_POINT(BADGE_DISPLAY_HEIGHT, 0))) {
+  if(fixed_point_gt(state->player.current_box.pos.y, FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
     state->status = JUMPNRUN_DEAD;
   }
 }
@@ -181,11 +171,12 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
                          jumpnrun_game_state *state)
 {
   jumpnrun_tile_range tilerange = jumpnrun_visible_tiles(lv, state);
-  jumpnrun_apply_movement(lv, &tilerange, state);
+  vec2d inertia_mod = state->player.inertia;
 
+  jumpnrun_apply_movement(lv, &tilerange, state, &inertia_mod);
   state->left = jumpnrun_level_assert_left_side(state);
 
-  if(state->tick_minor == 0) {
+  if(state->player.tick_minor == 0) {
     badge_framebuffer fb;
     badge_framebuffer_clear(&fb);
 
@@ -201,10 +192,9 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
       int screenpos = fixed_point_cast_int(lv->items[item].pos.x) - state->left;
       if(screenpos > -lv->items[item].type->sprite.width &&
          screenpos < BADGE_DISPLAY_WIDTH) {
-        rectangle hack_rect = hacker_rect(&state->current_pos, state);
         rectangle item_rect = rect_from_item(&lv->items[item]);
 
-        if(rectangle_intersect(&hack_rect, &item_rect)) {
+        if(rectangle_intersect(&state->player.current_box, &item_rect)) {
           lv->items[item].type->on_collect(state);
         }
 
@@ -218,35 +208,35 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
 
     for(size_t enemy_ix = 0; enemy_ix < lv->header.enemy_count; ++enemy_ix) {
       jumpnrun_enemy *enemy = &lv->enemies[enemy_ix];
-      jumpnrun_process_enemy(enemy, &fb, state, lv, &tilerange);
+      jumpnrun_process_enemy(enemy, &fb, state, lv, &tilerange, &inertia_mod);
     }
 
     badge_framebuffer_blt(&fb,
-                          fixed_point_cast_int(state->current_pos.x) - state->left,
-                          fixed_point_cast_int(state->current_pos.y),
-                          &anim_hacker[state->anim_frame],
+                          fixed_point_cast_int(state->player.current_box.pos.x) - state->left,
+                          fixed_point_cast_int(state->player.current_box.pos.y),
+                          &anim_hacker[state->player.anim_frame],
                           state->anim_direction);
 
     badge_framebuffer_flush(&fb);
 
-    if(!state->touching_ground) {
-      state->anim_frame = 2;
-    } else if(fixed_point_gt(fixed_point_abs(state->inertia.x), FIXED_POINT(0, 200))) {
-      state->anim_frame = (state->anim_frame + 1) % ARRAY_SIZE(anim_hacker);
+    if(!state->player.touching_ground) {
+      state->player.anim_frame = 2;
+    } else if(fixed_point_gt(fixed_point_abs(state->player.inertia.x), FIXED_POINT(0, 200))) {
+      state->player.anim_frame = (state->player.anim_frame + 1) % ARRAY_SIZE(anim_hacker);
     } else {
-      state->anim_frame = 0;
+      state->player.anim_frame = 0;
     }
   } else {
     for(size_t enemy_ix = 0; enemy_ix < lv->header.enemy_count; ++enemy_ix) {
       jumpnrun_enemy *enemy = &lv->enemies[enemy_ix];
-      jumpnrun_process_enemy(enemy, NULL, state, lv, &tilerange);
+      jumpnrun_process_enemy(enemy, NULL, state, lv, &tilerange, &inertia_mod);
     }
   }
 
-  state->inertia = state->inertia_mod;
-  ++state->tick_minor;
-  if(state->tick_minor == 3) {
-    state->tick_minor = 0;
+  state->player.inertia = inertia_mod;
+  ++state->player.tick_minor;
+  if(state->player.tick_minor == 3) {
+    state->player.tick_minor = 0;
   }
 }
 
@@ -258,7 +248,7 @@ uint8_t jumpnrun_play(char const *lvname) {
   jumpnrun_game_state gs;
   memset(&gs, 0, sizeof(gs));
 
-  gs.current_pos = lv.start_pos;
+  gs.player.current_box = rectangle_new(lv.start_pos, hacker_extent);
 
   while(gs.status == JUMPNRUN_PLAYING) {
     badge_event_t ev = badge_event_wait();
@@ -270,8 +260,8 @@ uint8_t jumpnrun_play(char const *lvname) {
         uint8_t new_state = badge_event_new_input_state(ev);
         uint8_t new_buttons = new_state & (old_state ^ new_state);
 
-        if((new_buttons & BADGE_EVENT_KEY_BTN_A) && gs.touching_ground) {
-	  gs.jumpable_frames = 12;
+        if((new_buttons & BADGE_EVENT_KEY_BTN_A) && gs.player.touching_ground) {
+	  gs.player.jumpable_frames = 12;
         }
 
         break;

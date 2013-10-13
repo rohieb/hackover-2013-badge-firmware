@@ -40,13 +40,16 @@ static void jumpnrun_level_make_item(jumpnrun_item *dest, level_thing thing) {
 static void jumpnrun_level_make_enemy(jumpnrun_enemy *dest, level_thing thing) {
   dest->type = &jumpnrun_enemy_type_data[thing.type];
 
-  dest->spawn_pos.x   = FIXED_POINT(thing.x * JUMPNRUN_TILE_PIXEL_WIDTH , 0);
-  dest->spawn_pos.y   = FIXED_POINT(thing.y * JUMPNRUN_TILE_PIXEL_HEIGHT, 0);
-  dest->current_pos   = dest->spawn_pos;
-  dest->inertia       = dest->type->spawn_inertia;
-  dest->flags         = 0;
-  dest->tick_counter  = 0;
-  dest->current_frame = 0;
+  dest->spawn_pos.x          = FIXED_POINT(thing.x * JUMPNRUN_TILE_PIXEL_WIDTH , 0);
+  dest->spawn_pos.y          = FIXED_POINT(thing.y * JUMPNRUN_TILE_PIXEL_HEIGHT, 0);
+  dest->base.current_box     = rectangle_new(dest->spawn_pos, dest->type->extent);
+  dest->base.inertia         = dest->type->spawn_inertia;
+  dest->flags                = 0;
+  dest->base.tick_minor      = 0;
+  dest->base.anim_frame      = 0;
+  dest->base.anim_direction  = 0;
+  dest->base.touching_ground = 0;
+  dest->base.jumpable_frames = 0;
 }
 
 #ifdef __linux__

@@ -6,9 +6,8 @@
 #include "levels.h"
 #include "tiles.h"
 
-#include "../util/fixed_point.h"
-#include "../util/rectangle.h"
 #include "../ui/sprite.h"
+#include "../util/util.h"
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -26,19 +25,11 @@ enum {
 };
 
 typedef struct jumpnrun_game_state {
-  vec2d   current_pos;
-  vec2d   inertia;
-  vec2d   inertia_mod;
+  jumpnrun_moveable player;
+
   uint8_t status;
-
-  uint8_t tick_minor;
-  uint8_t anim_frame;
-  uint8_t anim_direction;
-
   int     left;
-
-  bool    touching_ground;
-  uint8_t jumpable_frames;
+  uint8_t anim_direction;
 
   size_t  spawned_enemies_counter;
   size_t  spawned_enemies[JUMPNRUN_MAX_SPAWNED_ENEMIES];

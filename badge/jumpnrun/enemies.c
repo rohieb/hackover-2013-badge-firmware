@@ -4,8 +4,6 @@
 #include "tiles.h"
 #include "jumpnrun.h"
 
-#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof*(arr))
-
 static badge_sprite const anim_cat[] = {
   { 8, 5, (uint8_t const *) "\xc7\x3f\xce\x38\x11" },
   { 8, 5, (uint8_t const *) "\xd7\x7d\xc6\x19\x25" }
@@ -28,27 +26,40 @@ static badge_sprite const anim_kaninchen[] = {
   { 7, 5, (uint8_t const *) "\x60\x30\xbe\x31\x01" }
 };
 
+static void enemy_animation_advance(jumpnrun_enemy *enemy) {
+  ++enemy->base.tick_minor;
+  if(enemy->base.tick_minor == enemy->type->animation_ticks_per_frame) {
+    enemy->base.tick_minor = 0;
+
+    ++enemy->base.anim_frame;
+    if(enemy->base.anim_frame >= enemy->type->animation_length) {
+      enemy->base.anim_frame = 0;
+    }
+  }
+}
+
 void jumpnrun_process_enemy(jumpnrun_enemy                   *self,
 			    badge_framebuffer                *fb,
 			    struct jumpnrun_game_state       *state,
 			    struct jumpnrun_level            *lv,
-			    struct jumpnrun_tile_range const *visible_tiles) {
-  int const spawn_margin = 1 + self->type->animation_frames[self->current_frame].width;
+			    struct jumpnrun_tile_range const *visible_tiles,
+			    vec2d                            *player_inertia_mod) {
+  int const spawn_margin = 1 + self->type->animation_frames[self->base.anim_frame].width;
 
   if(self->flags & JUMPNRUN_ENEMY_SPAWNED) {
-    if(fixed_point_lt(self->current_pos.x, FIXED_POINT(state->left                       - spawn_margin, 0)) ||
-       fixed_point_gt(self->current_pos.x, FIXED_POINT(state->left + BADGE_DISPLAY_WIDTH + spawn_margin, 0)) ||
-       fixed_point_cast_int(self->current_pos.y) > BADGE_DISPLAY_HEIGHT) {
+    if(fixed_point_lt(rectangle_left(enemy_box(self)), FIXED_POINT(state->left                       - spawn_margin, 0)) ||
+       fixed_point_gt(rectangle_left(enemy_box(self)), FIXED_POINT(state->left + BADGE_DISPLAY_WIDTH + spawn_margin, 0)) ||
+       fixed_point_gt(rectangle_top (enemy_box(self)), FIXED_POINT(BADGE_DISPLAY_HEIGHT                            , 0))) {
       self->flags &= ~JUMPNRUN_ENEMY_SPAWNED;
     } else {
-      self->type->game_tick(self, state, lv, visible_tiles);
+      self->type->game_tick(self, state, lv, visible_tiles, player_inertia_mod);
 
-      if(state->tick_minor == 0) {
+      if(fb) {
 	badge_framebuffer_blt(fb,
-			      fixed_point_cast_int(self->current_pos.x) - state->left,
-			      fixed_point_cast_int(self->current_pos.y),
-			      &self->type->animation_frames[self->current_frame],
-			      fixed_point_lt(self->inertia.x, FIXED_POINT(0, 0)) ? 0 : BADGE_BLT_MIRRORED);
+			      fixed_point_cast_int(rectangle_left(enemy_box(self))) - state->left,
+			      fixed_point_cast_int(rectangle_top (enemy_box(self))),
+			      enemy_sprite(self),
+			      enemy_render_flags(self));
       }
     }
   } else if(self->flags & JUMPNRUN_ENEMY_UNAVAILABLE) { 
@@ -61,11 +72,13 @@ void jumpnrun_process_enemy(jumpnrun_enemy                   *self,
 	    (fixed_point_lt(self->spawn_pos.x, FIXED_POINT(state->left + BADGE_DISPLAY_WIDTH + spawn_margin, 0)) &&
 	     fixed_point_gt(self->spawn_pos.x, FIXED_POINT(state->left + BADGE_DISPLAY_WIDTH, 0)))) {
     // enemy unspawned, available and in spawn zone.
-    self->flags        |= JUMPNRUN_ENEMY_SPAWNED | JUMPNRUN_ENEMY_UNAVAILABLE;
-    self->current_pos   = self->spawn_pos;
-    self->inertia       = self->type->spawn_inertia;
-    self->current_frame = 0;
-    self->tick_counter  = 0;
+    self->flags               |= JUMPNRUN_ENEMY_SPAWNED | JUMPNRUN_ENEMY_UNAVAILABLE;
+    self->base.current_box     = rectangle_new(self->spawn_pos, self->type->extent);
+    self->base.inertia         = self->type->spawn_inertia;
+    self->base.anim_frame      = 0;
+    self->base.tick_minor      = 0;
+    self->base.touching_ground = false;
+    self->base.jumpable_frames = 0;
   }
 }
 
@@ -73,78 +86,94 @@ void enemy_collision_tiles_bounce_horiz(jumpnrun_enemy            *self,
 					vec2d                     *desired_position,
 					jumpnrun_level            *lv,
 					jumpnrun_tile_range const *visible_tiles) {
-  rectangle rect_self = rect_from_enemy(self);
-  vec2d inertia_copy = self->inertia;
-  bool touching_ground = false;
+  vec2d inertia_mod = self->base.inertia;
 
   collisions_tiles_displace(desired_position,
-			    &rect_self,
+			    &self->base,
 			    lv,
 			    visible_tiles,
-			    &inertia_copy,
-			    &touching_ground);
+			    &inertia_mod);
 
-  if(fixed_point_ne(inertia_copy.x, self->inertia.x)) {
-    self->inertia.x = fixed_point_neg(self->inertia.x);
+  if(fixed_point_ne(inertia_mod.x, self->base.inertia.x)) {
+    self->base.inertia.x = fixed_point_neg(self->base.inertia.x);
   }
 }
 
 void enemy_collision_player_jumpable(jumpnrun_enemy      *self,
-				     jumpnrun_game_state *state)
+				     jumpnrun_game_state *state,
+				     vec2d               *player_inertia_mod)
 {
-  rectangle rect_self   = rect_from_enemy(self);
-  rectangle rect_hacker = hacker_rect_current(state);
+  rectangle rect_self = enemy_hitbox(self);
 
-  if(rectangle_intersect(&rect_self, &rect_hacker)) {
-    if(fixed_point_gt(state->inertia.y, FIXED_POINT(0, 0))) {
+  if(rectangle_intersect(&rect_self, &state->player.current_box)) {
+    if(fixed_point_gt(state->player.inertia.y, FIXED_POINT(0, 0))) {
       self->flags &= ~JUMPNRUN_ENEMY_SPAWNED;
-      state->inertia_mod.y = FIXED_POINT(0, -250);
-      state->jumpable_frames = 12;
+      player_inertia_mod->y = FIXED_POINT(0, -250);
+      state->player.jumpable_frames = 12;
     } else {
       state->status = JUMPNRUN_DEAD;
     }
   }
 }
 
-void enemy_tick_cat(jumpnrun_enemy *self,
-		    jumpnrun_game_state *state,
-		    jumpnrun_level *lv,
-		    jumpnrun_tile_range const *visible_tiles) {
-  int screenpos = fixed_point_cast_int(self->current_pos.x);
+void enemy_tick_cat(jumpnrun_enemy            *self,
+		    jumpnrun_game_state       *state,
+		    jumpnrun_level            *lv,
+		    jumpnrun_tile_range const *visible_tiles,
+		    vec2d                     *player_inertia_mod) {
+  int screenpos = fixed_point_cast_int(rectangle_left(&self->base.current_box));
 
   if(screenpos + JUMPNRUN_MAX_SPAWN_MARGIN <  state->left ||
      screenpos                             >= state->left + BADGE_DISPLAY_WIDTH + JUMPNRUN_MAX_SPAWN_MARGIN) {
     return;
   }
 
-  jumpnrun_passive_movement(&self->inertia);
+  jumpnrun_passive_movement(&self->base.inertia);
 
-  vec2d new_pos = vec2d_add(self->current_pos, self->inertia);
+  vec2d new_pos = vec2d_add(enemy_position(self), self->base.inertia);
   self->type->collision_tiles(self, &new_pos, lv, visible_tiles);
-  self->type->collision_player(self, state);
-  self->current_pos = new_pos;
+  self->type->collision_player(self, state, player_inertia_mod);
+  rectangle_move_to(&self->base.current_box, new_pos);
 
-  self->tick_counter  = (self->tick_counter + 1) % self->type->animation_ticks_per_frame;
-  if(self->tick_counter == 0) {
-    self->current_frame = (self->current_frame + 1) % self->type->animation_length;
-  }
+  enemy_animation_advance(self);
 }
 
 jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = {
   { 16, ARRAY_SIZE(anim_cat), anim_cat,
-    { FIXED_POINT_I(0, -100), FIXED_POINT_I(0, 0) },
+    { 
+      FIXED_INT_I(8), FIXED_INT_I(5)
+    }, {
+      { FIXED_INT_I(0), FIXED_INT_I(0) },
+      { FIXED_INT_I(8), FIXED_INT_I(5) }
+    }, {
+      FIXED_POINT_I(0, -100), FIXED_INT_I(0)
+    },
     enemy_collision_tiles_bounce_horiz,
     enemy_collision_player_jumpable,
     enemy_tick_cat
   }, {
     12, ARRAY_SIZE(anim_mushroom), anim_mushroom,
-    { FIXED_POINT_I(0, -50), FIXED_POINT_I(0, 0) },
+    { 
+      FIXED_INT_I(7), FIXED_INT_I(7)
+    }, {
+      { FIXED_INT_I(0), FIXED_INT_I(0) },
+      { FIXED_INT_I(7), FIXED_INT_I(7) }
+    }, {
+      FIXED_POINT_I(0, -50), FIXED_INT_I(0)
+    },
     enemy_collision_tiles_bounce_horiz,
     enemy_collision_player_jumpable,
     enemy_tick_cat
   }, {
     9, ARRAY_SIZE(anim_kaninchen), anim_kaninchen,
-    { FIXED_POINT_I(0, -80), FIXED_POINT_I(0, 0) },
+    {
+      FIXED_INT_I(7), FIXED_INT_I(5)
+    }, {
+      { FIXED_INT_I(1), FIXED_INT_I(2) },
+      { FIXED_INT_I(6), FIXED_INT_I(3) }
+    }, {
+      FIXED_POINT_I(0, -80), FIXED_POINT_I(0, 0)
+    },
     enemy_collision_tiles_bounce_horiz,
     enemy_collision_player_jumpable,
     enemy_tick_cat

@@ -23,11 +23,14 @@ static inline bool fixed_point_eq(fixed_point x, fixed_point y) { return x.data 
 static inline bool fixed_point_ne(fixed_point x, fixed_point y) { return x.data != y.data; }
 
 #define FIXED_POINT_I(x, y) { ((x) * 256) + ((y) * 256 / 1000) }
+#define FIXED_INT_I(x) FIXED_POINT_I(x, 0)
 
 static inline fixed_point FIXED_POINT(unsigned x, unsigned y) {
   fixed_point r = { ((int) x * 256) + ((int) y * 256 / 1000) };
   return r;
 }
+
+static inline fixed_point FIXED_INT(unsigned x) { return FIXED_POINT(x, 0); }
 
 static inline int fixed_point_cast_int(fixed_point x) { return x.data / 256; }
 
