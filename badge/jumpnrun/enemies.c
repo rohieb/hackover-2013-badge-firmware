@@ -90,8 +90,8 @@ void enemy_collision_player_jumpable(jumpnrun_enemy      *self,
   if(rectangle_intersect(&rect_self, &rect_hacker)) {
     if(fixed_point_gt(state->inertia.y, FIXED_POINT(0, 0))) {
       self->flags &= ~JUMPNRUN_ENEMY_SPAWNED;
-      state->inertia_mod.y = FIXED_POINT(0, -250);
-      state->jumpable_frames = 8;
+      state->inertia_mod.y = FIXED_POINT(0, -167);
+      state->jumpable_frames = 12;
     } else {
       state->status = JUMPNRUN_DEAD;
     }
@@ -129,7 +129,7 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     enemy_collision_player_jumpable,
     enemy_tick_cat
   }, {
-    16, ARRAY_SIZE(anim_mushroom), anim_mushroom,
+    12, ARRAY_SIZE(anim_mushroom), anim_mushroom,
     { FIXED_POINT_I(0, -50), FIXED_POINT_I(0, 0) },
     enemy_collision_tiles_bounce_horiz,
     enemy_collision_player_jumpable,

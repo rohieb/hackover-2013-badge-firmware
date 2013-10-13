@@ -16,7 +16,7 @@
 static vec2d       const gravity      = { FIXED_POINT_I(0,   0), FIXED_POINT_I(0,  56) };
 static vec2d       const move_max     = { FIXED_POINT_I(0, 600), FIXED_POINT_I(1, 300) };
 static fixed_point const accel_horiz  =   FIXED_POINT_I(0,  50);
-static fixed_point const accel_vert   =   FIXED_POINT_I(0, 250);
+static fixed_point const accel_vert   =   FIXED_POINT_I(0, 167);
 static fixed_point const drag_factor  =   FIXED_POINT_I(0, 854);
 static fixed_point const speed_jump_x =   FIXED_POINT_I(0, 600);
 
@@ -244,7 +244,10 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
   }
 
   state->inertia = state->inertia_mod;
-  state->tick_minor = (state->tick_minor + 1) % 3;
+  ++state->tick_minor;
+  if(state->tick_minor == 3) {
+    state->tick_minor = 0;
+  }
 }
 
 uint8_t jumpnrun_play(char const *lvname) {
@@ -268,7 +271,7 @@ uint8_t jumpnrun_play(char const *lvname) {
         uint8_t new_buttons = new_state & (old_state ^ new_state);
 
         if((new_buttons & BADGE_EVENT_KEY_BTN_A) && gs.touching_ground) {
-          gs.jumpable_frames = 8;
+          gs.jumpable_frames = 12;
         }
 
         break;
