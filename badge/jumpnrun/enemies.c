@@ -20,6 +20,14 @@ static badge_sprite const anim_mushroom[] = {
   { 7, 7, (uint8_t const *) "\x04\xc3\xe7\xf3\x31\x10" }
 };
 
+static badge_sprite const anim_kaninchen[] = {
+  { 7, 5, (uint8_t const *) "\x60\x30\xbe\x31\x02" },
+  { 7, 5, (uint8_t const *) "\x42\x30\xbe\x31\x01" },
+  { 7, 5, (uint8_t const *) "\x42\x30\xae\x35\x01" },
+  { 7, 5, (uint8_t const *) "\x60\x30\xae\x35\x02" },
+  { 7, 5, (uint8_t const *) "\x60\x30\xbe\x31\x01" }
+};
+
 void jumpnrun_process_enemy(jumpnrun_enemy                   *self,
 			    badge_framebuffer                *fb,
 			    struct jumpnrun_game_state       *state,
@@ -131,6 +139,12 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
   }, {
     12, ARRAY_SIZE(anim_mushroom), anim_mushroom,
     { FIXED_POINT_I(0, -50), FIXED_POINT_I(0, 0) },
+    enemy_collision_tiles_bounce_horiz,
+    enemy_collision_player_jumpable,
+    enemy_tick_cat
+  }, {
+    9, ARRAY_SIZE(anim_kaninchen), anim_kaninchen,
+    { FIXED_POINT_I(0, -80), FIXED_POINT_I(0, 0) },
     enemy_collision_tiles_bounce_horiz,
     enemy_collision_player_jumpable,
     enemy_tick_cat
