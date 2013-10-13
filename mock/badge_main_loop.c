@@ -13,13 +13,13 @@
 void badge_main_loop(void) {
 
   for(;;) {
-    FILE *fd = fopen("jumpnrun/levels.txt", "r");
+    FILE *fd = fopen("../badge/jumpnrun/levels.txt", "r");
     char buf[12];
 
     while(fgets(buf, sizeof(buf), fd)) {
       buf[strlen(buf) - 1] = '\0';
-      char lvname[30];
-      sprintf(lvname, "jumpnrun/%s.lvl", buf);
+      char lvname[256];
+      sprintf(lvname, "../badge/jumpnrun/%s.lvl", buf);
       while(jumpnrun_play(lvname) != JUMPNRUN_WON)
         ;
     }

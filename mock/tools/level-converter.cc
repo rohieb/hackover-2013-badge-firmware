@@ -21,6 +21,8 @@ enum {
   LEVEL_LINE_COUNT = 13
 };
 
+#define PATH_PREFIX "../badge/jumpnrun/"
+
 namespace jnrcpp {
   struct descriptors {
     descriptors() {
@@ -51,10 +53,10 @@ namespace jnrcpp {
 
   struct level_name_map {
     level_name_map() {
-      std::ifstream in("jumpnrun/levels.txt");
+      std::ifstream in(PATH_PREFIX "levels.txt");
 
       if(!in) {
-        throw std::logic_error("jumpnrun/levels.txt konnte nicht geöffnet werden.");
+        throw std::logic_error(PATH_PREFIX "levels.txt konnte nicht geöffnet werden.");
       }
 
       std::string name;
@@ -74,7 +76,7 @@ namespace jnrcpp {
       : name(name),
         level_lines(LEVEL_LINE_COUNT)
     {
-      std::ifstream in(("jumpnrun/" + name + ".lv").c_str());
+      std::ifstream in((PATH_PREFIX + name + ".lv").c_str());
 
       if(!in) {
         throw std::invalid_argument("Could not open file: " + name + ".lv");
@@ -238,7 +240,7 @@ namespace jnrcpp {
 void jumpnrun_level_dump(size_t level) {
   std::string name = jnrcpp::level_names.names[level];
   jnrcpp::level lv(name);
-  std::ofstream out(("jumpnrun/" + name + ".lvl").c_str());
+  std::ofstream out((PATH_PREFIX + name + ".lvl").c_str());
 
   lv.dump(out);
 }
