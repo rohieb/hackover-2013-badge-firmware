@@ -4,4 +4,5 @@
 *.elf
 *.ld
 *.dep
+*.lvl
 lpcrc
