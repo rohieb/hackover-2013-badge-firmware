@@ -18,7 +18,7 @@ static badge_sprite const anim_mushroom[] = {
   { 7, 7, (uint8_t const *) "\x04\xc3\xe7\xf3\x31\x10" }
 };
 
-static badge_sprite const anim_kaninchen[] = {
+static badge_sprite const anim_bunny[] = {
   { 7, 5, (uint8_t const *) "\x60\x30\xbe\x31\x02" },
   { 7, 5, (uint8_t const *) "\x42\x30\xbe\x31\x01" },
   { 7, 5, (uint8_t const *) "\x42\x30\xae\x35\x01" },
@@ -136,6 +136,18 @@ void enemy_collision_tiles_bounce_horiz(jumpnrun_enemy            *self,
   }
 }
 
+void enemy_collision_player_deadly(struct jumpnrun_enemy      *self,
+				   struct jumpnrun_game_state *state,
+				   vec2d                      *player_inertia_mod) {
+  (void) player_inertia_mod;
+
+  rectangle rect_self = enemy_hitbox(self);
+
+  if(rectangle_intersect(&rect_self, &state->player.current_box)) {
+    state->status = JUMPNRUN_DEAD;
+  }
+}
+
 void enemy_collision_player_jumpable(jumpnrun_enemy      *self,
                                      jumpnrun_game_state *state,
                                      vec2d               *player_inertia_mod)
@@ -151,6 +163,17 @@ void enemy_collision_player_jumpable(jumpnrun_enemy      *self,
       state->status = JUMPNRUN_DEAD;
     }
   }
+}
+
+void enemy_collision_tiles_pass_through(struct jumpnrun_enemy             *self,
+					vec2d                             *desired_position,
+					struct jumpnrun_level             *lv,
+					struct jumpnrun_tile_range  const *visible_tiles) {
+  (void) self;
+  (void) desired_position;
+  (void) lv;
+  (void) visible_tiles;
+  return;
 }
 
 void enemy_tick_straight_ahead(jumpnrun_enemy            *self,
@@ -173,29 +196,6 @@ void enemy_tick_straight_ahead(jumpnrun_enemy            *self,
   rectangle_move_to(&self->base.current_box, new_pos);
 
   enemy_animation_advance(self);
-}
-
-void enemy_collision_tiles_pass_through(struct jumpnrun_enemy             *self,
-					vec2d                             *desired_position,
-					struct jumpnrun_level             *lv,
-					struct jumpnrun_tile_range  const *visible_tiles) {
-  (void) self;
-  (void) desired_position;
-  (void) lv;
-  (void) visible_tiles;
-  return;
-}
-
-void enemy_collision_player_deadly(struct jumpnrun_enemy      *self,
-				   struct jumpnrun_game_state *state,
-				   vec2d                      *player_inertia_mod) {
-  (void) player_inertia_mod;
-
-  rectangle rect_self = enemy_hitbox(self);
-
-  if(rectangle_intersect(&rect_self, &state->player.current_box)) {
-    state->status = JUMPNRUN_DEAD;
-  }
 }
 
 void enemy_tick_swing_up_and_down(struct jumpnrun_enemy            *self,
@@ -243,6 +243,32 @@ void enemy_tick_stationary(struct jumpnrun_enemy            *self,
   enemy_animation_advance(self);
 }
 
+void enemy_tick_jumper(jumpnrun_enemy            *self,
+		       jumpnrun_game_state       *state,
+		       jumpnrun_level            *lv,
+		       jumpnrun_tile_range const *visible_tiles,
+		       vec2d                     *player_inertia_mod) {
+  int screenpos = fixed_point_cast_int(rectangle_left(&self->base.current_box));
+
+  if(screenpos + JUMPNRUN_MAX_SPAWN_MARGIN <  state->left ||
+     screenpos                             >= state->left + BADGE_DISPLAY_WIDTH + JUMPNRUN_MAX_SPAWN_MARGIN) {
+    return;
+  }
+
+  jumpnrun_passive_movement(&self->base.inertia);
+
+  vec2d new_pos = vec2d_add(enemy_position(self), self->base.inertia);
+  self->type->collision_tiles(self, &new_pos, lv, visible_tiles);
+  self->type->collision_player(self, state, player_inertia_mod);
+  rectangle_move_to(&self->base.current_box, new_pos);
+
+  if(self->base.touching_ground) {
+    self->base.inertia.y = self->type->spawn_inertia.y;
+  }
+
+  enemy_animation_advance(self);
+}
+
 
 jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = {
   {
@@ -269,15 +295,15 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .game_tick                 = enemy_tick_straight_ahead
   }, {
     .animation_ticks_per_frame = 9,
-    .animation_length          = ARRAY_SIZE(anim_kaninchen),
-    .animation_frames          = anim_kaninchen,
+    .animation_length          = ARRAY_SIZE(anim_bunny),
+    .animation_frames          = anim_bunny,
     .extent                    = { FIXED_INT_I(7), FIXED_INT_I(5) },
     .hitbox                    = { { FIXED_INT_I(1), FIXED_INT_I(2) },
                                    { FIXED_INT_I(5), FIXED_INT_I(3) } },
-    .spawn_inertia             = { FIXED_POINT_I(0, -80), FIXED_POINT_I(0, 0) },
+    .spawn_inertia             = { FIXED_POINT_I(0, -80), FIXED_POINT_I(0, -800) },
     .collision_tiles           = enemy_collision_tiles_bounce_horiz,
     .collision_player          = enemy_collision_player_jumpable,
-    .game_tick                 = enemy_tick_straight_ahead
+    .game_tick                 = enemy_tick_jumper
   }, {
     .animation_ticks_per_frame = 6,
     .animation_length          = ARRAY_SIZE(anim_snake),
