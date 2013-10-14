@@ -65,6 +65,7 @@
 #include "drivers/fatfs/ff.h"
 
 #include "badge/pinconfig.h"
+#include <funk/nrf24l01p.h>
 
 #ifdef R0KET
 
@@ -204,10 +205,13 @@ int main(void)
 #endif
 
   /*
+  nrf_init();
+
   for(uint8_t i = 1; ; ++i) {
     badge_framebuffer fb = { { { 0 } } };
 
     fb.data[2][86] = 0xff;
+    fb.data[3][87] = nrf_read_reg(R_CONFIG);
     fb.data[4][86] = 0xff;
     for(uint8_t j = 0; j < i; j += 3) {
       fb.data[3][j / 3] = 0xff;
@@ -218,6 +222,7 @@ int main(void)
     systickDelay(200);
   }
   */
+
   {
     //    f_mkfs(0, 1, 0);
     badge_framebuffer fb;

@@ -236,7 +236,7 @@ void sspInit (uint8_t portNum, sspClockPolarity_t polarity, sspClockPhase_t phas
                 Block length of the data buffer
 */
 /**************************************************************************/
-void sspSend (uint8_t portNum, uint8_t *buf, uint32_t length)
+void sspSend (uint8_t portNum, uint8_t const *buf, uint32_t length)
 {
   uint32_t i;
   uint8_t Dummy = Dummy;
@@ -295,3 +295,27 @@ void sspReceive(uint8_t portNum, uint8_t *buf, uint32_t length)
   return; 
 }
 
+void sspSendReceive(uint8_t portNum, uint8_t *buf, uint32_t length)
+{
+  uint32_t i;
+  uint8_t Dummy = Dummy;
+
+  if (portNum == 0)
+    {
+      for (i = 0; i < length; i++)
+	{
+	  /* Move on only if NOT busy and TX FIFO not full. */
+	  while ((SSP_SSP0SR & (SSP_SSP0SR_TNF_NOTFULL | SSP_SSP0SR_BSY_BUSY)) != SSP_SSP0SR_TNF_NOTFULL);
+	  SSP_SSP0DR = *buf;
+  
+	  while ( (SSP_SSP0SR & (SSP_SSP0SR_BSY_BUSY|SSP_SSP0SR_RNE_NOTEMPTY)) != SSP_SSP0SR_RNE_NOTEMPTY );
+	  /* Whenever a byte is written, MISO FIFO counter increments, Clear FIFO 
+      on MISO. Otherwise, when SSP0Receive() is called, previous data byte
+      is left in the FIFO. */
+	  *buf = SSP_SSP0DR;
+	  buf++;
+	}
+    }
+
+  return; 
+}

@@ -24,6 +24,7 @@ DEBUGBUILD = FALSE
 # IDE Flags (Keeps various IDEs happy)
 ##########################################################################
 
+#OPTDEFINES = -D __NEWLIB__ -DR0KET
 OPTDEFINES = -D __NEWLIB__ -DHOB_REV2
 ##########################################################################
 # Project-specific files 
@@ -46,6 +47,9 @@ SRCS += \
   dataflash/iobase.c \
   dataflash/diskio.c \
   dataflash/at45db041d.c
+
+SRCS += \
+  funk/nrf24l01p.c
 
 SRCS += \
   project/commands.c

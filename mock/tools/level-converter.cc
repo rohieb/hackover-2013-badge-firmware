@@ -42,7 +42,10 @@ namespace jnrcpp {
       enemies.add
         ("cat"      , JUMPNRUN_ENEMY_TYPE_CAT      )
         ("mushroom" , JUMPNRUN_ENEMY_TYPE_MUSHROOM )
-	("kaninchen", JUMPNRUN_ENEMY_TYPE_KANINCHEN)
+	("bunny"    , JUMPNRUN_ENEMY_TYPE_BUNNY    )
+	("kaninchen", JUMPNRUN_ENEMY_TYPE_BUNNY    ) // legacy
+	("snake"    , JUMPNRUN_ENEMY_TYPE_SNAKE    )
+	("spiral"   , JUMPNRUN_ENEMY_TYPE_SPIRAL   )
         ;
     }
 
