@@ -44,6 +44,13 @@ static badge_sprite const anim_spiral[] = {
   { 10, 10, (uint8_t const *) "\xfe\x0b\xa8\xaf\xa2\xba\xca\x6a\x28\xbf\x01\xfe\x0f" }
 };
 
+static badge_sprite const anim_rotor[] = {
+  { 9, 9, (uint8_t const *) "\x00\x00\x00\x00\xf0\xe1\x40\x00\x00\x00\x00" },
+  { 9, 9, (uint8_t const *) "\x1c\x30\x60\x80\x00\x01\x00\x00\x00\x00\x00" },
+  { 9, 9, (uint8_t const *) "\x00\x00\x00\x04\x0e\x1f\x00\x00\x00\x00\x00" },
+  { 9, 9, (uint8_t const *) "\x00\x00\x00\x00\x00\x01\x02\x0c\x18\x70\x00" }
+};
+
 static void enemy_animation_advance(jumpnrun_enemy *enemy) {
   ++enemy->base.tick_minor;
   if(enemy->base.tick_minor == enemy->type->animation_ticks_per_frame) {
@@ -191,20 +198,39 @@ void enemy_tick_swing_up_and_down(struct jumpnrun_enemy            *self,
     return;
   }
 
-  self->base.inertia.y = fixed_point_add(self->base.inertia.y, 
-					 fixed_point_mul(fixed_point_div(self->type->spawn_inertia.y, FIXED_INT(40)),
-							 fixed_point_sub(self->spawn_pos.y,
-									 self->base.current_box.pos.y)));
-
-  jumpnrun_passive_movement(&self->base.inertia);
-
   vec2d new_pos = vec2d_add(enemy_position(self), self->base.inertia);
   self->type->collision_tiles(self, &new_pos, lv, visible_tiles);
   self->type->collision_player(self, state, player_inertia_mod);
   rectangle_move_to(&self->base.current_box, new_pos);
 
+  self->base.inertia.y =
+    fixed_point_add(fixed_point_add(self->base.inertia.y, 
+				    fixed_point_div(self->type->spawn_inertia.y, FIXED_INT(3))),
+		    fixed_point_mul(FIXED_POINT(0, 5),
+				    fixed_point_sub(self->spawn_pos.y,
+						    enemy_position(self).y)));
+
   enemy_animation_advance(self);
 }
+
+void enemy_tick_stationary(struct jumpnrun_enemy            *self,
+			   struct jumpnrun_game_state       *state,
+			   struct jumpnrun_level            *lv,
+			   struct jumpnrun_tile_range const *visible_tiles,
+			   vec2d                            *player_inertia_mod) {
+  int screenpos = fixed_point_cast_int(rectangle_left(&self->base.current_box));
+
+  if(screenpos + JUMPNRUN_MAX_SPAWN_MARGIN <  state->left ||
+     screenpos                             >= state->left + BADGE_DISPLAY_WIDTH + JUMPNRUN_MAX_SPAWN_MARGIN) {
+    return;
+  }
+
+  self->type->collision_tiles(self, &self->base.current_box.pos, lv, visible_tiles);
+  self->type->collision_player(self, state, player_inertia_mod);
+
+  enemy_animation_advance(self);
+}
+
 
 jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = {
   {
@@ -257,10 +283,21 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .animation_frames          = anim_spiral,
     .extent                    = { FIXED_INT_I(10), FIXED_INT_I(10) },
     .hitbox                    = { { FIXED_INT_I(1), FIXED_INT_I(1) },
-				   { FIXED_INT_I(8), FIXED_INT_I(8) } },    
-    .spawn_inertia             = { FIXED_INT_I(0), FIXED_POINT_I(0, 200) },
+				   { FIXED_INT_I(8), FIXED_INT_I(8) } },
+    .spawn_inertia             = { FIXED_INT_I(0), FIXED_POINT_I(0, -200) },
     .collision_tiles           = enemy_collision_tiles_pass_through,
     .collision_player          = enemy_collision_player_deadly,
     .game_tick                 = enemy_tick_swing_up_and_down
+  }, {
+    .animation_ticks_per_frame = 6,
+    .animation_length          = ARRAY_SIZE(anim_rotor),
+    .animation_frames          = anim_rotor,
+    .extent                    = { FIXED_INT_I(9), FIXED_INT_I(9) },
+    .hitbox                    = { { FIXED_INT_I(1), FIXED_INT_I(1) },
+				   { FIXED_INT_I(7), FIXED_INT_I(7) } },
+    .spawn_inertia             = { FIXED_INT_I(0), FIXED_POINT_I(0, 0) },
+    .collision_tiles           = enemy_collision_tiles_pass_through,
+    .collision_player          = enemy_collision_player_deadly,
+    .game_tick                 = enemy_tick_stationary
   }
 };

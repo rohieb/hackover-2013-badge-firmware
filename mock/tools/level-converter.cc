@@ -46,6 +46,7 @@ namespace jnrcpp {
 	("kaninchen", JUMPNRUN_ENEMY_TYPE_BUNNY    ) // legacy
 	("snake"    , JUMPNRUN_ENEMY_TYPE_SNAKE    )
 	("spiral"   , JUMPNRUN_ENEMY_TYPE_SPIRAL   )
+	("rotor"    , JUMPNRUN_ENEMY_TYPE_ROTOR    )
         ;
     }
 
