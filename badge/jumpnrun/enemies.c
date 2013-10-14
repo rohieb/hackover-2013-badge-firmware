@@ -45,6 +45,12 @@ static badge_sprite const anim_spiral[] = {
 };
 
 static badge_sprite const anim_rotor[] = {
+  /*
+  { 9, 9, (uint8_t const *) "\x00\x00\x00\x04\x0e\x1f\x02\x0c\x18\x70\x00" },
+  { 9, 9, (uint8_t const *) "\x1c\x30\x60\x84\x0e\x1f\x00\x00\x00\x00\x00" },
+  { 9, 9, (uint8_t const *) "\x1c\x30\x60\x80\xf0\xe1\x40\x00\x00\x00\x00" },
+  { 9, 9, (uint8_t const *) "\x00\x00\x00\x00\xf0\xe1\x42\x0c\x18\x70\x00" },
+  */
   { 9, 9, (uint8_t const *) "\x00\x00\x00\x00\xf0\xe1\x42\x0c\x18\x70\x00" },
   { 9, 9, (uint8_t const *) "\x1c\x30\x60\x80\xf0\xe1\x40\x00\x00\x00\x00" },
   { 9, 9, (uint8_t const *) "\x1c\x30\x60\x84\x0e\x1f\x00\x00\x00\x00\x00" },
@@ -295,7 +301,7 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .collision_player          = enemy_collision_player_deadly,
     .game_tick                 = enemy_tick_swing_up_and_down
   }, {
-    .animation_ticks_per_frame = 3,
+    .animation_ticks_per_frame = 5,
     .animation_length          = ARRAY_SIZE(anim_rotor),
     .animation_frames          = anim_rotor,
     .extent                    = { FIXED_INT_I(9), FIXED_INT_I(9) },
