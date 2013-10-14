@@ -192,7 +192,7 @@ void enemy_tick_swing_up_and_down(struct jumpnrun_enemy            *self,
   }
 
   self->base.inertia.y = fixed_point_add(self->base.inertia.y, 
-					 fixed_point_mul(FIXED_POINT(0, 5),
+					 fixed_point_mul(fixed_point_div(self->type->spawn_inertia.y, FIXED_INT(40)),
 							 fixed_point_sub(self->spawn_pos.y,
 									 self->base.current_box.pos.y)));
 
