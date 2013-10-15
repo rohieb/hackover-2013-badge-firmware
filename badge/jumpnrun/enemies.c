@@ -27,10 +27,10 @@ static badge_sprite const anim_bunny[] = {
 };
 
 static badge_sprite const anim_snake[] = {
-  { 10, 6, (uint8_t const *) "\x10\x86\x83\x30\x04\x83\xa2\x0f" },
-  { 10, 6, (uint8_t const *) "\x10\x86\x83\x20\x0c\xc1\xa2\x0f" },
-  { 10, 6, (uint8_t const *) "\x10\x86\x83\x20\x08\x82\xe0\x0f" },
-  { 10, 6, (uint8_t const *) "\x10\x86\x83\x20\x08\x86\xe1\x0f" }
+  { 10, 6, (uint8_t const *) "\x10\x86\x83\x30\x04\x83\xa2\x07" },
+  { 10, 6, (uint8_t const *) "\x10\x86\x83\x20\x0c\xc1\xa2\x07" },
+  { 10, 6, (uint8_t const *) "\x10\x86\x83\x20\x08\x82\xe0\x07" },
+  { 10, 6, (uint8_t const *) "\x10\x86\x83\x20\x08\x86\xe1\x07" }
 };
 
 static badge_sprite const anim_spiral[] = {

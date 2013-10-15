@@ -57,6 +57,7 @@
 #include "ui/display.h"
 #include "ui/sprite.h"
 #include "ui/event.h"
+#include "ui/font.h"
 #include "util/util.h"
 #include "jumpnrun/jumpnrun.h"
 
@@ -127,7 +128,7 @@ void rbInit() {
     { RB_PWR_CHRG, &RB_PWR_CHRG_IO, gpioPullupMode_PullUp }
 #endif
   };
-    
+
   for(int i = 0; i < ARRAY_SIZE(input_pins); ++i) {
     gpioSetDir(input_pins[i].port, input_pins[i].pin, gpioDirection_Input);
     gpioSetPullup(input_pins[i].reg, input_pins[i].mode);
@@ -223,25 +224,13 @@ int main(void)
   }
   */
 
+  FATFS fs;
+  f_mount(0, &fs);
+
   {
-    //    f_mkfs(0, 1, 0);
-    badge_framebuffer fb;
-    int res = 0;
-    FATFS fatvol;
+    badge_framebuffer fb = { { { 0 } } };
 
-    while(FR_OK != f_mount(0, &fatvol)) {
-      f_mkfs(0, 1, 0);
-    }
-
-    FIL fil;
-    if(FR_OK == (res = f_open(&fil, "sshot.dat", FA_OPEN_EXISTING | FA_READ))) {
-      UINT readbytes;
-
-      if(FR_OK != f_read(&fil, &fb, sizeof(fb), &readbytes)) {
-      }
-
-      f_close(&fil);
-    }
+    fb.data[0][0] = badge_framebuffer_render_text(&fb, 2, 10, "foobar");
 
     badge_framebuffer_flush(&fb);
   }

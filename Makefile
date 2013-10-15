@@ -41,6 +41,7 @@ SRCS = \
   badge/jumpnrun/tiles.c \
   badge/ui/display.c \
   badge/ui/event.c \
+  badge/ui/font.c \
   badge/ui/sprite.c
 
 SRCS += \
