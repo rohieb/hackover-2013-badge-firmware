@@ -58,6 +58,15 @@ static badge_sprite const anim_dog[] = {
   { 8, 5, (uint8_t const *) "\xc1\xf8\xc6\xb8\x20" }
 };
 
+static badge_sprite const anim_giraffe[] = {
+  { 8, 10, (uint8_t const *) "\x00\x10\x60\x80\xff\xc1\x00\x03\x3c\x08" },
+  { 8, 10, (uint8_t const *) "\x00\x10\x60\xa0\x7f\xc1\x00\x03\x1c\x88" },
+  { 9, 10, (uint8_t const *) "\x00\x10\x68\x90\x3f\xc1\x00\x03\x0c\x48\x00\x02" },
+  { 8, 10, (uint8_t const *) "\x00\x10\x60\xb0\x3f\xc1\x00\x03\x0c\xc8" },
+  { 8, 10, (uint8_t const *) "\x08\x30\xc0\x81\xfc\xc0\x00\x03\x3c\x08" },
+  { 8, 10, (uint8_t const *) "\x00\x10\x60\x80\xff\xc1\x00\x03\x3c\x08" }
+};
+
 static void enemy_animation_advance(jumpnrun_enemy *enemy) {
   ++enemy->base.tick_minor;
   if(enemy->base.tick_minor == enemy->type->animation_ticks_per_frame) {
@@ -331,6 +340,55 @@ void enemy_tick_dog(jumpnrun_enemy            *self,
   else if(fixed_point_ne(self->base.inertia.x, FIXED_INT(0))) { self->flags |=  JUMPNRUN_ENEMY_FACING_RIGHT; }
 }
 
+void enemy_tick_giraffe(jumpnrun_enemy            *self,
+                        jumpnrun_game_state       *state,
+                        jumpnrun_level            *lv,
+                        jumpnrun_tile_range const *visible_tiles,
+                        vec2d                     *player_inertia_mod) {
+  int screenpos = fixed_point_cast_int(rectangle_left(&self->base.current_box));
+
+  if(screenpos + JUMPNRUN_MAX_SPAWN_MARGIN <  state->left ||
+     screenpos                             >= state->left + BADGE_DISPLAY_WIDTH + JUMPNRUN_MAX_SPAWN_MARGIN) {
+    return;
+  }
+
+  bool was_on_ground = self->base.touching_ground;
+
+  jumpnrun_passive_movement(&self->base.inertia);
+
+  vec2d new_pos = vec2d_add(enemy_position(self), self->base.inertia);
+  self->type->collision_tiles(self, &new_pos, lv, visible_tiles);
+  self->type->collision_player(self, state, player_inertia_mod);
+  rectangle_move_to(&self->base.current_box, new_pos);
+
+  if(self->base.touching_ground) {
+    if(was_on_ground) {
+      enemy_animation_advance(self);
+      if(self->base.anim_frame == 0) {
+        if(self->flags & JUMPNRUN_ENEMY_FACING_RIGHT) {
+          self->base.inertia.x = fixed_point_neg(self->type->spawn_inertia.x);
+          self->base.inertia.y = self->type->spawn_inertia.y;
+        } else {
+          self->base.inertia = self->type->spawn_inertia;
+        }
+      }
+    } else {
+      self->base.tick_minor = 0;
+      self->base.anim_frame = 3;
+      self->base.inertia.x  = FIXED_INT(0);
+    }
+  } else if(was_on_ground) {
+    self->base.tick_minor = 0;
+    self->base.anim_frame = 1;
+  } else if(self->base.anim_frame == 1) {
+    enemy_animation_advance(self);
+  }
+
+  ++self->base.tick_minor;
+  if     (fixed_point_lt(self->base.inertia.x, FIXED_INT(0))) { self->flags &= ~JUMPNRUN_ENEMY_FACING_RIGHT; }
+  else if(fixed_point_ne(self->base.inertia.x, FIXED_INT(0))) { self->flags |=  JUMPNRUN_ENEMY_FACING_RIGHT; }
+}
+
 jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = {
   {
     .animation_ticks_per_frame = 16,
@@ -409,5 +467,16 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .collision_tiles           = enemy_collision_tiles_bounce_horiz,
     .collision_player          = enemy_collision_player_jumpable,
     .game_tick                 = enemy_tick_dog
+  }, {
+    .animation_ticks_per_frame = 36,
+    .animation_length          = ARRAY_SIZE(anim_giraffe),
+    .animation_frames          = anim_giraffe,
+    .extent                    = { FIXED_INT_I(7), FIXED_INT_I(10) },
+    .hitbox                    = { { FIXED_INT_I(2), FIXED_INT_I(1) },
+                                   { FIXED_INT_I(4), FIXED_INT_I(9) } },
+    .spawn_inertia             = { FIXED_POINT_I(0, -150), FIXED_POINT_I(-1, -200) },
+    .collision_tiles           = enemy_collision_tiles_bounce_horiz,
+    .collision_player          = enemy_collision_player_jumpable,
+    .game_tick                 = enemy_tick_giraffe
   }
 };

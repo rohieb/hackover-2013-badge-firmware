@@ -48,6 +48,7 @@ namespace jnrcpp {
         ("spiral"   , JUMPNRUN_ENEMY_TYPE_SPIRAL   )
         ("rotor"    , JUMPNRUN_ENEMY_TYPE_ROTOR    )
         ("dog"      , JUMPNRUN_ENEMY_TYPE_DOG      )
+        ("giraffe"  , JUMPNRUN_ENEMY_TYPE_GIRAFFE  )
         ;
     }
 
