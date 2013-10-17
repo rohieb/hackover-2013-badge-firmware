@@ -102,7 +102,8 @@ void jumpnrun_process_enemy(jumpnrun_enemy                   *self,
        fixed_point_gt(rectangle_top (enemy_box(self)), FIXED_POINT(BADGE_DISPLAY_HEIGHT                            , 0))) {
       self->flags &= ~JUMPNRUN_ENEMY_SPAWNED;
     } else {
-      self->type->game_tick(self, state, lv, visible_tiles, player_inertia_mod);
+      self->type->move_tick(self, state, lv, visible_tiles, player_inertia_mod);
+      self->type->collision_shots(self, state);
 
       if(fb) {
         badge_framebuffer_blt(fb,
@@ -189,6 +190,49 @@ void enemy_collision_tiles_pass_through(struct jumpnrun_enemy             *self,
   (void) lv;
   (void) visible_tiles;
   return;
+}
+
+void enemy_collision_shots_die(struct jumpnrun_enemy      *self,
+                               struct jumpnrun_game_state *state) {
+  rectangle rect_self = enemy_hitbox(self);
+
+  for(uint8_t i = 0; i < JUMPNRUN_MAX_SHOTS; ++i) {
+    jumpnrun_shot *shot = &state->shots[i];
+
+    if(jumpnrun_shot_spawned(shot)) {
+      if(rectangle_intersect(&rect_self, &shot->current_box)) {
+        self->flags &= ~JUMPNRUN_ENEMY_SPAWNED;
+        jumpnrun_shot_despawn(shot);
+      }
+    }
+  }
+}
+
+void enemy_collision_shots_bounce(struct jumpnrun_enemy      *self,
+                                  struct jumpnrun_game_state *state) {
+  rectangle rect_self = enemy_hitbox(self);
+
+  for(uint8_t i = 0; i < JUMPNRUN_MAX_SHOTS; ++i) {
+    jumpnrun_shot *shot = &state->shots[i];
+
+    if(jumpnrun_shot_spawned(shot)) {
+      if(rectangle_intersect(&rect_self, &shot->current_box)) {
+        if(fixed_point_gt(shot->inertia.x, FIXED_INT(0))) {
+          rectangle_move_to_x(&shot->current_box, fixed_point_sub(rectangle_left(&rect_self), rectangle_width(&shot->current_box)));
+        } else {
+          rectangle_move_to_x(&shot->current_box, rectangle_right(&rect_self));
+        }
+
+        shot->inertia.x = fixed_point_neg(shot->inertia.x);
+      }
+    }
+  }
+}
+
+void enemy_collision_shots_dontcare(struct jumpnrun_enemy      *self,
+                                    struct jumpnrun_game_state *state) {
+  (void) self;
+  (void) state;
 }
 
 void enemy_tick_straight_ahead(jumpnrun_enemy            *self,
@@ -411,7 +455,8 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .spawn_inertia             = { FIXED_POINT_I(0, -200), FIXED_INT_I(0) },
     .collision_tiles           = enemy_collision_tiles_bounce_horiz,
     .collision_player          = enemy_collision_player_jumpable,
-    .game_tick                 = enemy_tick_straight_ahead
+    .collision_shots           = enemy_collision_shots_die,
+    .move_tick                 = enemy_tick_straight_ahead
   }, {
     .animation_ticks_per_frame = 12,
     .animation_length          = ARRAY_SIZE(anim_mushroom),
@@ -422,7 +467,8 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .spawn_inertia             = { FIXED_POINT_I(0, -50), FIXED_INT_I(0) },
     .collision_tiles           = enemy_collision_tiles_bounce_horiz,
     .collision_player          = enemy_collision_player_jumpable,
-    .game_tick                 = enemy_tick_straight_ahead
+    .collision_shots           = enemy_collision_shots_die,
+    .move_tick                 = enemy_tick_straight_ahead
   }, {
     .animation_ticks_per_frame = 9,
     .animation_length          = ARRAY_SIZE(anim_bunny),
@@ -433,7 +479,8 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .spawn_inertia             = { FIXED_POINT_I(0, -80), FIXED_POINT_I(0, -800) },
     .collision_tiles           = enemy_collision_tiles_bounce_horiz,
     .collision_player          = enemy_collision_player_jumpable,
-    .game_tick                 = enemy_tick_jumper
+    .collision_shots           = enemy_collision_shots_die,
+    .move_tick                 = enemy_tick_jumper
   }, {
     .animation_ticks_per_frame = 6,
     .animation_length          = ARRAY_SIZE(anim_snake),
@@ -444,7 +491,8 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .spawn_inertia             = { FIXED_POINT_I(0, -150), FIXED_INT_I(0) },
     .collision_tiles           = enemy_collision_tiles_bounce_horiz,
     .collision_player          = enemy_collision_player_jumpable,
-    .game_tick                 = enemy_tick_straight_ahead
+    .collision_shots           = enemy_collision_shots_die,
+    .move_tick                 = enemy_tick_straight_ahead
   }, {
     .animation_ticks_per_frame = 6,
     .animation_length          = ARRAY_SIZE(anim_spiral),
@@ -455,7 +503,8 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .spawn_inertia             = { FIXED_INT_I(0), FIXED_POINT_I(0, -200) },
     .collision_tiles           = enemy_collision_tiles_pass_through,
     .collision_player          = enemy_collision_player_deadly,
-    .game_tick                 = enemy_tick_swing_up_and_down
+    .collision_shots           = enemy_collision_shots_dontcare,
+    .move_tick                 = enemy_tick_swing_up_and_down
   }, {
     .animation_ticks_per_frame = 5,
     .animation_length          = ARRAY_SIZE(anim_rotor),
@@ -466,7 +515,8 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .spawn_inertia             = { FIXED_INT_I(0), FIXED_POINT_I(0, 0) },
     .collision_tiles           = enemy_collision_tiles_pass_through,
     .collision_player          = enemy_collision_player_deadly,
-    .game_tick                 = enemy_tick_stationary
+    .collision_shots           = enemy_collision_shots_dontcare,
+    .move_tick                 = enemy_tick_stationary
   }, {
     .animation_ticks_per_frame = 18,
     .animation_length          = ARRAY_SIZE(anim_dog),
@@ -477,7 +527,8 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .spawn_inertia             = { FIXED_POINT_I(0, -200), FIXED_POINT_I(0, 0) },
     .collision_tiles           = enemy_collision_tiles_bounce_horiz,
     .collision_player          = enemy_collision_player_jumpable,
-    .game_tick                 = enemy_tick_dog
+    .collision_shots           = enemy_collision_shots_die,
+    .move_tick                 = enemy_tick_dog
   }, {
     .animation_ticks_per_frame = 36,
     .animation_length          = ARRAY_SIZE(anim_giraffe),
@@ -488,7 +539,8 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .spawn_inertia             = { FIXED_POINT_I(0, -150), FIXED_POINT_I(-1, -200) },
     .collision_tiles           = enemy_collision_tiles_bounce_horiz,
     .collision_player          = enemy_collision_player_jumpable,
-    .game_tick                 = enemy_tick_giraffe
+    .collision_shots           = enemy_collision_shots_bounce,
+    .move_tick                 = enemy_tick_giraffe
   }, {
     .animation_ticks_per_frame = 24,
     .animation_length          = ARRAY_SIZE(anim_bird),
@@ -499,6 +551,7 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .spawn_inertia             = { FIXED_POINT_I(0, -400), FIXED_POINT_I(0, -150) },
     .collision_tiles           = enemy_collision_tiles_bounce_horiz,
     .collision_player          = enemy_collision_player_jumpable,
-    .game_tick                 = enemy_tick_swing_up_and_down
+    .collision_shots           = enemy_collision_shots_die,
+    .move_tick                 = enemy_tick_swing_up_and_down
   }
 };

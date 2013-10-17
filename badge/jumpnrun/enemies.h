@@ -29,7 +29,10 @@ typedef struct jumpnrun_enemy_type {
   void (*collision_player)(struct jumpnrun_enemy      *self,
                            struct jumpnrun_game_state *state,
                            vec2d                      *player_inertia_mod);
-  void (*game_tick)(struct jumpnrun_enemy            *self,
+  void (*collision_shots)(struct jumpnrun_enemy      *self,
+                          struct jumpnrun_game_state *state);
+
+  void (*move_tick)(struct jumpnrun_enemy            *self,
                     struct jumpnrun_game_state       *state,
                     struct jumpnrun_level            *lv,
                     struct jumpnrun_tile_range const *visible_tiles,

@@ -55,13 +55,9 @@ static badge_sprite const anim_sickle[] = {
 };
 
 enum {
-  JUMPNRUN_SHOT_EXTENT          =  3,
+  JUMPNRUN_SHOT_EXTENT = 3,
   JUMPNRUN_SHOT_TICKS_PER_FRAME = 24
 };
-
-static void jumpnrun_shot_despawn(jumpnrun_shot *shot) {
-  shot->inertia.x = FIXED_INT(0);
-}
 
 static void jumpnrun_shot_spawn(jumpnrun_shot *shot, jumpnrun_game_state const *state) {
   shot->tick        = 0;

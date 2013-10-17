@@ -31,6 +31,7 @@ typedef struct jumpnrun_shot {
 } jumpnrun_shot;
 
 static inline bool jumpnrun_shot_spawned(jumpnrun_shot const *shot) { return fixed_point_ne(shot->inertia.x, FIXED_INT(0)); }
+static inline void jumpnrun_shot_despawn(jumpnrun_shot       *shot) { shot->inertia.x = FIXED_INT(0); }
 
 enum {
   JUMPNRUN_MAX_SHOTS = 2
