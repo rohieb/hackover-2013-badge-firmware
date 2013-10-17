@@ -164,7 +164,9 @@ void enemy_collision_player_jumpable(jumpnrun_enemy      *self,
   rectangle rect_self = enemy_hitbox(self);
 
   if(rectangle_intersect(&rect_self, &state->player.current_box)) {
-    if(fixed_point_gt(state->player.inertia.y, FIXED_POINT(0, 0))) {
+    if(fixed_point_lt(rectangle_top(&state->player.current_box), rectangle_top(&rect_self)) &&
+       fixed_point_gt(state->player.inertia.y, FIXED_POINT(0, 0)))
+    {
       self->flags &= ~JUMPNRUN_ENEMY_SPAWNED;
       player_inertia_mod->y = FIXED_POINT(0, -250);
       state->player.jumpable_frames = 12;
