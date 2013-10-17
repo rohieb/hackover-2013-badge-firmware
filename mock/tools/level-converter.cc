@@ -174,7 +174,7 @@ namespace jnrcpp {
 
           if(iter != objmap.end()) {
             unsigned char buf[3];
-            buf[0] = static_cast<uint8_t>(y) << 4 | static_cast<uint8_t>(x >> 8);
+            buf[0] = static_cast<uint8_t>(y + 1) << 4 | static_cast<uint8_t>(x >> 8);
             buf[1] = static_cast<uint8_t>(x);
             buf[2] = static_cast<uint8_t>(find_type(types, iter->second, error));
 

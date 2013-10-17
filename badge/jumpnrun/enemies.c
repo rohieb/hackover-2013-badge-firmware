@@ -68,8 +68,12 @@ static badge_sprite const anim_giraffe[] = {
 };
 
 static badge_sprite const anim_bird[] = {
+  { 9, 7, (uint8_t const *) "\x10\x0c\x05\xf7\x4a\xa9\x58\x10" },
+  { 9, 7, (uint8_t const *) "\x10\x0c\x05\x87\x47\xa2\x70\x10" }
+/*
   { 10, 8, (uint8_t const *) "\x10\x10\x18\x14\x38\x2e\x29\x29\x2e\x10" },
   { 10, 8, (uint8_t const *) "\x10\x10\x18\x14\x38\x78\xa8\xa8\x78\x10" }
+*/
 };
 
 static void enemy_animation_advance(jumpnrun_enemy *enemy) {
@@ -489,8 +493,8 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .animation_ticks_per_frame = 24,
     .animation_length          = ARRAY_SIZE(anim_bird),
     .animation_frames          = anim_bird,
-    .extent                    = { FIXED_INT_I(10), FIXED_INT_I(8) },
-    .hitbox                    = { { FIXED_INT_I(2), FIXED_INT_I(3) },
+    .extent                    = { FIXED_INT_I(9), FIXED_INT_I(7) },
+    .hitbox                    = { { FIXED_INT_I(1), FIXED_INT_I(3) },
                                    { FIXED_INT_I(7), FIXED_INT_I(3) } },
     .spawn_inertia             = { FIXED_POINT_I(0, -400), FIXED_POINT_I(0, -150) },
     .collision_tiles           = enemy_collision_tiles_bounce_horiz,
