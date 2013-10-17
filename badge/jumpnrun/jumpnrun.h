@@ -25,6 +25,7 @@ enum {
 };
 
 typedef struct jumpnrun_shot {
+  rectangle old_box;
   rectangle current_box;
   vec2d     inertia;
   uint8_t   tick;

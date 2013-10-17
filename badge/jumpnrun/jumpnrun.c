@@ -20,7 +20,7 @@ static fixed_point const drag_factor  =   FIXED_POINT_I(0, 854);
 static fixed_point const speed_jump_x =   FIXED_POINT_I(0, 600);
 
 static vec2d const hacker_extent = { FIXED_INT_I(5), FIXED_INT_I(8) };
-static vec2d const shot_spawn_inertia = { FIXED_POINT_I(1, 0), FIXED_POINT_I(0, -800) };
+static vec2d const shot_spawn_inertia = { FIXED_POINT_I(0, 800), FIXED_POINT_I(0, -800) };
 
 static badge_sprite const anim_hacker[] = {
   { 5, 8, (uint8_t const *) "\x1c\xff\xfd\x04\x04" },
@@ -48,15 +48,19 @@ static badge_sprite const anim_hacker[] = {
 };
 
 static badge_sprite const anim_sickle[] = {
+  { 3, 3, (uint8_t const *) "\xab\x01" },
+  { 3, 3, (uint8_t const *) "\xee\x00" }
+/*
   { 3, 3, (uint8_t const *) "\x8a\x01" },
   { 3, 3, (uint8_t const *) "\x6a" },
   { 3, 3, (uint8_t const *) "\xa3" },
   { 3, 3, (uint8_t const *) "\xac" }
+*/
 };
 
 enum {
   JUMPNRUN_SHOT_EXTENT = 3,
-  JUMPNRUN_SHOT_TICKS_PER_FRAME = 24
+  JUMPNRUN_SHOT_TICKS_PER_FRAME = 36
 };
 
 static void jumpnrun_shot_spawn(jumpnrun_shot *shot, jumpnrun_game_state const *state) {
@@ -71,6 +75,9 @@ static void jumpnrun_shot_spawn(jumpnrun_shot *shot, jumpnrun_game_state const *
     shot->current_box = rectangle_new((vec2d) { rectangle_right(&state->player.current_box), rectangle_top(&state->player.current_box) },
                                       (vec2d) { FIXED_INT(JUMPNRUN_SHOT_EXTENT), FIXED_INT(JUMPNRUN_SHOT_EXTENT) });
   }
+
+  shot->old_box = shot->current_box;
+  shot->inertia = vec2d_add(shot->inertia, state->player.inertia);
 }
 
 static inline int imax(int x, int y) {
@@ -236,16 +243,27 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
 
       if(jumpnrun_shot_spawned(shot)) {
         rectangle_move_rel(&shot->current_box, shot->inertia);
-        jumpnrun_passive_movement(&shot->inertia);
+        shot->inertia = vec2d_add(shot->inertia, gravity);
+
         if(fixed_point_gt(rectangle_top(&shot->current_box), FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
           jumpnrun_shot_despawn(shot);
         }
 
+        /* show every position twice, because LCD switching time. This makes the shots more
+         * visible on the nokia lcds.
+         */
+        badge_framebuffer_blt(&fb,
+                              fixed_point_cast_int(shot->old_box.pos.x) - state->left,
+                              fixed_point_cast_int(shot->old_box.pos.y),
+                              &anim_sickle[shot->tick / JUMPNRUN_SHOT_TICKS_PER_FRAME],
+                              fixed_point_lt(shot->inertia.x, FIXED_INT(0)) ? BADGE_BLT_MIRRORED : 0);
         badge_framebuffer_blt(&fb,
                               fixed_point_cast_int(shot->current_box.pos.x) - state->left,
                               fixed_point_cast_int(shot->current_box.pos.y),
                               &anim_sickle[shot->tick / JUMPNRUN_SHOT_TICKS_PER_FRAME],
                               fixed_point_lt(shot->inertia.x, FIXED_INT(0)) ? BADGE_BLT_MIRRORED : 0);
+
+        shot->old_box = shot->current_box;
 
         ++shot->tick;
         if(shot->tick == ARRAY_SIZE(anim_sickle) * JUMPNRUN_SHOT_TICKS_PER_FRAME) {
@@ -280,7 +298,8 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
 
       if(jumpnrun_shot_spawned(shot)) {
         rectangle_move_rel(&shot->current_box, shot->inertia);
-        jumpnrun_passive_movement(&shot->inertia);
+        shot->inertia = vec2d_add(shot->inertia, gravity);
+
         if(fixed_point_gt(rectangle_top(&shot->current_box), FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
           jumpnrun_shot_despawn(shot);
         }
