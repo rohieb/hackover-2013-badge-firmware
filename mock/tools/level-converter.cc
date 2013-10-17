@@ -40,16 +40,18 @@ namespace jnrcpp {
         ;
 
       enemies.add
-        ("cat"      , JUMPNRUN_ENEMY_TYPE_CAT      )
-        ("mushroom" , JUMPNRUN_ENEMY_TYPE_MUSHROOM )
-        ("bunny"    , JUMPNRUN_ENEMY_TYPE_BUNNY    )
-        ("kaninchen", JUMPNRUN_ENEMY_TYPE_BUNNY    ) // legacy
-        ("snake"    , JUMPNRUN_ENEMY_TYPE_SNAKE    )
-        ("spiral"   , JUMPNRUN_ENEMY_TYPE_SPIRAL   )
-        ("rotor"    , JUMPNRUN_ENEMY_TYPE_ROTOR    )
-        ("dog"      , JUMPNRUN_ENEMY_TYPE_DOG      )
-        ("giraffe"  , JUMPNRUN_ENEMY_TYPE_GIRAFFE  )
-        ("bird"     , JUMPNRUN_ENEMY_TYPE_BIRD     )
+        ("cat"          , JUMPNRUN_ENEMY_TYPE_CAT          )
+        ("mushroom"     , JUMPNRUN_ENEMY_TYPE_MUSHROOM     )
+        ("bunny"        , JUMPNRUN_ENEMY_TYPE_BUNNY        )
+        ("kaninchen"    , JUMPNRUN_ENEMY_TYPE_BUNNY        ) // legacy
+        ("snake"        , JUMPNRUN_ENEMY_TYPE_SNAKE        )
+        ("spiral"       , JUMPNRUN_ENEMY_TYPE_SPIRAL       )
+        ("rotor"        , JUMPNRUN_ENEMY_TYPE_ROTOR        )
+        ("dog"          , JUMPNRUN_ENEMY_TYPE_DOG          )
+        ("giraffe"      , JUMPNRUN_ENEMY_TYPE_GIRAFFE      )
+        ("bird"         , JUMPNRUN_ENEMY_TYPE_BIRD         )
+        ("bird_straight", JUMPNRUN_ENEMY_TYPE_BIRD_STRAIGHT)
+        ("bird_dip"     , JUMPNRUN_ENEMY_TYPE_BIRD_DIP     )
         ;
     }
 

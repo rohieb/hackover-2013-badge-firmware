@@ -444,6 +444,63 @@ void enemy_tick_giraffe(jumpnrun_enemy            *self,
   else if(fixed_point_ne(self->base.inertia.x, FIXED_INT(0))) { self->flags |=  JUMPNRUN_ENEMY_FACING_RIGHT; }
 }
 
+void enemy_tick_fly_straight(struct jumpnrun_enemy            *self,
+                             struct jumpnrun_game_state       *state,
+                             struct jumpnrun_level            *lv,
+                             struct jumpnrun_tile_range const *visible_tiles,
+                             vec2d                            *player_inertia_mod) {
+  int screenpos = fixed_point_cast_int(rectangle_left(&self->base.current_box));
+
+  if(screenpos + JUMPNRUN_MAX_SPAWN_MARGIN <  state->left ||
+     screenpos                             >= state->left + BADGE_DISPLAY_WIDTH + JUMPNRUN_MAX_SPAWN_MARGIN) {
+    return;
+  }
+
+  vec2d new_pos = vec2d_add(enemy_position(self), self->base.inertia);
+  self->type->collision_tiles(self, &new_pos, lv, visible_tiles);
+  self->type->collision_player(self, state, player_inertia_mod);
+  rectangle_move_to(&self->base.current_box, new_pos);
+
+  enemy_animation_advance(self);
+}
+
+void enemy_tick_fly_straight_and_dip(struct jumpnrun_enemy            *self,
+                                     struct jumpnrun_game_state       *state,
+                                     struct jumpnrun_level            *lv,
+                                     struct jumpnrun_tile_range const *visible_tiles,
+                                     vec2d                            *player_inertia_mod) {
+  int screenpos = fixed_point_cast_int(rectangle_left(&self->base.current_box));
+
+  if(screenpos + JUMPNRUN_MAX_SPAWN_MARGIN <  state->left ||
+     screenpos                             >= state->left + BADGE_DISPLAY_WIDTH + JUMPNRUN_MAX_SPAWN_MARGIN) {
+    return;
+  }
+
+  if(fixed_point_lt(fixed_point_abs(fixed_point_sub(enemy_position(self).x,
+                                                    state->player.current_box.pos.x)),
+                    FIXED_INT(20))) {
+    self->flags |= JUMPNRUN_ENEMY_EVENT_TRIGGER1;
+  }
+
+  if(self->flags & JUMPNRUN_ENEMY_EVENT_TRIGGER1) {
+    self->base.inertia.y =
+      fixed_point_add(fixed_point_add(self->base.inertia.y,
+                                      fixed_point_div(self->type->spawn_inertia.y, FIXED_INT(3))),
+                      fixed_point_mul(FIXED_POINT(0, 5),
+                                      fixed_point_sub(self->spawn_pos.y,
+                                                      enemy_position(self).y)));
+  } else {
+    self->base.inertia.y = FIXED_INT(0);
+  }
+
+  vec2d new_pos = vec2d_add(enemy_position(self), self->base.inertia);;
+  self->type->collision_tiles(self, &new_pos, lv, visible_tiles);
+  self->type->collision_player(self, state, player_inertia_mod);
+  rectangle_move_to(&self->base.current_box, new_pos);
+
+  enemy_animation_advance(self);
+}
+
 jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = {
   {
     .animation_ticks_per_frame = 18,
@@ -553,5 +610,29 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .collision_player          = enemy_collision_player_jumpable,
     .collision_shots           = enemy_collision_shots_die,
     .move_tick                 = enemy_tick_swing_up_and_down
+  }, {
+    .animation_ticks_per_frame = 24,
+    .animation_length          = ARRAY_SIZE(anim_bird),
+    .animation_frames          = anim_bird,
+    .extent                    = { FIXED_INT_I(9), FIXED_INT_I(7) },
+    .hitbox                    = { { FIXED_INT_I(1), FIXED_INT_I(3) },
+                                   { FIXED_INT_I(7), FIXED_INT_I(3) } },
+    .spawn_inertia             = { FIXED_POINT_I(0, -400), FIXED_INT_I(0) },
+    .collision_tiles           = enemy_collision_tiles_bounce_horiz,
+    .collision_player          = enemy_collision_player_jumpable,
+    .collision_shots           = enemy_collision_shots_die,
+    .move_tick                 = enemy_tick_fly_straight
+  }, {
+    .animation_ticks_per_frame = 24,
+    .animation_length          = ARRAY_SIZE(anim_bird),
+    .animation_frames          = anim_bird,
+    .extent                    = { FIXED_INT_I(9), FIXED_INT_I(7) },
+    .hitbox                    = { { FIXED_INT_I(1), FIXED_INT_I(3) },
+                                   { FIXED_INT_I(7), FIXED_INT_I(3) } },
+    .spawn_inertia             = { FIXED_POINT_I(0, -400), FIXED_POINT_I(0, 200) },
+    .collision_tiles           = enemy_collision_tiles_bounce_horiz,
+    .collision_player          = enemy_collision_player_jumpable,
+    .collision_shots           = enemy_collision_shots_die,
+    .move_tick                 = enemy_tick_fly_straight_and_dip
   }
 };

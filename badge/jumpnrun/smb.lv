@@ -2,7 +2,7 @@
 
                                                                                                                                                                                                     ##
                                                                                C  C                                                                                                                  #
-                     ?                                                         ########   ###?              ?           ###    #??#                                                        ##        #
+                     ?                                                     X   ########   ###?        W     ?           ###    #??#                                                        ##        #
                                                                                                                                                                                           ###        #
                                                                                                                                                                                          ####        #     #
                        G                                                                                                                                                                #####        #    ###
@@ -33,3 +33,5 @@ R rotor
 H dog
 G giraffe
 V bird
+W bird_straight
+X bird_dip

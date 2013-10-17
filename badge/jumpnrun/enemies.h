@@ -50,7 +50,8 @@ typedef struct jumpnrun_enemy {
 enum {
   JUMPNRUN_ENEMY_SPAWNED      = 1,
   JUMPNRUN_ENEMY_UNAVAILABLE  = 2,
-  JUMPNRUN_ENEMY_FACING_RIGHT = 4
+  JUMPNRUN_ENEMY_FACING_RIGHT = 4,
+  JUMPNRUN_ENEMY_EVENT_TRIGGER1 = 128
 };
 
 static inline rectangle    const *enemy_box         (jumpnrun_enemy const *enemy) { return &enemy->base.current_box   ; }
@@ -71,6 +72,8 @@ enum {
   JUMPNRUN_ENEMY_TYPE_DOG,
   JUMPNRUN_ENEMY_TYPE_GIRAFFE,
   JUMPNRUN_ENEMY_TYPE_BIRD,
+  JUMPNRUN_ENEMY_TYPE_BIRD_STRAIGHT,
+  JUMPNRUN_ENEMY_TYPE_BIRD_DIP,
 
   JUMPNRUN_ENEMY_TYPE_COUNT
 };
