@@ -29,7 +29,6 @@ typedef struct jumpnrun_game_state {
 
   uint8_t status;
   int     left;
-  uint8_t anim_direction;
 
   size_t  spawned_enemies_counter;
   size_t  spawned_enemies[JUMPNRUN_MAX_SPAWNED_ENEMIES];

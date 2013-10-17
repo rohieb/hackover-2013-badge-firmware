@@ -7,7 +7,7 @@ typedef struct jumpnrun_moveable {
   rectangle current_box;
   vec2d     inertia;
 
-  uint8_t  tick_minor;
+  uint8_t   tick_minor;
   uint8_t   anim_frame;
   uint8_t   anim_direction;
 

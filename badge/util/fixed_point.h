@@ -26,13 +26,16 @@ static inline bool fixed_point_ne(fixed_point x, fixed_point y) { return x.data 
 #define FIXED_INT_I(x) FIXED_POINT_I(x, 0)
 
 static inline fixed_point FIXED_POINT(int32_t x, int32_t y) {
-  fixed_point r = { (x * 256) + (y * 256 / 1000) };
+  fixed_point r = FIXED_POINT_I(x, y);
   return r;
 }
 
 static inline fixed_point FIXED_INT(int32_t x) { return FIXED_POINT(x, 0); }
 
-static inline int fixed_point_cast_int(fixed_point x) { return x.data / 256; }
+// sign bit is shifted in if x.data < 0, so this is x.data / 256 - (x.data < 0).
+// This means 0.123 is cast to 1, which is what we want when we cast a model coordinate
+// to a screen coordinate.
+static inline int fixed_point_cast_int(fixed_point x) { return x.data >> 8; }
 
 static inline fixed_point fixed_point_min(fixed_point x, fixed_point y) { return fixed_point_lt(x, y) ? x : y; }
 static inline fixed_point fixed_point_max(fixed_point x, fixed_point y) { return fixed_point_gt(x, y) ? x : y; }
