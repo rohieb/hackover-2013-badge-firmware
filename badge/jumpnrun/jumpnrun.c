@@ -20,19 +20,19 @@ static fixed_point const drag_factor  =   FIXED_POINT_I(0, 854);
 static fixed_point const speed_jump_x =   FIXED_POINT_I(0, 600);
 
 static vec2d const hacker_extent = { FIXED_INT_I(5), FIXED_INT_I(8) };
+static vec2d const shot_spawn_inertia = { FIXED_POINT_I(1, 0), FIXED_POINT_I(0, -800) };
 
 static badge_sprite const anim_hacker[] = {
   { 5, 8, (uint8_t const *) "\x1c\xff\xfd\x04\x04" },
   { 5, 8, (uint8_t const *) "\x1c\xff\x3d\xc4\x04" },
   { 5, 8, (uint8_t const *) "\xdc\x3f\x1d\x24\xc4" },
   { 5, 8, (uint8_t const *) "\x1c\xff\x3d\xc4\x04" }
-
-/*
-  { 5, 8, (uint8_t const *) "\x46\xfc\x73\x8c\x31" },
-  { 5, 8, (uint8_t const *) "\x46\xfc\x73\x8c\x52" },
-  { 5, 8, (uint8_t const *) "\x46\xfc\x73\x94\x8c" },
-  { 5, 8, (uint8_t const *) "\x46\xfc\x73\x8c\x52" }
-*/
+  /*
+    { 5, 8, (uint8_t const *) "\x46\xfc\x73\x8c\x31" },
+    { 5, 8, (uint8_t const *) "\x46\xfc\x73\x8c\x52" },
+    { 5, 8, (uint8_t const *) "\x46\xfc\x73\x94\x8c" },
+    { 5, 8, (uint8_t const *) "\x46\xfc\x73\x8c\x52" }
+  */
   /*
     { 6, 8, (uint8_t const *) "\x0c\xe1\x3b\x0e\xc3\x30" },
     { 6, 8, (uint8_t const *) "\x0c\xe1\x3b\x0e\x43\x51" },
@@ -47,6 +47,35 @@ static badge_sprite const anim_hacker[] = {
   */
 };
 
+static badge_sprite const anim_sickle[] = {
+  { 3, 3, (uint8_t const *) "\x8a\x01" },
+  { 3, 3, (uint8_t const *) "\x6a" },
+  { 3, 3, (uint8_t const *) "\xa3" },
+  { 3, 3, (uint8_t const *) "\xac" }
+};
+
+enum {
+  JUMPNRUN_SHOT_EXTENT          =  3,
+  JUMPNRUN_SHOT_TICKS_PER_FRAME = 24
+};
+
+static void jumpnrun_shot_despawn(jumpnrun_shot *shot) {
+  shot->inertia.x = FIXED_INT(0);
+}
+
+static void jumpnrun_shot_spawn(jumpnrun_shot *shot, jumpnrun_game_state const *state) {
+  shot->tick        = 0;
+  shot->inertia     = shot_spawn_inertia;
+
+  if(state->player.anim_direction == BADGE_BLT_MIRRORED) {
+    shot->current_box = rectangle_new((vec2d) { fixed_point_sub(rectangle_left(&state->player.current_box), FIXED_INT(JUMPNRUN_SHOT_EXTENT)), rectangle_top(&state->player.current_box) },
+                                      (vec2d) { FIXED_INT(JUMPNRUN_SHOT_EXTENT), FIXED_INT(JUMPNRUN_SHOT_EXTENT) });
+    shot->inertia.x   = fixed_point_neg(shot->inertia.x);
+  } else {
+    shot->current_box = rectangle_new((vec2d) { rectangle_right(&state->player.current_box), rectangle_top(&state->player.current_box) },
+                                      (vec2d) { FIXED_INT(JUMPNRUN_SHOT_EXTENT), FIXED_INT(JUMPNRUN_SHOT_EXTENT) });
+  }
+}
 
 static inline int imax(int x, int y) {
   return x < y ? y : x;
@@ -116,19 +145,19 @@ void jumpnrun_passive_movement(vec2d *inertia)
 static void jumpnrun_apply_movement(jumpnrun_level      const *lv,
                                     jumpnrun_tile_range const *tilerange,
                                     jumpnrun_game_state       *state,
-				    vec2d                     *inertia_mod) {
+                                    vec2d                     *inertia_mod) {
   switch(badge_event_current_input_state() &
          (BADGE_EVENT_KEY_LEFT |
           BADGE_EVENT_KEY_RIGHT)) {
   case BADGE_EVENT_KEY_LEFT:
     //    state->player.inertia.x = state->player.touching_ground ? fixed_point_sub(state->player.inertia.x, accel_horiz) : fixed_point_neg(speed_jump_x);
     state->player.inertia.x = fixed_point_sub(state->player.inertia.x, accel_horiz);
-    state->anim_direction = BADGE_BLT_MIRRORED;
+    state->player.anim_direction = BADGE_BLT_MIRRORED;
     break;
   case BADGE_EVENT_KEY_RIGHT:
     //    state->player.inertia.x = state->player.touching_ground ? fixed_point_add(state->player.inertia.x, accel_horiz) : speed_jump_x;
     state->player.inertia.x = fixed_point_add(state->player.inertia.x, accel_horiz);
-    state->anim_direction = 0;
+    state->player.anim_direction = 0;
     break;
   default:
     if(state->player.touching_ground) {
@@ -206,6 +235,29 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
       }
     }
 
+    for(size_t shot_ix = 0; shot_ix < JUMPNRUN_MAX_SHOTS; ++shot_ix) {
+      jumpnrun_shot *shot = &state->shots[shot_ix];
+
+      if(jumpnrun_shot_spawned(shot)) {
+        rectangle_move_rel(&shot->current_box, shot->inertia);
+        jumpnrun_passive_movement(&shot->inertia);
+        if(fixed_point_gt(rectangle_top(&shot->current_box), FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
+          jumpnrun_shot_despawn(shot);
+        }
+
+        badge_framebuffer_blt(&fb,
+                              fixed_point_cast_int(shot->current_box.pos.x) - state->left,
+                              fixed_point_cast_int(shot->current_box.pos.y),
+                              &anim_sickle[shot->tick / JUMPNRUN_SHOT_TICKS_PER_FRAME],
+                              fixed_point_lt(shot->inertia.x, FIXED_INT(0)) ? BADGE_BLT_MIRRORED : 0);
+
+        ++shot->tick;
+        if(shot->tick == ARRAY_SIZE(anim_sickle) * JUMPNRUN_SHOT_TICKS_PER_FRAME) {
+          shot->tick = 0;
+        }
+      }
+    }
+
     for(size_t enemy_ix = 0; enemy_ix < lv->header.enemy_count; ++enemy_ix) {
       jumpnrun_enemy *enemy = &lv->enemies[enemy_ix];
       jumpnrun_process_enemy(enemy, &fb, state, lv, &tilerange, &inertia_mod);
@@ -215,7 +267,7 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
                           fixed_point_cast_int(state->player.current_box.pos.x) - state->left,
                           fixed_point_cast_int(state->player.current_box.pos.y),
                           &anim_hacker[state->player.anim_frame],
-                          state->anim_direction);
+                          state->player.anim_direction);
 
     badge_framebuffer_flush(&fb);
 
@@ -227,6 +279,23 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
       state->player.anim_frame = 0;
     }
   } else {
+    for(size_t shot_ix = 0; shot_ix < JUMPNRUN_MAX_SHOTS; ++shot_ix) {
+      jumpnrun_shot *shot = &state->shots[shot_ix];
+
+      if(jumpnrun_shot_spawned(shot)) {
+        rectangle_move_rel(&shot->current_box, shot->inertia);
+        jumpnrun_passive_movement(&shot->inertia);
+        if(fixed_point_gt(rectangle_top(&shot->current_box), FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
+          jumpnrun_shot_despawn(shot);
+        }
+
+        ++shot->tick;
+        if(shot->tick == ARRAY_SIZE(anim_sickle) * JUMPNRUN_SHOT_TICKS_PER_FRAME) {
+          shot->tick = 0;
+        }
+      }
+    }
+
     for(size_t enemy_ix = 0; enemy_ix < lv->header.enemy_count; ++enemy_ix) {
       jumpnrun_enemy *enemy = &lv->enemies[enemy_ix];
       jumpnrun_process_enemy(enemy, NULL, state, lv, &tilerange, &inertia_mod);
@@ -261,7 +330,17 @@ uint8_t jumpnrun_play(char const *lvname) {
         uint8_t new_buttons = new_state & (old_state ^ new_state);
 
         if((new_buttons & BADGE_EVENT_KEY_BTN_A) && gs.player.touching_ground) {
-	  gs.player.jumpable_frames = 12;
+          gs.player.jumpable_frames = 12;
+        }
+
+        if((new_buttons & BADGE_EVENT_KEY_BTN_B)) {
+          uint8_t i;
+          for(i = 0; i < JUMPNRUN_MAX_SHOTS && jumpnrun_shot_spawned(&gs.shots[i]); ++i)
+            ;
+
+          if(i < JUMPNRUN_MAX_SHOTS) {
+            jumpnrun_shot_spawn(gs.shots + i, &gs);
+          }
         }
 
         break;

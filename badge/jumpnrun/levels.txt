@@ -1,4 +1,4 @@
-foo
 smb
+foo
 gnobbel
 mean

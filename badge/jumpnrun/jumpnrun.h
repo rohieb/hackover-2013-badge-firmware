@@ -24,14 +24,25 @@ enum {
   JUMPNRUN_MAX_SPAWNED_ENEMIES = 10
 };
 
+typedef struct jumpnrun_shot {
+  rectangle current_box;
+  vec2d     inertia;
+  uint8_t   tick;
+} jumpnrun_shot;
+
+static inline bool jumpnrun_shot_spawned(jumpnrun_shot const *shot) { return fixed_point_ne(shot->inertia.x, FIXED_INT(0)); }
+
+enum {
+  JUMPNRUN_MAX_SHOTS = 2
+};
+
 typedef struct jumpnrun_game_state {
   jumpnrun_moveable player;
 
   uint8_t status;
   int     left;
 
-  size_t  spawned_enemies_counter;
-  size_t  spawned_enemies[JUMPNRUN_MAX_SPAWNED_ENEMIES];
+  jumpnrun_shot shots[JUMPNRUN_MAX_SHOTS];
 } jumpnrun_game_state;
 
 rectangle hacker_rect_current(jumpnrun_game_state const *state);
