@@ -257,6 +257,35 @@ void enemy_tick_straight_ahead(jumpnrun_enemy            *self,
   enemy_animation_advance(self);
 }
 
+void enemy_tick_straight_follow(jumpnrun_enemy            *self,
+                                jumpnrun_game_state       *state,
+                                jumpnrun_level            *lv,
+                                jumpnrun_tile_range const *visible_tiles,
+                                vec2d                     *player_inertia_mod) {
+  int screenpos = fixed_point_cast_int(rectangle_left(&self->base.current_box));
+
+  if(screenpos + JUMPNRUN_MAX_SPAWN_MARGIN <  state->left ||
+     screenpos                             >= state->left + BADGE_DISPLAY_WIDTH + JUMPNRUN_MAX_SPAWN_MARGIN) {
+    return;
+  }
+
+  jumpnrun_passive_movement(&self->base.inertia);
+
+  vec2d new_pos = vec2d_add(enemy_position(self), self->base.inertia);
+  self->type->collision_tiles(self, &new_pos, lv, visible_tiles);
+  self->type->collision_player(self, state, player_inertia_mod);
+  rectangle_move_to(&self->base.current_box, new_pos);
+
+  if(fixed_point_le(rectangle_mid_x(&state->player.current_box), rectangle_mid_x(enemy_box(self)))) {
+    self->base.inertia.x = self->type->spawn_inertia.x;
+  } else {
+    self->base.inertia.x = fixed_point_neg(self->type->spawn_inertia.x);
+  }
+
+
+  enemy_animation_advance(self);
+}
+
 void enemy_tick_swing_up_and_down(struct jumpnrun_enemy            *self,
                                   struct jumpnrun_game_state       *state,
                                   struct jumpnrun_level            *lv,
@@ -524,7 +553,7 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .collision_tiles           = enemy_collision_tiles_bounce_horiz,
     .collision_player          = enemy_collision_player_jumpable,
     .collision_shots           = enemy_collision_shots_die,
-    .move_tick                 = enemy_tick_straight_ahead
+    .move_tick                 = enemy_tick_straight_follow
   }, {
     .animation_ticks_per_frame = 9,
     .animation_length          = ARRAY_SIZE(anim_bunny),
