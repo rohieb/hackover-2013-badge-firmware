@@ -1,33 +1,39 @@
 #include "collision.h"
 
-void collision_displace(vec2d             *desired_pos,
-                        jumpnrun_moveable *current,
-                        rectangle   const *obstacle,
-                        vec2d             *inertia_mod) {
+uint8_t collision_displace(vec2d             *desired_pos,
+                           jumpnrun_moveable *current,
+                           rectangle   const *obstacle,
+                           vec2d             *inertia_mod) {
   rectangle desired = current->current_box;
   rectangle_move_to(&desired, *desired_pos);
 
   if(!rectangle_intersect(obstacle, &desired)) {
-    return;
+    return 0;
   }
 
   fixed_point x = FIXED_INT(1000), y = FIXED_INT(1000);
   fixed_point dx = desired_pos->x, dy = desired_pos->y;
   bool bottom_collision = false;
 
+  uint8_t coll_x = 0;
+  uint8_t coll_y = 0;
+  uint8_t coll   = 0;
+
   if(fixed_point_le(rectangle_top   ( obstacle), rectangle_top(&desired)) &&
      fixed_point_gt(rectangle_bottom( obstacle), rectangle_top(&desired)) &&
      fixed_point_lt(rectangle_top   (&desired ), rectangle_top(&current->current_box))) {
 
-    y  = fixed_point_sub(rectangle_bottom(obstacle), rectangle_top(&desired));
-    dy =                 rectangle_bottom(obstacle);
+    coll_y = JUMPNRUN_COLLISION_BOTTOM;
+    y      = fixed_point_sub(rectangle_bottom(obstacle), rectangle_top(&desired));
+    dy     =                 rectangle_bottom(obstacle);
 
   } else if(fixed_point_gt(rectangle_bottom( obstacle), rectangle_bottom(&desired)) &&
             fixed_point_le(rectangle_top   ( obstacle), rectangle_bottom(&desired)) &&
             fixed_point_gt(rectangle_top   (&desired ), rectangle_top   (&current->current_box))) {
 
-    y  = fixed_point_sub(rectangle_bottom(&desired ), rectangle_top   ( obstacle));
-    dy = fixed_point_sub(rectangle_top   ( obstacle), rectangle_height(&desired ));
+    coll_y = JUMPNRUN_COLLISION_TOP;
+    y      = fixed_point_sub(rectangle_bottom(&desired ), rectangle_top   ( obstacle));
+    dy     = fixed_point_sub(rectangle_top   ( obstacle), rectangle_height(&desired ));
     bottom_collision = true;
 
   }
@@ -36,35 +42,39 @@ void collision_displace(vec2d             *desired_pos,
      fixed_point_gt(rectangle_right( obstacle), rectangle_left(&desired)) &&
      fixed_point_lt(rectangle_left (&desired ), rectangle_left(&current->current_box))) {
 
-    x  = fixed_point_sub(rectangle_right(obstacle), rectangle_left(&desired));
-    dx =                 rectangle_right(obstacle);
+    coll_x = JUMPNRUN_COLLISION_RIGHT;
+    x      = fixed_point_sub(rectangle_right(obstacle), rectangle_left(&desired));
+    dx     =                 rectangle_right(obstacle);
 
   } else if(fixed_point_gt(rectangle_right( obstacle), rectangle_right(&desired)) &&
             fixed_point_le(rectangle_left ( obstacle), rectangle_right(&desired)) &&
             fixed_point_gt(rectangle_left (&desired ), rectangle_left (&current->current_box))) {
 
-    x  = fixed_point_sub(rectangle_right(&desired ), rectangle_left ( obstacle));
-    dx = fixed_point_sub(rectangle_left ( obstacle), rectangle_width(&desired ));
+    coll_x = JUMPNRUN_COLLISION_LEFT;
+    x      = fixed_point_sub(rectangle_right(&desired ), rectangle_left ( obstacle));
+    dx     = fixed_point_sub(rectangle_left ( obstacle), rectangle_width(&desired ));
 
   }
 
   if(fixed_point_eq(x, y)) {
     desired_pos->x = dx;
     desired_pos->y = dy;
+    coll = coll_x | coll_y;
   } else if(fixed_point_gt(x, y)) {
     desired_pos->y = dy;
     inertia_mod->y = FIXED_INT(0);
-
     current->touching_ground = bottom_collision;
+    coll = coll_y;
   } else {
     desired_pos->x = dx;
     inertia_mod->x = FIXED_INT(0);
+    coll = coll_x;
   }
 
-  return;
+  return coll;
 }
 
-void collisions_tiles_displace(vec2d                     *desired_position,
+bool collisions_tiles_displace(vec2d                     *desired_position,
                                jumpnrun_moveable         *thing,
                                jumpnrun_level      const *lv,
                                jumpnrun_tile_range const *visible_tiles,
@@ -123,6 +133,7 @@ void collisions_tiles_displace(vec2d                     *desired_position,
   }
 
   /* collision: sort by priority (top/bottom, left/right, then diagonal) */
+  bool lethal = false;
   thing->touching_ground = false;
 
   for(size_t collision_index = 0; collision_index < ARRAY_SIZE(collision_order); ++collision_index) {
@@ -130,10 +141,16 @@ void collisions_tiles_displace(vec2d                     *desired_position,
       continue;
     }
 
-    rectangle tile_rect = rect_from_tile(&lv->tiles[collision_tile[collision_order[collision_index]]]);
+    jumpnrun_tile *tile_obj = &lv->tiles[collision_tile[collision_order[collision_index]]];
+    rectangle tile_rect = rect_from_tile(tile_obj);
 
-    collision_displace(desired_position, thing, &tile_rect, inertia_mod);
+    uint8_t coll = collision_displace(desired_position, thing, &tile_rect, inertia_mod);
+    if(coll & tile_type(tile_obj)->lethal_sides) {
+      lethal = true;
+    }
   }
 
   rectangle_move_to(&thing->current_box, *desired_position);
+
+  return lethal;
 }

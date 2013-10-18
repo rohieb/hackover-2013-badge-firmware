@@ -139,11 +139,15 @@ void enemy_collision_tiles_bounce_horiz(jumpnrun_enemy            *self,
                                         jumpnrun_tile_range const *visible_tiles) {
   vec2d inertia_mod = self->base.inertia;
 
-  collisions_tiles_displace(desired_position,
-                            &self->base,
-                            lv,
-                            visible_tiles,
-                            &inertia_mod);
+  bool killed = collisions_tiles_displace(desired_position,
+                                          &self->base,
+                                          lv,
+                                          visible_tiles,
+                                          &inertia_mod);
+
+  if(killed) {
+    self->flags &= ~JUMPNRUN_ENEMY_SPAWNED;
+  }
 
   if(fixed_point_ne(inertia_mod.x, self->base.inertia.x)) {
     self->base.inertia.x = fixed_point_neg(self->base.inertia.x);

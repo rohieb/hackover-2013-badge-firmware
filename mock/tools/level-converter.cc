@@ -33,6 +33,10 @@ namespace jnrcpp {
         ("tube_right"    , JUMPNRUN_TILE_TYPE_TUBE_RIGHT    )
         ("brick"         , JUMPNRUN_TILE_TYPE_BRICK         )
         ("square"        , JUMPNRUN_TILE_TYPE_SQUARE        )
+        ("spike_up"      , JUMPNRUN_TILE_TYPE_SPIKE_UP      )
+        ("spike_right"   , JUMPNRUN_TILE_TYPE_SPIKE_RIGHT   )
+        ("spike_down"    , JUMPNRUN_TILE_TYPE_SPIKE_DOWN    )
+        ("spike_left"    , JUMPNRUN_TILE_TYPE_SPIKE_LEFT    )
         ;
 
       items.add

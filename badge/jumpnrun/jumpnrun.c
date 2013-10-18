@@ -191,10 +191,10 @@ static void jumpnrun_apply_movement(jumpnrun_level      const *lv,
   }
 
   *inertia_mod = state->player.inertia;
-  collisions_tiles_displace(&new_pos, &state->player, lv, tilerange, inertia_mod);
+  bool killed = collisions_tiles_displace(&new_pos, &state->player, lv, tilerange, inertia_mod);
   state->player.inertia = *inertia_mod;
 
-  if(fixed_point_gt(state->player.current_box.pos.y, FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
+  if(killed || fixed_point_gt(state->player.current_box.pos.y, FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
     state->status = JUMPNRUN_DEAD;
   }
 }
