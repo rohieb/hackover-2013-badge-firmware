@@ -420,11 +420,10 @@ void enemy_tick_giraffe(jumpnrun_enemy            *self,
     if(was_on_ground) {
       enemy_animation_advance(self);
       if(self->base.anim_frame == 0) {
-        if(self->flags & JUMPNRUN_ENEMY_FACING_RIGHT) {
-          self->base.inertia.x = fixed_point_neg(self->type->spawn_inertia.x);
-          self->base.inertia.y = self->type->spawn_inertia.y;
-        } else {
-          self->base.inertia = self->type->spawn_inertia;
+        self->base.inertia = self->type->spawn_inertia;
+
+        if(fixed_point_gt(rectangle_mid_x(&state->player.current_box), rectangle_mid_x(enemy_box(self)))) {
+          self->base.inertia.x = fixed_point_neg(self->base.inertia.x);
         }
       }
     } else {

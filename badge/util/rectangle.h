@@ -40,12 +40,10 @@ static inline fixed_point rectangle_right (rectangle const *r) { return fixed_po
 static inline fixed_point rectangle_width (rectangle const *r) { return r->extent.x; }
 static inline fixed_point rectangle_height(rectangle const *r) { return r->extent.y; }
 
-static inline vec2d rectangle_mid(rectangle const *r) {
-  vec2d v = { fixed_point_add(r->pos.x, fixed_point_div(r->extent.x, FIXED_POINT(2, 0))),
-	      fixed_point_add(r->pos.y, fixed_point_div(r->extent.y, FIXED_POINT(2, 0)))
-  };
-  return v;
-}
+static inline fixed_point rectangle_mid_x (rectangle const *r) { return fixed_point_add(r->pos.x, fixed_point_div(r->extent.x, FIXED_INT(2))); }
+static inline fixed_point rectangle_mid_y (rectangle const *r) { return fixed_point_add(r->pos.y, fixed_point_div(r->extent.y, FIXED_INT(2))); }
+
+static inline vec2d       rectangle_mid   (rectangle const *r) { vec2d v = { rectangle_mid_x(r), rectangle_mid_y(r) }; return v; }
 
 static inline void rectangle_move_to  (rectangle *r, vec2d       new_pos) { r->pos = new_pos; }
 static inline void rectangle_move_to_x(rectangle *r, fixed_point new_x  ) { r->pos.x = new_x; }
@@ -55,11 +53,11 @@ static inline void rectangle_move_rel (rectangle *r, vec2d       vec    ) { r->p
 static inline void rectangle_expand   (rectangle *r, vec2d       extent ) { r->extent = extent; }
 
 static inline bool rectangle_intersect(rectangle const *r1,
-				       rectangle const *r2) {
+                                       rectangle const *r2) {
   return (fixed_point_lt(rectangle_top   (r1), rectangle_bottom(r2)) &&
-	  fixed_point_gt(rectangle_bottom(r1), rectangle_top   (r2)) &&
-	  fixed_point_lt(rectangle_left  (r1), rectangle_right (r2)) &&
-	  fixed_point_gt(rectangle_right (r1), rectangle_left  (r2)));
+          fixed_point_gt(rectangle_bottom(r1), rectangle_top   (r2)) &&
+          fixed_point_lt(rectangle_left  (r1), rectangle_right (r2)) &&
+          fixed_point_gt(rectangle_right (r1), rectangle_left  (r2)));
 }
 
 #endif

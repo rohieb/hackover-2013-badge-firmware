@@ -20,8 +20,8 @@ enum {
 };
 
 typedef struct jumpnrun_tile_position {
-  uint16_t x;
-  uint8_t  y;
+  int16_t x;
+  int8_t  y;
 } jumpnrun_tile_position;
 
 typedef struct jumpnrun_tile_type {

@@ -18,7 +18,7 @@ extern "C" {
 #include <vector>
 
 enum {
-  LEVEL_LINE_COUNT = 13
+  LEVEL_LINE_COUNT = 14
 };
 
 #define PATH_PREFIX "../badge/jumpnrun/"
@@ -176,7 +176,7 @@ namespace jnrcpp {
 
           if(iter != objmap.end()) {
             unsigned char buf[3];
-            buf[0] = static_cast<uint8_t>(y + 1) << 4 | static_cast<uint8_t>(x >> 8);
+            buf[0] = static_cast<uint8_t>(y) << 4 | static_cast<uint8_t>(x >> 8);
             buf[1] = static_cast<uint8_t>(x);
             buf[2] = static_cast<uint8_t>(find_type(types, iter->second, error));
 
