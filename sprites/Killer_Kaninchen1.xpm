@@ -1,0 +1,10 @@
+/* XPM */
+static char * Killer_Kaninchen1_xpm[] = {
+"7 5 2 1",
+" 	c #FFFFFF",
+".	c #000000",
+" .  .  ",
+" .  .  ",
+"  ..   ",
+"  .....",
+"   ... "};
