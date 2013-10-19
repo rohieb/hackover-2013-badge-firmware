@@ -10,5 +10,6 @@ enum {
 
 uint8_t badge_framebuffer_render_char(badge_framebuffer *fb, int8_t pos_x, int8_t pos_y, char c);
 uint8_t badge_framebuffer_render_text(badge_framebuffer *fb, int8_t pos_x, int8_t pos_y, char const *text);
+uint8_t badge_framebuffer_render_number(badge_framebuffer *fb, int8_t pos_x, int8_t pos_y, uint8_t number);
 
 #endif

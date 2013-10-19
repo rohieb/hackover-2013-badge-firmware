@@ -231,6 +231,7 @@ int main(void)
     badge_framebuffer fb = { { { 0 } } };
 
     fb.data[0][0] = badge_framebuffer_render_text(&fb, 2, 10, "foobar");
+    fb.data[0][1] = badge_framebuffer_render_number(&fb, 10, 18, 99);
 
     badge_framebuffer_flush(&fb);
   }

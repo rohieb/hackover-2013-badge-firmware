@@ -1,16 +1,16 @@
+                                                                                                                           X
 
+                                                                                                                                                                      
 
-
-
-                                                                                                                                                   ###    #   ###
-                     ##                                                                                                           #####                           ###
-                    ###                                                                                                          #
-                   ####                                                          ###      #######                             #
-                  #####                 ##      ##     ##        ##     ###  ##                             ###              #                                                       ######
-                 ######                                   ##     ###                                                ####
+                                                                                                                                          ###    #   ###              
+                     ##                                        V                                                         #####      #                    ###          V
+                    ###                                                                                                 #                                  #  M
+                   ####                                                 ###      #######        W  c                 #                                     ####   
+                  #####        ##      ##     ##        ##     ###  ##           V              ######              #                                                ##     ######
+                 ######                          ##     ###                                                ####                                                           V
                 #######
-               ########                                                                                                                                                                                                                        DC           
-######################################                                                                                                                                                              #################   ##      ##      #########                                            
+    P          ########                       W                                                                                                                                                G                                      dC
+#######################                                                                                                                                                                    #################   ##      ##      #########
 
 [tiles]
 0 tube_top_left
@@ -19,9 +19,26 @@
 3 tube_right
 # brick
 ? square
+^ spike_up
+v spike_down
+> spike_right
+< spike_left
 
 [items]
-D doc
+d doc
+c checkpoint
+k key
+e doc_encrypted
 
 [enemies]
 C cat
+M mushroom
+B bunny
+S snake
+@ spiral
+R rotor
+H dog
+G giraffe
+V bird
+W bird_straight
+X bird_dip

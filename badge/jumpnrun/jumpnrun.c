@@ -338,7 +338,7 @@ uint8_t jumpnrun_play(char const *lvname) {
   jumpnrun_game_state gs;
   memset(&gs, 0, sizeof(gs));
 
-  for(gs.lives = 3; gs.status != JUMPNRUN_WON && gs.lives != 0; --gs.lives) {
+  for(gs.lives = 99; gs.status != JUMPNRUN_WON && gs.lives != 0; --gs.lives) {
     gs.status = JUMPNRUN_PLAYING;
     gs.left = 0;
     memset(&gs.player, 0, sizeof(gs.player));
