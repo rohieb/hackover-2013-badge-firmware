@@ -2,6 +2,7 @@
 #include "tiles.h"
 #include "items.h"
 #include "enemies.h"
+#include "jumpnrun.h"
 
 #ifndef __linux__
 #include <drivers/fatfs/ff.h>
@@ -26,30 +27,30 @@ static level_thing jumpnrun_level_parse_blob(unsigned char blob[3]) {
 }
 
 static void jumpnrun_level_make_tile(jumpnrun_tile *dest, level_thing thing) {
+  memset(dest, 0, sizeof(*dest));
+
   dest->type  = thing.type;
   dest->pos.x = thing.x;
   dest->pos.y = thing.y;
 }
 
 static void jumpnrun_level_make_item(jumpnrun_item *dest, level_thing thing) {
+  memset(dest, 0, sizeof(*dest));
+
   dest->type = &jumpnrun_item_type_data[thing.type];
-  dest->pos.x = FIXED_POINT(thing.x * JUMPNRUN_TILE_PIXEL_WIDTH , 0);
-  dest->pos.y = FIXED_POINT(thing.y * JUMPNRUN_TILE_PIXEL_WIDTH , 0);
+  dest->pos.x = FIXED_POINT( thing.x      * JUMPNRUN_TILE_PIXEL_WIDTH                            , 0);
+  dest->pos.y = FIXED_POINT((thing.y + 1) * JUMPNRUN_TILE_PIXEL_WIDTH - dest->type->sprite.height, 0);
 }
 
 static void jumpnrun_level_make_enemy(jumpnrun_enemy *dest, level_thing thing) {
+  memset(dest, 0, sizeof(*dest));
+
   dest->type = &jumpnrun_enemy_type_data[thing.type];
 
-  dest->spawn_pos.x          = FIXED_POINT(thing.x * JUMPNRUN_TILE_PIXEL_WIDTH , 0);
-  dest->spawn_pos.y          = FIXED_POINT(thing.y * JUMPNRUN_TILE_PIXEL_HEIGHT, 0);
+  dest->spawn_pos.x          = FIXED_POINT( thing.x      * JUMPNRUN_TILE_PIXEL_WIDTH                                          , 0);
+  dest->spawn_pos.y          = FIXED_POINT((thing.y + 1) * JUMPNRUN_TILE_PIXEL_HEIGHT - dest->type->animation_frames[0].height, 0);
   dest->base.current_box     = rectangle_new(dest->spawn_pos, dest->type->extent);
   dest->base.inertia         = dest->type->spawn_inertia;
-  dest->flags                = 0;
-  dest->base.tick_minor      = 0;
-  dest->base.anim_frame      = 0;
-  dest->base.anim_direction  = 0;
-  dest->base.touching_ground = 0;
-  dest->base.jumpable_frames = 0;
 }
 
 #ifdef __linux__
@@ -92,8 +93,8 @@ int jumpnrun_load_level_from_file(jumpnrun_level *dest, FIL *fd) {
 #endif
     return JUMPNRUN_LEVEL_LOAD_ERROR;
   } else {
-    dest->start_pos.x = FIXED_POINT(spos[0] * JUMPNRUN_TILE_PIXEL_WIDTH , 0);
-    dest->start_pos.y = FIXED_POINT(spos[1] * JUMPNRUN_TILE_PIXEL_HEIGHT, 0);
+    dest->start_pos.x = fixed_point_sub(FIXED_INT((spos[0] + 1) * JUMPNRUN_TILE_PIXEL_WIDTH ), hacker_extents().x);
+    dest->start_pos.y =                 FIXED_INT( spos[1]      * JUMPNRUN_TILE_PIXEL_HEIGHT);
   }
 
   for(i = 0; i < dest->header.tile_count; ++i) {

@@ -43,12 +43,12 @@ typedef struct jumpnrun_game_state {
 
   uint8_t status;
   int     left;
+  uint8_t lives;
 
   jumpnrun_shot shots[JUMPNRUN_MAX_SHOTS];
 } jumpnrun_game_state;
 
-rectangle hacker_rect_current(jumpnrun_game_state const *state);
-
+vec2d hacker_extents(void);
 void jumpnrun_passive_movement(vec2d *inertia);
 
 uint8_t jumpnrun_play(char const *lvname);

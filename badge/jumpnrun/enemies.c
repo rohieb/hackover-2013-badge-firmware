@@ -552,7 +552,7 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .extent                    = { FIXED_INT_I(7), FIXED_INT_I(7) },
     .hitbox                    = { { FIXED_INT_I(1), FIXED_INT_I(1) },
                                    { FIXED_INT_I(5), FIXED_INT_I(4) } },
-    .spawn_inertia             = { FIXED_POINT_I(0, -50), FIXED_INT_I(0) },
+    .spawn_inertia             = { FIXED_POINT_I(0, -80), FIXED_INT_I(0) },
     .collision_tiles           = enemy_collision_tiles_bounce_horiz,
     .collision_player          = enemy_collision_player_jumpable,
     .collision_shots           = enemy_collision_shots_die,

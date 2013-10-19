@@ -40,7 +40,8 @@ namespace jnrcpp {
         ;
 
       items.add
-        ("doc", JUMPNRUN_ITEM_TYPE_DOCUMENT)
+        ("doc"       , JUMPNRUN_ITEM_TYPE_DOCUMENT  )
+        ("checkpoint", JUMPNRUN_ITEM_TYPE_CHECKPOINT)
         ;
 
       enemies.add
