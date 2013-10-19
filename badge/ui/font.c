@@ -80,7 +80,7 @@ uint8_t badge_framebuffer_render_text(badge_framebuffer *fb, int8_t pos_x, int8_
 }
 
 static uint8_t badge_framebuffer_render_number_with_fd(badge_framebuffer *fb, int8_t *pos_x, int8_t pos_y, uint8_t number, FIL *fd) {
-  if(number > 10) {
+  if(number >= 10) {
     badge_framebuffer_render_number_with_fd(fb, pos_x, pos_y, number / 10, fd);
   }
 
