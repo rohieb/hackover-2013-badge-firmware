@@ -362,6 +362,7 @@ uint8_t jumpnrun_play(char const *lvname) {
     gs.status = JUMPNRUN_PLAYING;
     gs.left = 0;
     memset(&gs.player, 0, sizeof(gs.player));
+    memset(&gs.shots , 0, sizeof(gs.shots ));
     gs.player.current_box = rectangle_new(lv.start_pos,
                                           hacker_extents());
 

@@ -39,6 +39,7 @@ SRCS = \
   badge/jumpnrun/jumpnrun.c \
   badge/jumpnrun/level_load.c \
   badge/jumpnrun/tiles.c \
+  badge/jumpnrun/stats.c \
   badge/ui/display.c \
   badge/ui/event.c \
   badge/ui/font.c \
