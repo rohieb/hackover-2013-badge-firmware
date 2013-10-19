@@ -24,7 +24,8 @@ BADGE_CSRCS   = badge_main_loop.c \
                 jumpnrun/items.c \
                 jumpnrun/jumpnrun.c \
                 jumpnrun/tiles.c \
-                jumpnrun/level_load.c
+                jumpnrun/level_load.c \
+                jumpnrun/stats.c
 
 BADGE_CXXOBJS = $(BADGE_CXXSRCS:%.cc=%.o)
 BADGE_COBJS   = $(BADGE_CSRCS:%.c=%.o)

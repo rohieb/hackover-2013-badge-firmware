@@ -51,6 +51,7 @@ typedef struct jumpnrun_game_state {
 
 vec2d hacker_extents(void);
 void jumpnrun_passive_movement(vec2d *inertia);
+badge_sprite const *jumpnrun_hacker_symbol(void);
 
 uint8_t jumpnrun_play(char const *lvname);
 

@@ -1,6 +1,7 @@
 #include "jumpnrun.h"
 #include "collision.h"
 #include "levels.h"
+#include "stats.h"
 
 #include "../ui/display.h"
 #include "../ui/event.h"
@@ -46,6 +47,10 @@ static badge_sprite const anim_hacker[] = {
     { 6, 8, (uint8_t const *) "\xff\xff\xff\xff\xff\xff" }
   */
 };
+
+badge_sprite const *jumpnrun_hacker_symbol(void) {
+  return &anim_hacker[0];
+}
 
 static badge_sprite const anim_sickle[] = {
   { 3, 3, (uint8_t const *) "\xab\x01" },
@@ -339,6 +344,21 @@ uint8_t jumpnrun_play(char const *lvname) {
   memset(&gs, 0, sizeof(gs));
 
   for(gs.lives = 99; gs.status != JUMPNRUN_WON && gs.lives != 0; --gs.lives) {
+    jumpnrun_show_lives_screen(&gs);
+
+    for(uint8_t i = 0; i < 75; ) {
+      badge_event_t ev = badge_event_wait();
+      if(badge_event_type(ev) == BADGE_EVENT_GAME_TICK) {
+        ++i;
+      } else if(i > 25) {
+        uint8_t old_state = badge_event_old_input_state(ev);
+        uint8_t new_state = badge_event_new_input_state(ev);
+        uint8_t new_buttons = new_state & (old_state ^ new_state);
+
+        if(new_buttons != 0) break;
+      }
+    }
+
     gs.status = JUMPNRUN_PLAYING;
     gs.left = 0;
     memset(&gs.player, 0, sizeof(gs.player));
