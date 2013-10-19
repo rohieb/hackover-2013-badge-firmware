@@ -340,8 +340,14 @@ uint8_t jumpnrun_play(char const *lvname) {
 
   for(gs.lives = 3; gs.lives != 0; --gs.lives) {
     gs.status = JUMPNRUN_PLAYING;
+    memset(&gs.player, 0, sizeof(gs.player));
     gs.player.current_box = rectangle_new(lv.start_pos,
                                           hacker_extents());
+
+
+    for(size_t i = 0; i < lv.header.enemy_count; ++i) {
+      lv.enemies[i].flags = 0;
+    }
 
     while(gs.status == JUMPNRUN_PLAYING) {
       badge_event_t ev = badge_event_wait();

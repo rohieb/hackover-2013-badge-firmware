@@ -118,10 +118,8 @@ void jumpnrun_process_enemy(jumpnrun_enemy                   *self,
        state->left + BADGE_DISPLAY_WIDTH + spawn_margin < fixed_point_cast_int(self->spawn_pos.x)) {
       self->flags &= ~JUMPNRUN_ENEMY_UNAVAILABLE;
     }
-  } else if((fixed_point_gt(self->spawn_pos.x, FIXED_POINT(state->left                       - spawn_margin, 0)) &&
-             fixed_point_lt(self->spawn_pos.x, FIXED_POINT(state->left - spawn_margin / 2, 0))) ||
-            (fixed_point_lt(self->spawn_pos.x, FIXED_POINT(state->left + BADGE_DISPLAY_WIDTH + spawn_margin, 0)) &&
-             fixed_point_gt(self->spawn_pos.x, FIXED_POINT(state->left + BADGE_DISPLAY_WIDTH, 0)))) {
+  } else if(fixed_point_gt(self->spawn_pos.x, FIXED_POINT(state->left                       - spawn_margin, 0)) &&
+            fixed_point_lt(self->spawn_pos.x, FIXED_POINT(state->left + BADGE_DISPLAY_WIDTH + spawn_margin, 0))) {
     // enemy unspawned, available and in spawn zone.
     self->flags                = JUMPNRUN_ENEMY_SPAWNED | JUMPNRUN_ENEMY_UNAVAILABLE;
     self->base.current_box     = rectangle_new(self->spawn_pos, self->type->extent);
