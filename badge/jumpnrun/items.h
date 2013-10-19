@@ -35,6 +35,8 @@ static inline rectangle rect_from_item(jumpnrun_item const *item) {
 enum {
   JUMPNRUN_ITEM_TYPE_DOCUMENT,
   JUMPNRUN_ITEM_TYPE_CHECKPOINT,
+  JUMPNRUN_ITEM_TYPE_KEY,
+  JUMPNRUN_ITEM_TYPE_ENCRYPTED_DOCUMENT,
 
   JUMPNRUN_ITEM_TYPE_COUNT
 };

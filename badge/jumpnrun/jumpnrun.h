@@ -44,6 +44,7 @@ typedef struct jumpnrun_game_state {
   uint8_t status;
   int     left;
   uint8_t lives;
+  uint8_t keys;
 
   jumpnrun_shot shots[JUMPNRUN_MAX_SHOTS];
 } jumpnrun_game_state;

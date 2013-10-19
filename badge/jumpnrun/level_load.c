@@ -38,8 +38,12 @@ static void jumpnrun_level_make_item(jumpnrun_item *dest, level_thing thing) {
   memset(dest, 0, sizeof(*dest));
 
   dest->type = &jumpnrun_item_type_data[thing.type];
-  dest->pos.x = FIXED_POINT( thing.x      * JUMPNRUN_TILE_PIXEL_WIDTH                            , 0);
-  dest->pos.y = FIXED_POINT((thing.y + 1) * JUMPNRUN_TILE_PIXEL_WIDTH - dest->type->sprite.height, 0);
+
+  uint8_t xoff = (JUMPNRUN_TILE_PIXEL_WIDTH - (dest->type->sprite.width % JUMPNRUN_TILE_PIXEL_WIDTH)) / 2;
+  uint8_t yoff = thing.type != JUMPNRUN_ITEM_TYPE_CHECKPOINT ? 1 : 0; // HACK: spezielle Ausnahme
+
+  dest->pos.x = FIXED_POINT( thing.x      * JUMPNRUN_TILE_PIXEL_WIDTH                             + xoff, 0);
+  dest->pos.y = FIXED_POINT((thing.y + 1) * JUMPNRUN_TILE_PIXEL_WIDTH - dest->type->sprite.height - yoff, 0);
 }
 
 static void jumpnrun_level_make_enemy(jumpnrun_enemy *dest, level_thing thing) {
