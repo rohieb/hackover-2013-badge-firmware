@@ -340,6 +340,7 @@ uint8_t jumpnrun_play(char const *lvname) {
 
   for(gs.lives = 3; gs.lives != 0; --gs.lives) {
     gs.status = JUMPNRUN_PLAYING;
+    gs.left = 0;
     memset(&gs.player, 0, sizeof(gs.player));
     gs.player.current_box = rectangle_new(lv.start_pos,
                                           hacker_extents());
