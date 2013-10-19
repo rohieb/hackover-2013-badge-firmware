@@ -338,13 +338,12 @@ uint8_t jumpnrun_play(char const *lvname) {
   jumpnrun_game_state gs;
   memset(&gs, 0, sizeof(gs));
 
-  for(gs.lives = 3; gs.lives != 0; --gs.lives) {
+  for(gs.lives = 3; gs.status != JUMPNRUN_WON && gs.lives != 0; --gs.lives) {
     gs.status = JUMPNRUN_PLAYING;
     gs.left = 0;
     memset(&gs.player, 0, sizeof(gs.player));
     gs.player.current_box = rectangle_new(lv.start_pos,
                                           hacker_extents());
-
 
     for(size_t i = 0; i < lv.header.enemy_count; ++i) {
       lv.enemies[i].flags = 0;
