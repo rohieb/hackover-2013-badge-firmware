@@ -51,7 +51,7 @@ $(BADGE_CXXOBJS) : %.o : %.cc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -c -o $@ $< $(LDLIBS)
 
 $(BADGE): $(BADGE_OBJS)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) -o $@ $(+:../badge/%=%)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(+:../badge/%=%) $(LDLIBS)
 
 dep: $(DEPS)
 
