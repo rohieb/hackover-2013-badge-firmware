@@ -1,7 +1,32 @@
 #include "font.h"
 #include "sprite.h"
 
+#ifdef __linux__
+#include <stdio.h>
+typedef FILE *FIL;
+typedef uint8_t FRESULT;
+typedef unsigned UINT;
+enum { FR_OK = 0 };
+
+void f_close(FIL *fd) { fclose(*fd); *fd = NULL; }
+FRESULT f_lseek(FIL *fd, unsigned pos) { return fseek(*fd, pos, SEEK_SET); }
+FRESULT f_read(FIL *fd, unsigned char *buffer, size_t buflen, UINT *bytes) {
+  *bytes = fread(buffer, 1, buflen, *fd);
+  return *bytes == 0;
+}
+
+#else
 #include <drivers/fatfs/ff.h>
+#endif
+
+static FRESULT open_font_file(FIL *fd) {
+#ifdef __linux__
+  *fd = fopen("../sprites/font.dat", "r");
+  return fd ? 0 : -1;
+#else
+  return f_open(fd, "font.dat", FA_OPEN_EXISTING | FA_READ);
+#endif
+}
 
 static uint8_t badge_framebuffer_render_char_with_fd(badge_framebuffer *fb, int8_t pos_x, int8_t pos_y, char c, FIL *fd) {
   UINT readbytes;
@@ -19,10 +44,6 @@ static uint8_t badge_framebuffer_render_char_with_fd(badge_framebuffer *fb, int8
   }
 
   return 0;
-}
-
-static FRESULT open_font_file(FIL *fd) {
-  return f_open(fd, "font.dat", FA_OPEN_EXISTING | FA_READ);
 }
 
 uint8_t badge_framebuffer_render_char(badge_framebuffer *fb, int8_t pos_x, int8_t pos_y, char c) {

@@ -17,6 +17,7 @@ BADGE_CXXSRCS = mock-main.cc \
                 mock/event.cc \
                 mock/lcd-window.cc
 BADGE_CSRCS   = badge_main_loop.c \
+                ui/font.c \
                 ui/sprite.c \
                 jumpnrun/collision.c \
                 jumpnrun/enemies.c \
