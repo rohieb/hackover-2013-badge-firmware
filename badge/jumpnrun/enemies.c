@@ -280,12 +280,11 @@ void enemy_tick_straight_follow(jumpnrun_enemy            *self,
   self->type->collision_player(self, state, player_inertia_mod);
   rectangle_move_to(&self->base.current_box, new_pos);
 
-  if(fixed_point_le(rectangle_mid_x(&state->player.current_box), rectangle_mid_x(enemy_box(self)))) {
+  if(fixed_point_lt(rectangle_right(&state->player.current_box), rectangle_left(enemy_box(self)))) {
     self->base.inertia.x = self->type->spawn_inertia.x;
-  } else {
+  } else if(fixed_point_gt(rectangle_left(&state->player.current_box), rectangle_right(enemy_box(self)))) {
     self->base.inertia.x = fixed_point_neg(self->type->spawn_inertia.x);
   }
-
 
   enemy_animation_advance(self);
 }
