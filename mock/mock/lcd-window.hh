@@ -19,7 +19,7 @@ namespace badge2013 {
   class lcd_drawingarea : public Gtk::DrawingArea {
   public:
     lcd_drawingarea(BaseObjectType *cobject,
-		    Glib::RefPtr<Gtk::Builder> const &glade);
+                    Glib::RefPtr<Gtk::Builder> const &glade);
     virtual ~lcd_drawingarea();
 
     void push_framebuffer(badge_framebuffer const &fb);
@@ -31,7 +31,7 @@ namespace badge2013 {
     void force_redraw();
 
     Glib::Dispatcher  sig_redraw_;
-    badge_framebuffer framebuffer_;  
+    badge_framebuffer framebuffer_;
   };
 
 
@@ -51,12 +51,12 @@ namespace badge2013 {
   private:
     bool on_game_tick();
 
-    bool             running_ = false;
+    bool             running_;
     Glib::Dispatcher sig_close_;
     badge_worker     worker_;
-    lcd_drawingarea *canvas_    = 0;
-    std::uint8_t     key_state_ = 0;
-    std::uint8_t     ticks_ = 0;
+    lcd_drawingarea *canvas_;
+    std::uint8_t     key_state_;
+    std::uint8_t     ticks_;
   };
 }
 

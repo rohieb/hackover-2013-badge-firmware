@@ -6,7 +6,7 @@
 
 namespace badge2013 {
   lcd_drawingarea::lcd_drawingarea(BaseObjectType *cobject,
-				   Glib::RefPtr<Gtk::Builder> const &)
+                                   Glib::RefPtr<Gtk::Builder> const &)
     : Gtk::DrawingArea(cobject)
   {
     sig_redraw_.connect(sigc::mem_fun(*this, &lcd_drawingarea::force_redraw));
@@ -36,13 +36,13 @@ namespace badge2013 {
     double c_height = w_height / BADGE_DISPLAY_HEIGHT;
 
     cr->save();
-  
+
     for(int i = 0; i < BADGE_DISPLAY_WIDTH; ++i) {
       for(int j = 0; j < BADGE_DISPLAY_HEIGHT; ++j) {
-	if(badge_framebuffer_pixel(&framebuffer_, i, j)) {
-	  cr->rectangle(c_width * i, c_height * j,
-			c_width    , c_height);
-	}
+        if(badge_framebuffer_pixel(&framebuffer_, i, j)) {
+          cr->rectangle(c_width * i, c_height * j,
+                        c_width    , c_height);
+        }
       }
     }
 
@@ -58,7 +58,11 @@ namespace badge2013 {
 
   lcd_window::lcd_window(BaseObjectType *cobject, Glib::RefPtr<Gtk::Builder> const &glade)
     : Gtk::Window(cobject),
-      worker_(this)
+      running_(false),
+      worker_(this),
+      canvas_(0),
+      key_state_(0),
+      ticks_(0)
   {
     glade->get_widget_derived("canvas", canvas_);
 
@@ -111,7 +115,7 @@ namespace badge2013 {
     badge_event_push(badge_event_new(BADGE_EVENT_USER_INPUT, key_state_, new_state));
     key_state_ = new_state;
 
-    return true;  
+    return true;
   }
 
   bool lcd_window::on_game_tick() {

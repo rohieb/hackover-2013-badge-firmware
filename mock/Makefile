@@ -2,7 +2,7 @@
 
 CPPFLAGS      = $$(pkg-config --cflags gtkmm-3.0) -I. -I ../badge
 CFLAGS        = -Wall -Wextra -pedantic -std=c99   -Werror -O0 -g
-CXXFLAGS      = -Wall -Wextra -pedantic -std=c++11 -Werror -O0 -g
+CXXFLAGS      = -Wall -Wextra -pedantic -std=c++0x -Werror -O0 -g
 
 BADGE         = badge
 CONVERTER     = level-converter

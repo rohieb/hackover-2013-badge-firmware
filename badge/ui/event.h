@@ -9,7 +9,7 @@ extern "C" {
 
   enum {
     BADGE_EVENT_USER_INPUT,
-    BADGE_EVENT_GAME_TICK,
+    BADGE_EVENT_GAME_TICK
   };
 
   enum {
