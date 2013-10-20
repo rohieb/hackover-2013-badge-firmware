@@ -5,8 +5,8 @@
 #include <stdint.h>
 
 size_t badge_menu(char const *const * menu,
-                  size_t n,
-                  size_t first_visible,
-                  size_t preselected);
+                  size_t  n,
+                  size_t *first_visible,
+                  size_t  preselected);
 
 #endif

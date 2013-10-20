@@ -1,8 +1,8 @@
 #!/usr/bin/make -f
 
 CPPFLAGS      = $$(pkg-config --cflags gtkmm-3.0) -I. -I ../badge
-CFLAGS        = -Wall -Wextra -pedantic -std=c99   -Werror -O0 -g
-CXXFLAGS      = -Wall -Wextra -pedantic -std=c++0x -Werror -O0 -g
+CFLAGS        = -Wall -Wextra -pedantic -std=c99   -Werror -O0 -g -fstack-protector-all
+CXXFLAGS      = -Wall -Wextra -pedantic -std=c++0x -Werror -O0 -g -fstack-protector-all
 
 BADGE         = badge
 CONVERTER     = level-converter

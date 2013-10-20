@@ -30,8 +30,11 @@ void badge_main_loop(void) {
     menu[j] = menu_buf[j];
   }
 
+  size_t choice = 0;
+  size_t first_visible = 0;
+
   for(;;) {
-    size_t choice = badge_menu(menu, ARRAY_SIZE(menu), 0, 0);
+    choice = badge_menu(menu, ARRAY_SIZE(menu), &first_visible, choice);
     char lvname[256];
     sprintf(lvname, "../badge/jumpnrun/%s.lvl", menu[choice]);
 
