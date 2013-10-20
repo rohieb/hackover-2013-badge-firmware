@@ -25,7 +25,6 @@ BADGE_CSRCS   = badge_main_loop.c \
                 jumpnrun/items.c \
                 jumpnrun/jumpnrun.c \
                 jumpnrun/level_load.c \
-                jumpnrun/moveable.c \
                 jumpnrun/player.c \
                 jumpnrun/render.c \
                 jumpnrun/shots.c \
