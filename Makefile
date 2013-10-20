@@ -47,6 +47,7 @@ SRCS = \
   badge/ui/display.c \
   badge/ui/event.c \
   badge/ui/font.c \
+  badge/ui/menu.c \
   badge/ui/sprite.c
 
 SRCS += \
