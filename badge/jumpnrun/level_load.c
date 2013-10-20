@@ -51,8 +51,8 @@ static void jumpnrun_level_make_enemy(jumpnrun_enemy *dest, level_thing thing) {
 
   dest->type = &jumpnrun_enemy_type_data[thing.type];
 
-  dest->spawn_pos.x = FIXED_POINT( thing.x      * JUMPNRUN_TILE_PIXEL_WIDTH                                          , 0);
-  dest->spawn_pos.y = FIXED_POINT((thing.y + 1) * JUMPNRUN_TILE_PIXEL_HEIGHT - dest->type->animation_frames[0].height, 0);
+  dest->spawn_pos.x = FIXED_POINT( thing.x      * JUMPNRUN_TILE_PIXEL_WIDTH  + fixed_point_cast_int(dest->type->hitbox.pos.x), 0);
+  dest->spawn_pos.y = FIXED_POINT((thing.y + 1) * JUMPNRUN_TILE_PIXEL_HEIGHT - dest->type->animation_frames[0].height        , 0);
   jumpnrun_enemy_despawn(dest);
 }
 
