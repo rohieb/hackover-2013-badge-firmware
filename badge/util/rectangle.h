@@ -13,7 +13,14 @@ static inline vec2d vec2d_add(vec2d v1, vec2d v2) {
     fixed_point_add(v1.x, v2.x),
     fixed_point_add(v1.y, v2.y)
   };
+  return r;
+}
 
+static inline vec2d vec2d_sub(vec2d v1, vec2d v2) {
+  vec2d r = {
+    fixed_point_sub(v1.x, v2.x),
+    fixed_point_sub(v1.y, v2.y)
+  };
   return r;
 }
 

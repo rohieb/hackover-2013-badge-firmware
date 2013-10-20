@@ -39,10 +39,10 @@ typedef struct jumpnrun_tile_range {
   size_t last; // actually one past last.
 } jumpnrun_tile_range;
 
-static inline fixed_point tile_left  (jumpnrun_tile const *tile) { return FIXED_POINT(tile->pos.x * JUMPNRUN_TILE_PIXEL_WIDTH , 0); }
-static inline fixed_point tile_top   (jumpnrun_tile const *tile) { return FIXED_POINT(tile->pos.y * JUMPNRUN_TILE_PIXEL_HEIGHT, 0); }
-static inline fixed_point tile_right (jumpnrun_tile const *tile) { return fixed_point_add(tile_left(tile), FIXED_POINT(JUMPNRUN_TILE_PIXEL_WIDTH , 0)); }
-static inline fixed_point tile_bottom(jumpnrun_tile const *tile) { return fixed_point_add(tile_top (tile), FIXED_POINT(JUMPNRUN_TILE_PIXEL_HEIGHT, 0)); }
+static inline fixed_point tile_left  (jumpnrun_tile const *tile) { return FIXED_INT(tile->pos.x * JUMPNRUN_TILE_PIXEL_WIDTH ); }
+static inline fixed_point tile_top   (jumpnrun_tile const *tile) { return FIXED_INT(tile->pos.y * JUMPNRUN_TILE_PIXEL_HEIGHT); }
+static inline fixed_point tile_right (jumpnrun_tile const *tile) { return fixed_point_add(tile_left(tile), FIXED_INT(JUMPNRUN_TILE_PIXEL_WIDTH )); }
+static inline fixed_point tile_bottom(jumpnrun_tile const *tile) { return fixed_point_add(tile_top (tile), FIXED_INT(JUMPNRUN_TILE_PIXEL_HEIGHT)); }
 
 /************************************/
 

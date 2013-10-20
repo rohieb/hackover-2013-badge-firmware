@@ -1,6 +1,8 @@
+#include "game_state.h"
 #include "jumpnrun.h"
 #include "collision.h"
 #include "levels.h"
+#include "render.h"
 #include "stats.h"
 
 #include "../ui/display.h"
@@ -20,86 +22,21 @@ static fixed_point const accel_vert   =   FIXED_POINT_I(0, 167);
 static fixed_point const drag_factor  =   FIXED_POINT_I(0, 854);
 static fixed_point const speed_jump_x =   FIXED_POINT_I(0, 600);
 
-vec2d hacker_extents(void) { return (vec2d) { FIXED_INT_I(5), FIXED_INT_I(8) }; }
-static vec2d const shot_spawn_inertia = { FIXED_POINT_I(0, 800), FIXED_POINT_I(0, -800) };
-
-static badge_sprite const anim_hacker[] = {
-  { 5, 8, (uint8_t const *) "\x1c\xff\xfd\x04\x04" },
-  { 5, 8, (uint8_t const *) "\x1c\xff\x3d\xc4\x04" },
-  { 5, 8, (uint8_t const *) "\xdc\x3f\x1d\x24\xc4" },
-  { 5, 8, (uint8_t const *) "\x1c\xff\x3d\xc4\x04" }
-  /*
-    { 5, 8, (uint8_t const *) "\x46\xfc\x73\x8c\x31" },
-    { 5, 8, (uint8_t const *) "\x46\xfc\x73\x8c\x52" },
-    { 5, 8, (uint8_t const *) "\x46\xfc\x73\x94\x8c" },
-    { 5, 8, (uint8_t const *) "\x46\xfc\x73\x8c\x52" }
-  */
-  /*
-    { 6, 8, (uint8_t const *) "\x0c\xe1\x3b\x0e\xc3\x30" },
-    { 6, 8, (uint8_t const *) "\x0c\xe1\x3b\x0e\x43\x51" },
-    { 6, 8, (uint8_t const *) "\x0c\xe1\x3b\x0e\x35\x82" },
-    { 6, 8, (uint8_t const *) "\x0c\xe1\x3b\x0e\x43\x51" }
-  */
-  /*
-    { 6, 8, (uint8_t const *) "\xff\xff\xff\xff\xff\xff" },
-    { 6, 8, (uint8_t const *) "\xff\xff\xff\xff\xff\xff" },
-    { 6, 8, (uint8_t const *) "\xff\xff\xff\xff\xff\xff" },
-    { 6, 8, (uint8_t const *) "\xff\xff\xff\xff\xff\xff" }
-  */
-};
-
-badge_sprite const *jumpnrun_hacker_symbol(void) {
-  return &anim_hacker[0];
-}
-
-static badge_sprite const anim_sickle[] = {
-  { 3, 3, (uint8_t const *) "\xab\x01" },
-  { 3, 3, (uint8_t const *) "\xee\x00" }
-/*
-  { 3, 3, (uint8_t const *) "\x8a\x01" },
-  { 3, 3, (uint8_t const *) "\x6a" },
-  { 3, 3, (uint8_t const *) "\xa3" },
-  { 3, 3, (uint8_t const *) "\xac" }
-*/
-};
-
-enum {
-  JUMPNRUN_SHOT_EXTENT = 3,
-  JUMPNRUN_SHOT_TICKS_PER_FRAME = 36
-};
-
-static void jumpnrun_shot_spawn(jumpnrun_shot *shot, jumpnrun_game_state const *state) {
-  shot->tick        = 0;
-  shot->inertia     = shot_spawn_inertia;
-
-  if(state->player.anim_direction == BADGE_BLT_MIRRORED) {
-    shot->current_box = rectangle_new((vec2d) { fixed_point_sub(rectangle_left(&state->player.current_box), FIXED_INT(JUMPNRUN_SHOT_EXTENT)), rectangle_top(&state->player.current_box) },
-                                      (vec2d) { FIXED_INT(JUMPNRUN_SHOT_EXTENT), FIXED_INT(JUMPNRUN_SHOT_EXTENT) });
-    shot->inertia.x   = fixed_point_neg(shot->inertia.x);
-  } else {
-    shot->current_box = rectangle_new((vec2d) { rectangle_right(&state->player.current_box), rectangle_top(&state->player.current_box) },
-                                      (vec2d) { FIXED_INT(JUMPNRUN_SHOT_EXTENT), FIXED_INT(JUMPNRUN_SHOT_EXTENT) });
-  }
-
-  shot->old_box = shot->current_box;
-  shot->inertia = vec2d_add(shot->inertia, state->player.inertia);
-}
-
 static inline int imax(int x, int y) {
   return x < y ? y : x;
 }
 
 static inline fixed_point hacker_left  (vec2d const *pos, jumpnrun_game_state const *state) { (void) state; return pos->x; }
 static inline fixed_point hacker_top   (vec2d const *pos, jumpnrun_game_state const *state) { (void) state; return pos->y; }
-static inline fixed_point hacker_right (vec2d const *pos, jumpnrun_game_state const *state) { return fixed_point_add(hacker_left(pos, state), hacker_extents().x); }
-static inline fixed_point hacker_bottom(vec2d const *pos, jumpnrun_game_state const *state) { return fixed_point_add(hacker_top (pos, state), hacker_extents().y); }
+static inline fixed_point hacker_right (vec2d const *pos, jumpnrun_game_state const *state) { return fixed_point_add(hacker_left(pos, state), jumpnrun_player_extents().x); }
+static inline fixed_point hacker_bottom(vec2d const *pos, jumpnrun_game_state const *state) { return fixed_point_add(hacker_top (pos, state), jumpnrun_player_extents().y); }
 
 int jumpnrun_level_assert_left_side(jumpnrun_game_state const *state) {
   static int const lmargin = 20;
   static int const rmargin = 50;
 
-  int pos_cur = fixed_point_cast_int(state->player.current_box.pos.x);
-  int pos_rel = pos_cur - state->left;
+  int pos_cur = fixed_point_cast_int(state->player.base.hitbox.pos.x);
+  int pos_rel = pos_cur - state->screen_left;
 
   if(pos_rel < lmargin) {
     return imax(0, pos_cur - lmargin);
@@ -107,7 +44,7 @@ int jumpnrun_level_assert_left_side(jumpnrun_game_state const *state) {
     return pos_cur - (BADGE_DISPLAY_WIDTH - rmargin);
   }
 
-  return state->left;
+  return state->screen_left;
 }
 
 static int jumpnrun_bsearch_tile(jumpnrun_level const *lv, jumpnrun_game_state const *state) {
@@ -117,7 +54,7 @@ static int jumpnrun_bsearch_tile(jumpnrun_level const *lv, jumpnrun_game_state c
   while(len > 0) {
     int mid = front + len / 2;
 
-    if(fixed_point_lt(tile_right(&lv->tiles[mid]), FIXED_INT(state->left - JUMPNRUN_MAX_SPAWN_MARGIN))) {
+    if(fixed_point_lt(tile_right(&lv->tiles[mid]), FIXED_INT(state->screen_left - JUMPNRUN_MAX_SPAWN_MARGIN))) {
       front = mid + 1;
       len -= len / 2 + 1;
     } else {
@@ -135,16 +72,20 @@ jumpnrun_tile_range jumpnrun_visible_tiles(jumpnrun_level const *lv,
   r.first = jumpnrun_bsearch_tile(lv, state);
 
   for(r.last = r.first;
-      r.last < lv->header.tile_count && lv->tiles[r.last].pos.x * JUMPNRUN_TILE_PIXEL_WIDTH < state->left + BADGE_DISPLAY_WIDTH + JUMPNRUN_MAX_SPAWN_MARGIN;
+      r.last < lv->header.tile_count && lv->tiles[r.last].pos.x * JUMPNRUN_TILE_PIXEL_WIDTH < state->screen_left + BADGE_DISPLAY_WIDTH + JUMPNRUN_MAX_SPAWN_MARGIN;
       ++r.last)
     ;
 
   return r;
 }
 
+void jumpnrun_apply_gravity(vec2d *inertia) {
+  *inertia = vec2d_add(*inertia, gravity);
+}
+
 void jumpnrun_passive_movement(vec2d *inertia)
 {
-  *inertia = vec2d_add(*inertia, gravity);
+  jumpnrun_apply_gravity(inertia);
 
   inertia->x = fixed_point_min(fixed_point_max(fixed_point_neg(move_max.x), inertia->x), move_max.x);
   inertia->y = fixed_point_min(fixed_point_max(fixed_point_neg(move_max.y), inertia->y), move_max.y);
@@ -158,49 +99,49 @@ static void jumpnrun_apply_movement(jumpnrun_level      const *lv,
          (BADGE_EVENT_KEY_LEFT |
           BADGE_EVENT_KEY_RIGHT)) {
   case BADGE_EVENT_KEY_LEFT:
-    //    state->player.inertia.x = state->player.touching_ground ? fixed_point_sub(state->player.inertia.x, accel_horiz) : fixed_point_neg(speed_jump_x);
-    state->player.inertia.x = fixed_point_sub(state->player.inertia.x, accel_horiz);
-    state->player.anim_direction = BADGE_BLT_MIRRORED;
+    //    state->player.base.inertia.x = state->player.touching_ground ? fixed_point_sub(state->player.base.inertia.x, accel_horiz) : fixed_point_neg(speed_jump_x);
+    state->player.base.inertia.x = fixed_point_sub(state->player.base.inertia.x, accel_horiz);
+    state->player.base.flags |= JUMPNRUN_MOVEABLE_MIRRORED;
     break;
   case BADGE_EVENT_KEY_RIGHT:
-    //    state->player.inertia.x = state->player.touching_ground ? fixed_point_add(state->player.inertia.x, accel_horiz) : speed_jump_x;
-    state->player.inertia.x = fixed_point_add(state->player.inertia.x, accel_horiz);
-    state->player.anim_direction = 0;
+    //    state->player.base.inertia.x = state->player.touching_ground ? fixed_point_add(state->player.base.inertia.x, accel_horiz) : speed_jump_x;
+    state->player.base.inertia.x = fixed_point_add(state->player.base.inertia.x, accel_horiz);
+    state->player.base.flags &= ~JUMPNRUN_MOVEABLE_MIRRORED;
     break;
   default:
-    if(state->player.touching_ground) {
-      state->player.inertia.x = fixed_point_mul(state->player.inertia.x, drag_factor);
+    if(jumpnrun_moveable_touching_ground(&state->player.base)) {
+      state->player.base.inertia.x = fixed_point_mul(state->player.base.inertia.x, drag_factor);
     } //else {
-      //state->player.inertia.x = FIXED_INT(0);
+      //state->player.base.inertia.x = FIXED_INT(0);
     //}
 
     break;
   }
 
-  if(state->player.jumpable_frames == 0) {
+  if(state->player.base.jumpable_frames == 0) {
     // intentionally left blank.
   } else if(badge_event_current_input_state() & BADGE_EVENT_KEY_BTN_A) {
-    state->player.inertia.y = fixed_point_sub(state->player.inertia.y, accel_vert);
-    --state->player.jumpable_frames;
+    state->player.base.inertia.y = fixed_point_sub(state->player.base.inertia.y, accel_vert);
+    --state->player.base.jumpable_frames;
   } else {
-    state->player.jumpable_frames = 0;
+    state->player.base.jumpable_frames = 0;
   }
 
-  jumpnrun_passive_movement(&state->player.inertia);
+  jumpnrun_passive_movement(&state->player.base.inertia);
 
-  vec2d new_pos = vec2d_add(state->player.current_box.pos, state->player.inertia);
+  vec2d new_pos = vec2d_add(state->player.base.hitbox.pos, state->player.base.inertia);
 
-  if(fixed_point_lt(new_pos.x, FIXED_INT(state->left))) {
-    new_pos.x = FIXED_INT(state->left);
-    state->player.inertia.x = FIXED_INT(0);
+  if(fixed_point_lt(new_pos.x, FIXED_INT(state->screen_left))) {
+    new_pos.x = FIXED_INT(state->screen_left);
+    state->player.base.inertia.x = FIXED_INT(0);
   }
 
-  *inertia_mod = state->player.inertia;
-  bool killed = collisions_tiles_displace(&new_pos, &state->player, lv, tilerange, inertia_mod);
-  state->player.inertia = *inertia_mod;
+  *inertia_mod = state->player.base.inertia;
+  bool killed = collisions_tiles_displace(&new_pos, &state->player.base, lv, tilerange, inertia_mod);
+  state->player.base.inertia = *inertia_mod;
 
-  if(killed || fixed_point_gt(state->player.current_box.pos.y, FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
-    state->status = JUMPNRUN_DEAD;
+  if(killed || fixed_point_gt(state->player.base.hitbox.pos.y, FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
+    state->player.base.flags |= JUMPNRUN_PLAYER_DEAD;
   }
 }
 
@@ -208,21 +149,17 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
                          jumpnrun_game_state *state)
 {
   jumpnrun_tile_range tilerange = jumpnrun_visible_tiles(lv, state);
-  vec2d inertia_mod = state->player.inertia;
+  vec2d inertia_mod = state->player.base.inertia;
 
   jumpnrun_apply_movement(lv, &tilerange, state, &inertia_mod);
-  state->left = jumpnrun_level_assert_left_side(state);
+  state->screen_left = jumpnrun_level_assert_left_side(state);
 
-  if(state->player.tick_minor == 0) {
+  if(state->player.base.tick_minor == 0) {
     badge_framebuffer fb;
     badge_framebuffer_clear(&fb);
 
     for(size_t tile = tilerange.first; tile < tilerange.last; ++tile) {
-      badge_framebuffer_blt(&fb,
-                            fixed_point_cast_int(tile_left(&lv->tiles[tile])) - state->left,
-                            fixed_point_cast_int(tile_top (&lv->tiles[tile])),
-                            &tile_type(&lv->tiles[tile])->sprite,
-                            0);
+      jumpnrun_render_tile(&fb, state, &lv->tiles[tile]);
     }
 
     for(size_t item = 0; item < lv->header.item_count; ++item) {
@@ -232,54 +169,24 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
         continue;
       }
 
-      int screenpos = fixed_point_cast_int(item_obj->pos.x) - state->left;
+      int screenpos = fixed_point_cast_int(item_obj->pos.x) - state->screen_left;
       if(screenpos > -item_obj->type->sprite.width &&
          screenpos < BADGE_DISPLAY_WIDTH) {
         rectangle item_rect = rect_from_item(item_obj);
 
-        if(rectangle_intersect(&state->player.current_box, &item_rect)) {
+        if(rectangle_intersect(&state->player.base.hitbox, &item_rect)) {
           item_obj->type->on_collect(item_obj, state, lv);
         }
 
-        badge_framebuffer_blt(&fb,
-                              screenpos,
-                              fixed_point_cast_int(item_obj->pos.y),
-                              &item_obj->type->sprite,
-                              0);
+        jumpnrun_render_item(&fb, state, item_obj);
       }
     }
 
     for(size_t shot_ix = 0; shot_ix < JUMPNRUN_MAX_SHOTS; ++shot_ix) {
       jumpnrun_shot *shot = &state->shots[shot_ix];
-
+      jumpnrun_shot_process(shot);
       if(jumpnrun_shot_spawned(shot)) {
-        rectangle_move_rel(&shot->current_box, shot->inertia);
-        shot->inertia = vec2d_add(shot->inertia, gravity);
-
-        if(fixed_point_gt(rectangle_top(&shot->current_box), FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
-          jumpnrun_shot_despawn(shot);
-        }
-
-        /* show every position twice, because LCD switching time. This makes the shots more
-         * visible on the nokia lcds.
-         */
-        badge_framebuffer_blt(&fb,
-                              fixed_point_cast_int(shot->old_box.pos.x) - state->left,
-                              fixed_point_cast_int(shot->old_box.pos.y),
-                              &anim_sickle[shot->tick / JUMPNRUN_SHOT_TICKS_PER_FRAME],
-                              fixed_point_lt(shot->inertia.x, FIXED_INT(0)) ? BADGE_BLT_MIRRORED : 0);
-        badge_framebuffer_blt(&fb,
-                              fixed_point_cast_int(shot->current_box.pos.x) - state->left,
-                              fixed_point_cast_int(shot->current_box.pos.y),
-                              &anim_sickle[shot->tick / JUMPNRUN_SHOT_TICKS_PER_FRAME],
-                              fixed_point_lt(shot->inertia.x, FIXED_INT(0)) ? BADGE_BLT_MIRRORED : 0);
-
-        shot->old_box = shot->current_box;
-
-        ++shot->tick;
-        if(shot->tick == ARRAY_SIZE(anim_sickle) * JUMPNRUN_SHOT_TICKS_PER_FRAME) {
-          shot->tick = 0;
-        }
+        jumpnrun_render_shot(&fb, state, shot);
       }
     }
 
@@ -288,38 +195,20 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
       jumpnrun_process_enemy(enemy, &fb, state, lv, &tilerange, &inertia_mod);
     }
 
-    badge_framebuffer_blt(&fb,
-                          fixed_point_cast_int(state->player.current_box.pos.x) - state->left,
-                          fixed_point_cast_int(state->player.current_box.pos.y),
-                          &anim_hacker[state->player.anim_frame],
-                          state->player.anim_direction);
+    jumpnrun_render_player(&fb, state);
 
     badge_framebuffer_flush(&fb);
 
-    if(!state->player.touching_ground) {
-      state->player.anim_frame = 2;
-    } else if(fixed_point_gt(fixed_point_abs(state->player.inertia.x), FIXED_POINT(0, 200))) {
-      state->player.anim_frame = (state->player.anim_frame + 1) % ARRAY_SIZE(anim_hacker);
+    if(!jumpnrun_moveable_touching_ground(&state->player.base)) {
+      state->player.base.anim_frame = 2;
+    } else if(fixed_point_gt(fixed_point_abs(state->player.base.inertia.x), FIXED_POINT(0, 200))) {
+      state->player.base.anim_frame = (state->player.base.anim_frame + 1) % JUMPNRUN_PLAYER_FRAMES;
     } else {
-      state->player.anim_frame = 0;
+      state->player.base.anim_frame = 0;
     }
   } else {
     for(size_t shot_ix = 0; shot_ix < JUMPNRUN_MAX_SHOTS; ++shot_ix) {
-      jumpnrun_shot *shot = &state->shots[shot_ix];
-
-      if(jumpnrun_shot_spawned(shot)) {
-        rectangle_move_rel(&shot->current_box, shot->inertia);
-        shot->inertia = vec2d_add(shot->inertia, gravity);
-
-        if(fixed_point_gt(rectangle_top(&shot->current_box), FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
-          jumpnrun_shot_despawn(shot);
-        }
-
-        ++shot->tick;
-        if(shot->tick == ARRAY_SIZE(anim_sickle) * JUMPNRUN_SHOT_TICKS_PER_FRAME) {
-          shot->tick = 0;
-        }
-      }
+      jumpnrun_shot_process(&state->shots[shot_ix]);
     }
 
     for(size_t enemy_ix = 0; enemy_ix < lv->header.enemy_count; ++enemy_ix) {
@@ -328,10 +217,10 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
     }
   }
 
-  state->player.inertia = inertia_mod;
-  ++state->player.tick_minor;
-  if(state->player.tick_minor == 3) {
-    state->player.tick_minor = 0;
+  state->player.base.inertia = inertia_mod;
+  ++state->player.base.tick_minor;
+  if(state->player.base.tick_minor == 3) {
+    state->player.base.tick_minor = 0;
   }
 }
 
@@ -341,36 +230,13 @@ uint8_t jumpnrun_play(char const *lvname) {
   JUMPNRUN_LEVEL_LOAD(lv, lvname);
 
   jumpnrun_game_state gs;
-  memset(&gs, 0, sizeof(gs));
 
-  for(gs.lives = 99; gs.status != JUMPNRUN_WON && gs.lives != 0; --gs.lives) {
+  for(jumpnrun_game_state_init(&gs, &lv); (gs.flags & JUMPNRUN_STATE_WON) == 0 && gs.player.lives != 0; --gs.player.lives) {
     jumpnrun_show_lives_screen(&gs);
+    jumpnrun_game_state_respawn(&gs, &lv);
 
-    for(uint8_t i = 0; i < 75; ) {
-      badge_event_t ev = badge_event_wait();
-      if(badge_event_type(ev) == BADGE_EVENT_GAME_TICK) {
-        ++i;
-      } else if(i > 25) {
-        uint8_t old_state = badge_event_old_input_state(ev);
-        uint8_t new_state = badge_event_new_input_state(ev);
-        uint8_t new_buttons = new_state & (old_state ^ new_state);
-
-        if(new_buttons != 0) break;
-      }
-    }
-
-    gs.status = JUMPNRUN_PLAYING;
-    gs.left = 0;
-    memset(&gs.player, 0, sizeof(gs.player));
-    memset(&gs.shots , 0, sizeof(gs.shots ));
-    gs.player.current_box = rectangle_new(lv.start_pos,
-                                          hacker_extents());
-
-    for(size_t i = 0; i < lv.header.enemy_count; ++i) {
-      lv.enemies[i].flags = 0;
-    }
-
-    while(gs.status == JUMPNRUN_PLAYING) {
+    while((gs.player.base.flags & JUMPNRUN_PLAYER_DEAD) == 0 &&
+          (gs.            flags & JUMPNRUN_STATE_WON  ) == 0) {
       badge_event_t ev = badge_event_wait();
 
       switch(badge_event_type(ev)) {
@@ -380,8 +246,8 @@ uint8_t jumpnrun_play(char const *lvname) {
         uint8_t new_state = badge_event_new_input_state(ev);
         uint8_t new_buttons = new_state & (old_state ^ new_state);
 
-        if((new_buttons & BADGE_EVENT_KEY_BTN_A) && gs.player.touching_ground) {
-          gs.player.jumpable_frames = 12;
+        if((new_buttons & BADGE_EVENT_KEY_BTN_A) && jumpnrun_moveable_touching_ground(&gs.player.base)) {
+          gs.player.base.jumpable_frames = 12;
         }
 
         if((new_buttons & BADGE_EVENT_KEY_BTN_B)) {
@@ -405,5 +271,7 @@ uint8_t jumpnrun_play(char const *lvname) {
     }
   }
 
-  return gs.status;
+  if(gs.flags & JUMPNRUN_STATE_WON) { return JUMPNRUN_WON; }
+  if(gs.player.lives == 0) return JUMPNRUN_LOST;
+  return JUMPNRUN_ERROR;
 }

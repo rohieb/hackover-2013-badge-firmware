@@ -4,7 +4,7 @@ uint8_t collision_displace(vec2d             *desired_pos,
                            jumpnrun_moveable *current,
                            rectangle   const *obstacle,
                            vec2d             *inertia_mod) {
-  rectangle desired = current->current_box;
+  rectangle desired = current->hitbox;
   rectangle_move_to(&desired, *desired_pos);
 
   if(!rectangle_intersect(obstacle, &desired)) {
@@ -21,7 +21,7 @@ uint8_t collision_displace(vec2d             *desired_pos,
 
   if(fixed_point_le(rectangle_top   ( obstacle), rectangle_top(&desired)) &&
      fixed_point_gt(rectangle_bottom( obstacle), rectangle_top(&desired)) &&
-     fixed_point_lt(rectangle_top   (&desired ), rectangle_top(&current->current_box))) {
+     fixed_point_lt(rectangle_top   (&desired ), rectangle_top(&current->hitbox))) {
 
     coll_y = JUMPNRUN_COLLISION_BOTTOM;
     y      = fixed_point_sub(rectangle_bottom(obstacle), rectangle_top(&desired));
@@ -29,7 +29,7 @@ uint8_t collision_displace(vec2d             *desired_pos,
 
   } else if(fixed_point_gt(rectangle_bottom( obstacle), rectangle_bottom(&desired)) &&
             fixed_point_le(rectangle_top   ( obstacle), rectangle_bottom(&desired)) &&
-            fixed_point_gt(rectangle_top   (&desired ), rectangle_top   (&current->current_box))) {
+            fixed_point_gt(rectangle_top   (&desired ), rectangle_top   (&current->hitbox))) {
 
     coll_y = JUMPNRUN_COLLISION_TOP;
     y      = fixed_point_sub(rectangle_bottom(&desired ), rectangle_top   ( obstacle));
@@ -40,7 +40,7 @@ uint8_t collision_displace(vec2d             *desired_pos,
 
   if(fixed_point_le(rectangle_left ( obstacle), rectangle_left(&desired)) &&
      fixed_point_gt(rectangle_right( obstacle), rectangle_left(&desired)) &&
-     fixed_point_lt(rectangle_left (&desired ), rectangle_left(&current->current_box))) {
+     fixed_point_lt(rectangle_left (&desired ), rectangle_left(&current->hitbox))) {
 
     coll_x = JUMPNRUN_COLLISION_RIGHT;
     x      = fixed_point_sub(rectangle_right(obstacle), rectangle_left(&desired));
@@ -48,7 +48,7 @@ uint8_t collision_displace(vec2d             *desired_pos,
 
   } else if(fixed_point_gt(rectangle_right( obstacle), rectangle_right(&desired)) &&
             fixed_point_le(rectangle_left ( obstacle), rectangle_right(&desired)) &&
-            fixed_point_gt(rectangle_left (&desired ), rectangle_left (&current->current_box))) {
+            fixed_point_gt(rectangle_left (&desired ), rectangle_left (&current->hitbox))) {
 
     coll_x = JUMPNRUN_COLLISION_LEFT;
     x      = fixed_point_sub(rectangle_right(&desired ), rectangle_left ( obstacle));
@@ -63,7 +63,13 @@ uint8_t collision_displace(vec2d             *desired_pos,
   } else if(fixed_point_gt(x, y)) {
     desired_pos->y = dy;
     inertia_mod->y = FIXED_INT(0);
-    current->touching_ground = bottom_collision;
+
+    if(bottom_collision) {
+      current->flags |=  JUMPNRUN_MOVEABLE_TOUCHING_GROUND;
+    } else {
+      current->flags &= ~JUMPNRUN_MOVEABLE_TOUCHING_GROUND;
+    }
+
     coll = coll_y;
   } else {
     desired_pos->x = dx;
@@ -86,7 +92,7 @@ bool collisions_tiles_displace(vec2d                     *desired_position,
   };
   static int const collision_order[] = { 7, 1, 3, 5, 6, 8, 0, 2 };
 
-  vec2d midpoint = rectangle_mid(&thing->current_box);
+  vec2d midpoint = rectangle_mid(&thing->hitbox);
 
   jumpnrun_tile_position midtile_pos = {
     fixed_point_cast_int(fixed_point_div(midpoint.x, FIXED_INT(JUMPNRUN_TILE_PIXEL_WIDTH ))),
@@ -134,7 +140,7 @@ bool collisions_tiles_displace(vec2d                     *desired_position,
 
   /* collision: sort by priority (top/bottom, left/right, then diagonal) */
   bool lethal = false;
-  thing->touching_ground = false;
+  thing->flags &= ~JUMPNRUN_MOVEABLE_TOUCHING_GROUND;
 
   for(size_t collision_index = 0; collision_index < ARRAY_SIZE(collision_order); ++collision_index) {
     if(collision_tile[collision_order[collision_index]] == -1) {
@@ -150,7 +156,7 @@ bool collisions_tiles_displace(vec2d                     *desired_position,
     }
   }
 
-  rectangle_move_to(&thing->current_box, *desired_position);
+  rectangle_move_to(&thing->hitbox, *desired_position);
 
   return lethal;
 }

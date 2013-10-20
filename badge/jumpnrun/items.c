@@ -1,12 +1,13 @@
 #include "items.h"
 #include "jumpnrun.h"
+#include "game_state.h"
 
 static void on_collect_win(jumpnrun_item       *self,
                            jumpnrun_game_state *state,
                            jumpnrun_level      *lv) {
   (void) lv;
   self->flags |= JUMPNRUN_ITEM_COLLECTED;
-  state->status = JUMPNRUN_WON;
+  state->flags |= JUMPNRUN_STATE_WON;
 }
 
 static void on_collect_checkpoint(jumpnrun_item       *self,
@@ -15,7 +16,7 @@ static void on_collect_checkpoint(jumpnrun_item       *self,
   (void) state;
   self->flags |= JUMPNRUN_ITEM_COLLECTED;
   lv->start_pos = (vec2d) { self->pos.x,
-                            fixed_point_sub(fixed_point_add(self->pos.y, FIXED_INT(self->type->sprite.height)), hacker_extents().y)
+                            fixed_point_sub(fixed_point_add(self->pos.y, FIXED_INT(self->type->sprite.height)), jumpnrun_player_extents().y)
   };
 }
 
@@ -24,13 +25,13 @@ static void on_collect_key(jumpnrun_item       *self,
                            jumpnrun_level      *lv) {
   (void) lv;
   self->flags |= JUMPNRUN_ITEM_COLLECTED;
-  ++state->keys;
+  ++state->player.keys;
 }
 
 static void on_collect_encrypted(jumpnrun_item       *self,
                                  jumpnrun_game_state *state,
                                  jumpnrun_level      *lv) {
-  if(state->keys != 0) {
+  if(state->player.keys != 0) {
     on_collect_win(self, state, lv);
   }
 }

@@ -51,10 +51,9 @@ static void jumpnrun_level_make_enemy(jumpnrun_enemy *dest, level_thing thing) {
 
   dest->type = &jumpnrun_enemy_type_data[thing.type];
 
-  dest->spawn_pos.x          = FIXED_POINT( thing.x      * JUMPNRUN_TILE_PIXEL_WIDTH                                          , 0);
-  dest->spawn_pos.y          = FIXED_POINT((thing.y + 1) * JUMPNRUN_TILE_PIXEL_HEIGHT - dest->type->animation_frames[0].height, 0);
-  dest->base.current_box     = rectangle_new(dest->spawn_pos, dest->type->extent);
-  dest->base.inertia         = dest->type->spawn_inertia;
+  dest->spawn_pos.x = FIXED_POINT( thing.x      * JUMPNRUN_TILE_PIXEL_WIDTH                                          , 0);
+  dest->spawn_pos.y = FIXED_POINT((thing.y + 1) * JUMPNRUN_TILE_PIXEL_HEIGHT - dest->type->animation_frames[0].height, 0);
+  jumpnrun_enemy_despawn(dest);
 }
 
 #ifdef __linux__
@@ -97,7 +96,7 @@ int jumpnrun_load_level_from_file(jumpnrun_level *dest, FIL *fd) {
 #endif
     return JUMPNRUN_LEVEL_LOAD_ERROR;
   } else {
-    dest->start_pos.x = fixed_point_sub(FIXED_INT((spos[0] + 1) * JUMPNRUN_TILE_PIXEL_WIDTH ), hacker_extents().x);
+    dest->start_pos.x = fixed_point_sub(FIXED_INT((spos[0] + 1) * JUMPNRUN_TILE_PIXEL_WIDTH ), jumpnrun_player_extents().x);
     dest->start_pos.y =                 FIXED_INT( spos[1]      * JUMPNRUN_TILE_PIXEL_HEIGHT);
   }
 

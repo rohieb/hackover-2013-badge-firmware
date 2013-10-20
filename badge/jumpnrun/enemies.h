@@ -18,7 +18,6 @@ typedef struct jumpnrun_enemy_type {
   size_t              animation_length;
   badge_sprite const *animation_frames;
 
-  vec2d               extent;
   rectangle           hitbox;
   vec2d               spawn_inertia;
 
@@ -42,25 +41,20 @@ typedef struct jumpnrun_enemy_type {
 typedef struct jumpnrun_enemy {
   jumpnrun_moveable base;
   vec2d             spawn_pos;
-  unsigned          flags;
 
   jumpnrun_enemy_type const *type;
 } jumpnrun_enemy;
 
 enum {
-  JUMPNRUN_ENEMY_SPAWNED      = 1,
-  JUMPNRUN_ENEMY_UNAVAILABLE  = 2,
-  JUMPNRUN_ENEMY_FACING_RIGHT = 4,
+// Do not collide with JUMPNRUN_MOVEABLE_* flags
+  JUMPNRUN_ENEMY_SPAWNED        = 4,
+  JUMPNRUN_ENEMY_UNAVAILABLE    = 8,
   JUMPNRUN_ENEMY_EVENT_TRIGGER1 = 128
 };
 
-static inline rectangle    const *enemy_box         (jumpnrun_enemy const *enemy) { return &enemy->base.current_box   ; }
-static inline vec2d               enemy_position    (jumpnrun_enemy const *enemy) { return enemy->base.current_box.pos; }
-static inline rectangle           enemy_hitbox      (jumpnrun_enemy const *enemy) { rectangle r = enemy->type->hitbox; rectangle_move_rel(&r, enemy_position(enemy)); return r; }
-static inline badge_sprite const *enemy_sprite      (jumpnrun_enemy const *enemy) { return &enemy->type->animation_frames[enemy->base.anim_frame]; }
-
-static inline bool                enemy_facing_right(jumpnrun_enemy const *enemy) { return (enemy->flags & JUMPNRUN_ENEMY_FACING_RIGHT) || fixed_point_gt(enemy->base.inertia.x, FIXED_INT(0)); }
-static inline uint8_t             enemy_render_flags(jumpnrun_enemy const *enemy) { return enemy_facing_right(enemy) ? BADGE_BLT_MIRRORED : 0; }
+static inline rectangle    const *enemy_hitbox(jumpnrun_enemy const *enemy) { return &enemy->base.hitbox; }
+void jumpnrun_enemy_despawn(jumpnrun_enemy *self);
+void jumpnrun_enemy_reset  (jumpnrun_enemy *self);
 
 enum {
   JUMPNRUN_ENEMY_TYPE_CAT,

@@ -21,11 +21,16 @@ BADGE_CSRCS   = badge_main_loop.c \
                 ui/sprite.c \
                 jumpnrun/collision.c \
                 jumpnrun/enemies.c \
+                jumpnrun/game_state.c \
                 jumpnrun/items.c \
                 jumpnrun/jumpnrun.c \
-                jumpnrun/tiles.c \
                 jumpnrun/level_load.c \
-                jumpnrun/stats.c
+                jumpnrun/moveable.c \
+                jumpnrun/player.c \
+                jumpnrun/render.c \
+                jumpnrun/shots.c \
+                jumpnrun/stats.c \
+                jumpnrun/tiles.c
 
 BADGE_CXXOBJS = $(BADGE_CXXSRCS:%.cc=%.o)
 BADGE_COBJS   = $(BADGE_CSRCS:%.c=%.o)
