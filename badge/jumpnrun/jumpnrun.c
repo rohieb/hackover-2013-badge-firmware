@@ -141,7 +141,7 @@ static void jumpnrun_apply_movement(jumpnrun_level      const *lv,
   bool killed = collisions_tiles_displace(&new_pos, &state->player.base, lv, tilerange, inertia_mod);
   state->player.base.inertia = *inertia_mod;
 
-  if(fixed_point_gt(state->player.base.hitbox.pos.y, FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
+  if(fixed_point_gt(rectangle_top(&state->player.base.hitbox), FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
     jumpnrun_player_despawn(&state->player);
   } else if(killed) {
     jumpnrun_player_kill   (&state->player);
@@ -205,7 +205,7 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
       jumpnrun_player_advance_animation(&state->player);
     } else if(jumpnrun_moveable_finished_dying(&state->player.base)) {
       jumpnrun_player_despawn(&state->player);
-    } else {
+    } else if(jumpnrun_moveable_dying(&state->player.base)) {
       jumpnrun_render_splosion(&fb, state, &state->player.base);
       state->player.base.tick_minor += JUMPNRUN_STATE_TICKS_PER_FRAME;
     }
