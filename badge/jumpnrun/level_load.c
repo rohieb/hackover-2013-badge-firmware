@@ -11,8 +11,8 @@
 #include <stdio.h>
 
 typedef struct {
-  uint8_t  x;
-  uint16_t y;
+  uint16_t x;
+  uint8_t  y;
   uint8_t  type;
 } level_thing;
 
@@ -20,7 +20,7 @@ static level_thing jumpnrun_level_parse_blob(unsigned char blob[3]) {
   level_thing result;
 
   result.y    = blob[0] >> 4;
-  result.x    = ((blob[0] & 0xf) << 8) | blob[1];
+  result.x    = ((blob[0] & 0x0f) << 8) | blob[1];
   result.type = blob[2];
 
   return result;
