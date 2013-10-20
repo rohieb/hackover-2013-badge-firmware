@@ -17,6 +17,7 @@ BADGE_CXXSRCS = mock-main.cc \
 BADGE_CSRCS   = badge_main_loop.c
 
 BADGE_FAROBJS = ui/font.o \
+                ui/menu.o \
                 ui/sprite.o \
                 jumpnrun/collision.o \
                 jumpnrun/enemies.o \
