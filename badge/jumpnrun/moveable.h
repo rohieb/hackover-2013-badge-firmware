@@ -7,7 +7,8 @@
 enum {
   // Do not collide with JUMPNRUN_ENEMY_* and JUMPNRUN_PLAYER_* flags.
   JUMPNRUN_MOVEABLE_TOUCHING_GROUND = 1,
-  JUMPNRUN_MOVEABLE_MIRRORED        = 2
+  JUMPNRUN_MOVEABLE_MIRRORED        = 2,
+  JUMPNRUN_MOVEABLE_DYING           = 4
 };
 
 typedef struct jumpnrun_moveable {

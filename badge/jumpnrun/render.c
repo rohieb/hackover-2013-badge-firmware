@@ -5,11 +5,18 @@ static badge_sprite const anim_sickle[JUMPNRUN_SHOT_FRAMES] = {
   { 3, 3, (uint8_t const *) "\xee" }
 };
 
-static badge_sprite const anim_player[JUMPNRUN_PLAYER_FRAMES ] = {
+static badge_sprite const anim_player[JUMPNRUN_PLAYER_FRAMES] = {
   { 5, 8, (uint8_t const *) "\x1c\xff\xfd\x04\x04" },
   { 5, 8, (uint8_t const *) "\x1c\xff\x3d\xc4\x04" },
   { 5, 8, (uint8_t const *) "\xdc\x3f\x1d\x24\xc4" },
   { 5, 8, (uint8_t const *) "\x1c\xff\x3d\xc4\x04" }
+};
+
+static badge_sprite const anim_splosion[JUMPNRUN_SPLOSION_FRAMES] = {
+  { 7, 5, (uint8_t const *) "\x00\x28\xa0\x00" },
+  { 7, 5, (uint8_t const *) "\x51\x29\xa0\x54\x04" },
+  { 7, 5, (uint8_t const *) "\x51\x01\x00\x54\x04" },
+  { 7, 5, (uint8_t const *) "\x11\x00\x00\x40\x04" }
 };
 
 vec2d jumpnrun_player_extents(void) { return (vec2d) { FIXED_INT_I(5), FIXED_INT_I(8) }; }
@@ -63,6 +70,20 @@ void jumpnrun_render_item         (badge_framebuffer *fb, jumpnrun_game_state co
                         fixed_point_cast_int(item->pos.y),
                         &item->type->sprite,
                         0);
+}
+
+void jumpnrun_render_splosion     (badge_framebuffer *fb, jumpnrun_game_state const *state, jumpnrun_moveable const *moveable) {
+  badge_sprite const *sprite = &anim_splosion[moveable->tick_minor / JUMPNRUN_SPLOSION_TICKS_PER_FRAME];
+  vec2d sprite_offset = {
+    fixed_point_div(fixed_point_sub(FIXED_INT(sprite->width ), rectangle_width (&moveable->hitbox)), FIXED_INT(2)),
+    fixed_point_div(fixed_point_sub(FIXED_INT(sprite->height), rectangle_height(&moveable->hitbox)), FIXED_INT(2))
+  };
+  vec2d render_pos = vec2d_sub(moveable->hitbox.pos, sprite_offset);
+
+  badge_framebuffer_blt(fb,
+                        fixed_point_cast_int(render_pos.x) - jumpnrun_screen_left(state),
+                        fixed_point_cast_int(render_pos.y),
+                        sprite, 0);
 }
 
 void jumpnrun_render_player_symbol(badge_framebuffer *fb, int8_t x, int8_t y) {

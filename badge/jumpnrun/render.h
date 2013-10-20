@@ -19,7 +19,14 @@ void jumpnrun_render_enemy        (badge_framebuffer *fb, jumpnrun_game_state co
 void jumpnrun_render_tile         (badge_framebuffer *fb, jumpnrun_game_state const *state, jumpnrun_tile     const *tile );
 void jumpnrun_render_item         (badge_framebuffer *fb, jumpnrun_game_state const *state, jumpnrun_item     const *item );
 
+void jumpnrun_render_splosion     (badge_framebuffer *fb, jumpnrun_game_state const *state, jumpnrun_moveable const *moveable);
+
 void jumpnrun_render_player_symbol(badge_framebuffer *fb, int8_t x, int8_t y);
 void jumpnrun_render_key_symbol   (badge_framebuffer *fb, int8_t x, int8_t y);
+
+enum {
+  JUMPNRUN_SPLOSION_FRAMES          =  4,
+  JUMPNRUN_SPLOSION_TICKS_PER_FRAME = 15
+};
 
 #endif

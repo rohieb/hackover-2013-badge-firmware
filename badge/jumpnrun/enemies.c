@@ -99,9 +99,14 @@ static void enemy_spawn(jumpnrun_enemy *self) {
   self->base.jumpable_frames = 0;
 }
 
+static void jumpnrun_enemy_kill(jumpnrun_enemy *self) {
+  self->base.flags |= JUMPNRUN_MOVEABLE_DYING;
+  self->base.tick_minor = 0;
+}
+
 void jumpnrun_enemy_despawn(jumpnrun_enemy *self) {
   // Despawned enemies are reset to their spawn position, so enemy_in_spawn_area will determine whether the spawn point is in the spawn area.
-  self->base.flags  &= ~(JUMPNRUN_ENEMY_SPAWNED | JUMPNRUN_ENEMY_MOVING);
+  self->base.flags  &= ~(JUMPNRUN_ENEMY_SPAWNED | JUMPNRUN_ENEMY_MOVING | JUMPNRUN_MOVEABLE_DYING);
   self->base.hitbox  = rectangle_new(self->spawn_pos, self->type->hitbox.extent);
   self->base.inertia = self->type->spawn_inertia;
 }
@@ -147,6 +152,15 @@ void jumpnrun_process_enemy(jumpnrun_enemy                   *self,
   if(self->base.flags & JUMPNRUN_ENEMY_SPAWNED) {
     if(!enemy_in_spawn_area(self, state) || fixed_point_gt(rectangle_top (enemy_hitbox(self)), FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
       jumpnrun_enemy_despawn(self);
+    } else if(self->base.flags & JUMPNRUN_MOVEABLE_DYING) {
+      if(self->base.tick_minor == JUMPNRUN_SPLOSION_FRAMES * JUMPNRUN_SPLOSION_TICKS_PER_FRAME) {
+        jumpnrun_enemy_despawn(self);
+      } else {
+        if(fb) {
+          jumpnrun_render_splosion(fb, state, &self->base);
+        }
+        ++self->base.tick_minor;
+      }
     } else {
       if((self->base.flags & JUMPNRUN_ENEMY_MOVING) || enemy_on_screen(self, state)) {
         self->base.flags |= JUMPNRUN_ENEMY_MOVING;
@@ -184,7 +198,7 @@ void enemy_collision_tiles_bounce_horiz(jumpnrun_enemy            *self,
                                           &inertia_mod);
 
   if(killed) {
-    jumpnrun_enemy_despawn(self);
+    jumpnrun_enemy_kill(self);
   } else if(fixed_point_ne(inertia_mod.x, self->base.inertia.x)) {
     enemy_bounce(self);
   }
@@ -208,7 +222,7 @@ void enemy_collision_player_jumpable(jumpnrun_enemy      *self,
     if(fixed_point_lt(rectangle_top(&state->player.base.hitbox), rectangle_top(enemy_hitbox(self))) &&
        fixed_point_gt(state->player.base.inertia.y, FIXED_INT(0)))
     {
-      jumpnrun_enemy_despawn(self);
+      jumpnrun_enemy_kill(self);
       player_inertia_mod->y = FIXED_POINT(0, -250);
       state->player.base.jumpable_frames = 12;
     } else {
@@ -234,7 +248,7 @@ void enemy_collision_shots_die(struct jumpnrun_enemy      *self,
 
     if(jumpnrun_shot_spawned(shot)) {
       if(rectangle_intersect(enemy_hitbox(self), &shot->current_box)) {
-        self->base.flags &= ~JUMPNRUN_ENEMY_SPAWNED;
+        jumpnrun_enemy_kill(self);
         jumpnrun_shot_despawn(shot);
       }
     }
