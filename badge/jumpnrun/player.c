@@ -12,3 +12,20 @@ void jumpnrun_player_spawn  (jumpnrun_player *self, vec2d spawn_pos, uint8_t liv
   jumpnrun_player_respawn(self, spawn_pos);
   self->lives = lives;
 }
+
+void jumpnrun_player_kill   (jumpnrun_player *self) {
+  if((self->base.flags & JUMPNRUN_MOVEABLE_DYING) == 0) {
+    self->base.flags |= JUMPNRUN_MOVEABLE_DYING;
+    self->base.tick_minor = 0;
+  }
+}
+
+void jumpnrun_player_despawn(jumpnrun_player *self) {
+  self->base.flags |=  JUMPNRUN_PLAYER_DEAD;
+  self->base.flags &= ~JUMPNRUN_MOVEABLE_DYING;
+  self->base.inertia = (vec2d) { FIXED_INT(0), FIXED_INT(0) };
+}
+
+void jumpnrun_player_advance_animation(jumpnrun_player *self) {
+  ++self->base.tick_minor;
+}

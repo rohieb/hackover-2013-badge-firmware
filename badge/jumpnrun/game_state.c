@@ -9,6 +9,7 @@ void jumpnrun_game_state_respawn(jumpnrun_game_state *state, jumpnrun_level cons
   jumpnrun_player_respawn(&state->player, lv->start_pos);
   state->flags = 0;
   state->screen_left = 0;
+  state->tick = 0;
   memset(state->shots, 0, sizeof(state->shots));
 
   for(size_t i = 0; i < lv->header.enemy_count; ++i) {

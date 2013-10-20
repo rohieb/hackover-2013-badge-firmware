@@ -7,15 +7,17 @@
 #include "../ui/display.h"
 
 enum {
-  JUMPNRUN_MAX_SHOTS = 2,
+  JUMPNRUN_MAX_SHOTS             = 2,
 
-  JUMPNRUN_STATE_WON = 1
+  JUMPNRUN_STATE_WON             = 1,
+  JUMPNRUN_STATE_TICKS_PER_FRAME = 3
 };
 
 typedef struct jumpnrun_game_state {
   jumpnrun_player   player;
   int               screen_left;
   uint8_t           flags;
+  uint8_t           tick;
   jumpnrun_shot     shots[JUMPNRUN_MAX_SHOTS];
 } jumpnrun_game_state;
 

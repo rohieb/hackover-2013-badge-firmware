@@ -11,6 +11,11 @@ enum {
   JUMPNRUN_MOVEABLE_DYING           = 4
 };
 
+enum {
+  JUMPNRUN_SPLOSION_FRAMES          =  4,
+  JUMPNRUN_SPLOSION_TICKS_PER_FRAME = 15
+};
+
 typedef struct jumpnrun_moveable {
   rectangle hitbox;
   vec2d     inertia;
@@ -24,5 +29,8 @@ typedef struct jumpnrun_moveable {
 
 static inline bool jumpnrun_moveable_touching_ground(jumpnrun_moveable const *self) { return self->flags & JUMPNRUN_MOVEABLE_TOUCHING_GROUND; }
 static inline bool jumpnrun_moveable_mirrored       (jumpnrun_moveable const *self) { return self->flags & JUMPNRUN_MOVEABLE_MIRRORED       ; }
+static inline bool jumpnrun_moveable_dying          (jumpnrun_moveable const *self) { return self->flags & JUMPNRUN_MOVEABLE_DYING          ; }
+
+static inline bool jumpnrun_moveable_finished_dying (jumpnrun_moveable const *self) { return jumpnrun_moveable_dying(self) && self->tick_minor >= JUMPNRUN_SPLOSION_FRAMES * JUMPNRUN_SPLOSION_TICKS_PER_FRAME; }
 
 #endif

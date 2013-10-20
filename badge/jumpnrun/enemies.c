@@ -152,8 +152,8 @@ void jumpnrun_process_enemy(jumpnrun_enemy                   *self,
   if(self->base.flags & JUMPNRUN_ENEMY_SPAWNED) {
     if(!enemy_in_spawn_area(self, state) || fixed_point_gt(rectangle_top (enemy_hitbox(self)), FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
       jumpnrun_enemy_despawn(self);
-    } else if(self->base.flags & JUMPNRUN_MOVEABLE_DYING) {
-      if(self->base.tick_minor == JUMPNRUN_SPLOSION_FRAMES * JUMPNRUN_SPLOSION_TICKS_PER_FRAME) {
+    } else if(jumpnrun_moveable_dying(&self->base)) {
+      if(jumpnrun_moveable_finished_dying(&self->base)) {
         jumpnrun_enemy_despawn(self);
       } else {
         if(fb) {
@@ -210,7 +210,7 @@ void enemy_collision_player_deadly(struct jumpnrun_enemy      *self,
   (void) player_inertia_mod;
 
   if(rectangle_intersect(enemy_hitbox(self), &state->player.base.hitbox)) {
-    state->player.base.flags |= JUMPNRUN_PLAYER_DEAD;
+    jumpnrun_player_kill(&state->player);
   }
 }
 
@@ -220,13 +220,14 @@ void enemy_collision_player_jumpable(jumpnrun_enemy      *self,
 {
   if(rectangle_intersect(enemy_hitbox(self), &state->player.base.hitbox)) {
     if(fixed_point_lt(rectangle_top(&state->player.base.hitbox), rectangle_top(enemy_hitbox(self))) &&
-       fixed_point_gt(state->player.base.inertia.y, FIXED_INT(0)))
+       fixed_point_gt(state->player.base.inertia.y, FIXED_INT(0)) &&
+       jumpnrun_player_alive(&state->player))
     {
       jumpnrun_enemy_kill(self);
       player_inertia_mod->y = FIXED_POINT(0, -250);
       state->player.base.jumpable_frames = 12;
     } else {
-      state->player.base.flags |= JUMPNRUN_PLAYER_DEAD;
+      jumpnrun_player_kill(&state->player);
     }
   }
 }

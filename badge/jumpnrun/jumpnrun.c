@@ -2,6 +2,7 @@
 #include "jumpnrun.h"
 #include "collision.h"
 #include "levels.h"
+#include "player.h"
 #include "render.h"
 #include "stats.h"
 
@@ -140,8 +141,10 @@ static void jumpnrun_apply_movement(jumpnrun_level      const *lv,
   bool killed = collisions_tiles_displace(&new_pos, &state->player.base, lv, tilerange, inertia_mod);
   state->player.base.inertia = *inertia_mod;
 
-  if(killed || fixed_point_gt(state->player.base.hitbox.pos.y, FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
-    state->player.base.flags |= JUMPNRUN_PLAYER_DEAD;
+  if(fixed_point_gt(state->player.base.hitbox.pos.y, FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
+    jumpnrun_player_despawn(&state->player);
+  } else if(killed) {
+    jumpnrun_player_kill   (&state->player);
   }
 }
 
@@ -151,12 +154,14 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
   jumpnrun_tile_range tilerange = jumpnrun_visible_tiles(lv, state);
   vec2d inertia_mod = state->player.base.inertia;
 
-  jumpnrun_apply_movement(lv, &tilerange, state, &inertia_mod);
+  if(jumpnrun_player_alive(&state->player)) {
+    jumpnrun_apply_movement(lv, &tilerange, state, &inertia_mod);
+  }
+
   state->screen_left = jumpnrun_level_assert_left_side(state);
 
-  if(state->player.base.tick_minor == 0) {
-    badge_framebuffer fb;
-    badge_framebuffer_clear(&fb);
+  if(state->tick == 0) {
+    badge_framebuffer fb = { { { 0 } } };
 
     for(size_t tile = tilerange.first; tile < tilerange.last; ++tile) {
       jumpnrun_render_tile(&fb, state, &lv->tiles[tile]);
@@ -195,7 +200,15 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
       jumpnrun_process_enemy(enemy, &fb, state, lv, &tilerange, &inertia_mod);
     }
 
-    jumpnrun_render_player(&fb, state);
+    if(jumpnrun_player_alive(&state->player)) {
+      jumpnrun_render_player(&fb, state);
+      jumpnrun_player_advance_animation(&state->player);
+    } else if(jumpnrun_moveable_finished_dying(&state->player.base)) {
+      jumpnrun_player_despawn(&state->player);
+    } else {
+      jumpnrun_render_splosion(&fb, state, &state->player.base);
+      state->player.base.tick_minor += JUMPNRUN_STATE_TICKS_PER_FRAME;
+    }
 
     badge_framebuffer_flush(&fb);
 
@@ -218,9 +231,9 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
   }
 
   state->player.base.inertia = inertia_mod;
-  ++state->player.base.tick_minor;
-  if(state->player.base.tick_minor == 3) {
-    state->player.base.tick_minor = 0;
+  ++state->tick;
+  if(state->tick == JUMPNRUN_STATE_TICKS_PER_FRAME) {
+    state->tick = 0;
   }
 }
 
