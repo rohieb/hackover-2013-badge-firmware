@@ -7,7 +7,7 @@
 
 enum {
   // Do not collide with JUMPNRUN_MOVEABLE_* flags
-  JUMPNRUN_PLAYER_DEAD = 4
+  JUMPNRUN_PLAYER_DEAD = 128
 };
 
 enum {

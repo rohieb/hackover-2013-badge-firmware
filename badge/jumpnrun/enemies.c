@@ -101,7 +101,7 @@ static void enemy_spawn(jumpnrun_enemy *self) {
 
 void jumpnrun_enemy_despawn(jumpnrun_enemy *self) {
   // Despawned enemies are reset to their spawn position, so enemy_in_spawn_area will determine whether the spawn point is in the spawn area.
-  self->base.flags  &= ~JUMPNRUN_ENEMY_SPAWNED;
+  self->base.flags  &= ~(JUMPNRUN_ENEMY_SPAWNED | JUMPNRUN_ENEMY_MOVING);
   self->base.hitbox  = rectangle_new(self->spawn_pos, self->type->hitbox.extent);
   self->base.inertia = self->type->spawn_inertia;
 }
@@ -130,7 +130,7 @@ static inline bool enemy_in_area(jumpnrun_enemy const *self, jumpnrun_game_state
 }
 
 static inline bool enemy_on_screen(jumpnrun_enemy const *self, jumpnrun_game_state *state) {
-  return enemy_in_area(self, state, 0);
+  return enemy_in_area(self, state, self->type->animation_frames[self->base.anim_frame].width);
 }
 
 static inline bool enemy_in_spawn_area(jumpnrun_enemy const *self, jumpnrun_game_state *state) {
@@ -148,10 +148,14 @@ void jumpnrun_process_enemy(jumpnrun_enemy                   *self,
     if(!enemy_in_spawn_area(self, state) || fixed_point_gt(rectangle_top (enemy_hitbox(self)), FIXED_INT(BADGE_DISPLAY_HEIGHT))) {
       jumpnrun_enemy_despawn(self);
     } else {
-      self->type->move_tick(self, state, lv, visible_tiles, player_inertia_mod);
-      self->type->collision_shots(self, state);
-      if     (fixed_point_lt(self->base.inertia.x, FIXED_INT(0))) { self->base.flags &= ~JUMPNRUN_MOVEABLE_MIRRORED; }
-      else if(fixed_point_ne(self->base.inertia.x, FIXED_INT(0))) { self->base.flags |=  JUMPNRUN_MOVEABLE_MIRRORED; }
+      if((self->base.flags & JUMPNRUN_ENEMY_MOVING) || enemy_on_screen(self, state)) {
+        self->base.flags |= JUMPNRUN_ENEMY_MOVING;
+
+        self->type->move_tick(self, state, lv, visible_tiles, player_inertia_mod);
+        self->type->collision_shots(self, state);
+        if     (fixed_point_lt(self->base.inertia.x, FIXED_INT(0))) { self->base.flags &= ~JUMPNRUN_MOVEABLE_MIRRORED; }
+        else if(fixed_point_ne(self->base.inertia.x, FIXED_INT(0))) { self->base.flags |=  JUMPNRUN_MOVEABLE_MIRRORED; }
+      }
 
       if(fb) {
         jumpnrun_render_enemy(fb, state, self);
@@ -221,7 +225,6 @@ void enemy_collision_tiles_pass_through(struct jumpnrun_enemy             *self,
   (void) desired_position;
   (void) lv;
   (void) visible_tiles;
-  return;
 }
 
 void enemy_collision_shots_die(struct jumpnrun_enemy      *self,
@@ -485,7 +488,7 @@ jumpnrun_enemy_type const jumpnrun_enemy_type_data[JUMPNRUN_ENEMY_TYPE_COUNT] = 
     .animation_length          = ARRAY_SIZE(anim_mushroom),
     .animation_frames          = anim_mushroom,
     .hitbox                    = { { FIXED_INT_I(1), FIXED_INT_I(1) },
-                                   { FIXED_INT_I(5), FIXED_INT_I(4) } },
+                                   { FIXED_INT_I(5), FIXED_INT_I(6) } },
     .spawn_inertia             = { FIXED_POINT_I(0, -80), FIXED_INT_I(0) },
     .collision_tiles           = enemy_collision_tiles_bounce_horiz,
     .collision_player          = enemy_collision_player_jumpable,

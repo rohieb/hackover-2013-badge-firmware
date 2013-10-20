@@ -47,9 +47,10 @@ typedef struct jumpnrun_enemy {
 
 enum {
 // Do not collide with JUMPNRUN_MOVEABLE_* flags
-  JUMPNRUN_ENEMY_SPAWNED        = 4,
-  JUMPNRUN_ENEMY_UNAVAILABLE    = 8,
-  JUMPNRUN_ENEMY_EVENT_TRIGGER1 = 128
+  JUMPNRUN_ENEMY_SPAWNED        = 128,
+  JUMPNRUN_ENEMY_UNAVAILABLE    =  64,
+  JUMPNRUN_ENEMY_MOVING         =  32,
+  JUMPNRUN_ENEMY_EVENT_TRIGGER1 =  16,
 };
 
 static inline rectangle    const *enemy_hitbox(jumpnrun_enemy const *enemy) { return &enemy->base.hitbox; }
