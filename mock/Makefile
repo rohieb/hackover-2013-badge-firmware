@@ -9,38 +9,38 @@ CONVERTER     = level-converter
 
 GLADEFILES    = lcd-display.glade
 
-VPATH         = ../badge
-
 BADGE_CXXSRCS = mock-main.cc \
                 mock/badge_worker.cc \
                 mock/display.cc \
                 mock/event.cc \
                 mock/lcd-window.cc
-BADGE_CSRCS   = badge_main_loop.c \
-                ui/font.c \
-                ui/sprite.c \
-                jumpnrun/collision.c \
-                jumpnrun/enemies.c \
-                jumpnrun/game_state.c \
-                jumpnrun/items.c \
-                jumpnrun/jumpnrun.c \
-                jumpnrun/level_load.c \
-                jumpnrun/player.c \
-                jumpnrun/render.c \
-                jumpnrun/shots.c \
-                jumpnrun/stats.c \
-                jumpnrun/tiles.c
+BADGE_CSRCS   = badge_main_loop.c
+
+BADGE_FAROBJS = ui/font.o \
+                ui/sprite.o \
+                jumpnrun/collision.o \
+                jumpnrun/enemies.o \
+                jumpnrun/game_state.o \
+                jumpnrun/items.o \
+                jumpnrun/jumpnrun.o \
+                jumpnrun/level_load.o \
+                jumpnrun/player.o \
+                jumpnrun/render.o \
+                jumpnrun/shots.o \
+                jumpnrun/stats.o \
+                jumpnrun/tiles.o
 
 BADGE_CXXOBJS = $(BADGE_CXXSRCS:%.cc=%.o)
 BADGE_COBJS   = $(BADGE_CSRCS:%.c=%.o)
-BADGE_OBJS    = $(BADGE_CXXOBJS) $(BADGE_COBJS)
+BADGE_OBJS    = $(BADGE_CXXOBJS) $(BADGE_COBJS) $(BADGE_FAROBJS)
 
 CONVERTER_SRCS = tools/level-converter.cc
 CONVERTER_OBJS = $(CONVERTER_SRCS:%.cc=%.o)
 
 CDEPS      = $(BADGE_CSRCS:%.c=%.dep)
 CXXDEPS    = $(BADGE_CXXSRCS:%.cc=%.dep) $(CONVERTER_SRCS:%.cc=%.dep)
-DEPS       = $(CDEPS) $(CXXDEPS)
+FARDEPS    = $(BADGE_FAROBJS:%.o=%.dep)
+DEPS       = $(CDEPS) $(CXXDEPS) $(FARDEPS)
 
 LDLIBS     = $$(pkg-config --libs gtkmm-3.0)
 RM         = rm -f
@@ -51,21 +51,27 @@ all: dep $(BADGE) $(CONVERTER)
 
 
 $(BADGE_COBJS) : %.o : %.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -c -o $(@:../badge/%=%) $< $(LDLIBS)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 $(BADGE_CXXOBJS) : %.o : %.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -c -o $@ $< $(LDLIBS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+
+$(BADGE_FAROBJS) : %.o : ../badge/%.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 $(BADGE): $(BADGE_OBJS)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(+:../badge/%=%) $(LDLIBS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $+ $(LDLIBS)
 
 dep: $(DEPS)
 
 $(CDEPS): %.dep : %.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -MM $< -MT $(<:%.c=%.o) -MF $@
+	$(CC)  $(CPPFLAGS) $(CFLAGS)   -MM $< -MT $@ -MT $(@:%.dep=%.o) -MF $@
 
 $(CXXDEPS): %.dep : %.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MM $< -MT $(<:%.cc=%.o) -MF $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MM $< -MT $@ -MT $(@:%.dep=%.o) -MF $@
+
+$(FARDEPS): %.dep : ../badge/%.c
+	$(CC)  $(CPPFLAGS) $(CFLAGS)   -MM $< -MT $@ -MT $(@:%.dep=%.o) -MF $@
 
 sinclude $(DEPS)
 

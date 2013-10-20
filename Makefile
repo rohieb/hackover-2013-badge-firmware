@@ -35,11 +35,15 @@ SRCS = \
   badge/init.c \
   badge/jumpnrun/collision.c \
   badge/jumpnrun/enemies.c \
+  badge/jumpnrun/game_state.c \
   badge/jumpnrun/items.c \
   badge/jumpnrun/jumpnrun.c \
   badge/jumpnrun/level_load.c \
-  badge/jumpnrun/tiles.c \
+  badge/jumpnrun/player.c \
+  badge/jumpnrun/render.c \
+  badge/jumpnrun/shots.c \
   badge/jumpnrun/stats.c \
+  badge/jumpnrun/tiles.c \
   badge/ui/display.c \
   badge/ui/event.c \
   badge/ui/font.c \
