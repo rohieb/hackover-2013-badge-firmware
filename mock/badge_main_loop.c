@@ -11,37 +11,30 @@
 #include <string.h>
 #include <unistd.h>
 
+#define MAX_LEVELS 1024
+
 void badge_main_loop(void) {
-  char const *const menu[] = {
-    "smb",
-    "skynet",
-    "wrongturn",
-    "lubiXOXO",
-    "lubilove",
-    "gnobbel",
-    "foo",
-    "mean",
-    "xyzzy",
-    "abc",
-    "nonsense"
-  };
+  char menu_buf[MAX_LEVELS][32];
+  FILE *fd = fopen("../badge/jumpnrun/levels.txt", "r");
 
-  size_t choice = badge_menu(menu, ARRAY_SIZE(menu), 0, 0);
+  int i;
 
-  printf("%zu\n", choice);
+  for(i = 0; i < MAX_LEVELS && fgets(menu_buf[i], sizeof(menu_buf[i]), fd); ++i) {
+    menu_buf[i][strlen(menu_buf[i]) - 1] = '\0';
+  }
+
+  fclose(fd);
+
+  char const *menu[i];
+  for(int j = 0; j < i; ++j) {
+    menu[j] = menu_buf[j];
+  }
 
   for(;;) {
-    FILE *fd = fopen("../badge/jumpnrun/levels.txt", "r");
-    char buf[12];
+    size_t choice = badge_menu(menu, ARRAY_SIZE(menu), 0, 0);
+    char lvname[256];
+    sprintf(lvname, "../badge/jumpnrun/%s.lvl", menu[choice]);
 
-    while(fgets(buf, sizeof(buf), fd)) {
-      buf[strlen(buf) - 1] = '\0';
-      char lvname[256];
-      sprintf(lvname, "../badge/jumpnrun/%s.lvl", buf);
-      while(jumpnrun_play(lvname) != JUMPNRUN_WON)
-        ;
-    }
-
-    fclose(fd);
+    jumpnrun_play(lvname);
   }
 }
