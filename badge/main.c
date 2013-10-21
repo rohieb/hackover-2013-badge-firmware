@@ -243,8 +243,10 @@ int main(void)
 
   badge_event_start();
 
+  jumpnrun_play();
+
   for(;;) {
-    if(JUMPNRUN_ERROR == jumpnrun_play("smb.lvl")) {
+    if(JUMPNRUN_ERROR == jumpnrun_play_level("smb.lvl")) {
       break;
     }
   }

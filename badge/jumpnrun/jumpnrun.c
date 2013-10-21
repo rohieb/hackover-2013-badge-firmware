@@ -237,7 +237,7 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
   }
 }
 
-uint8_t jumpnrun_play(char const *lvname) {
+uint8_t jumpnrun_play_level(char const *lvname) {
   jumpnrun_level lv;
 
   JUMPNRUN_LEVEL_LOAD(lv, lvname);

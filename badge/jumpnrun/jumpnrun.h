@@ -30,6 +30,7 @@ void jumpnrun_apply_gravity(vec2d *inertia);
 void jumpnrun_passive_movement(vec2d *inertia);
 badge_sprite const *jumpnrun_hacker_symbol(void);
 
-uint8_t jumpnrun_play(char const *lvname);
+uint8_t jumpnrun_play_level(char const *lvname);
+void jumpnrun_play(void);
 
 #endif

@@ -38,6 +38,6 @@ void badge_main_loop(void) {
     char lvname[256];
     sprintf(lvname, "../badge/jumpnrun/%s.lvl", menu[choice]);
 
-    jumpnrun_play(lvname);
+    jumpnrun_play_level(lvname);
   }
 }
