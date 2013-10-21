@@ -244,7 +244,9 @@ uint8_t jumpnrun_play(char const *lvname) {
 
   jumpnrun_game_state gs;
 
-  for(jumpnrun_game_state_init(&gs, &lv); (gs.flags & JUMPNRUN_STATE_WON) == 0 && gs.player.lives != 0; --gs.player.lives) {
+  jumpnrun_game_state_init(&gs, &lv);
+
+  do {
     jumpnrun_show_lives_screen(&gs);
     jumpnrun_game_state_respawn(&gs, &lv);
 
@@ -282,7 +284,7 @@ uint8_t jumpnrun_play(char const *lvname) {
       }
       }
     }
-  }
+  } while((gs.flags & JUMPNRUN_STATE_WON) == 0 && gs.player.lives-- != 0);
 
   if(gs.flags & JUMPNRUN_STATE_WON) { return JUMPNRUN_WON; }
   if(gs.player.lives == 0) return JUMPNRUN_LOST;

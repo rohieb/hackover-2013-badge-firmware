@@ -13,8 +13,8 @@ void jumpnrun_show_lives_screen(jumpnrun_game_state const *state) {
 
   int8_t y_upper = BADGE_DISPLAY_HEIGHT / 2 - BADGE_FONT_HEIGHT;
   int8_t y_lower = (BADGE_DISPLAY_HEIGHT + BADGE_FONT_HEIGHT) / 2;
-  int8_t x_left  = BADGE_DISPLAY_WIDTH / 2 - fixed_point_cast_int(jumpnrun_player_extents().y) - BADGE_FONT_WIDTH - 5;
-  int8_t x_mid   = (BADGE_DISPLAY_WIDTH - BADGE_FONT_WIDTH) / 2;
+  int8_t x_mid   = (BADGE_DISPLAY_WIDTH  - BADGE_FONT_WIDTH ) / 2;
+  int8_t x_left  = x_mid - BADGE_FONT_WIDTH - 5;
   int8_t x_right = x_mid + BADGE_FONT_WIDTH + 5;
 
   char buf[] = "x";

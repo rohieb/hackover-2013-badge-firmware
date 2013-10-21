@@ -2,7 +2,7 @@
 
 void jumpnrun_game_state_init(jumpnrun_game_state *state, jumpnrun_level const *lv) {
   memset(state, 0, sizeof(*state));
-  jumpnrun_player_spawn(&state->player, lv->start_pos, 5);
+  jumpnrun_player_spawn(&state->player, lv->start_pos, 3);
 }
 
 void jumpnrun_game_state_respawn(jumpnrun_game_state *state, jumpnrun_level const *lv) {

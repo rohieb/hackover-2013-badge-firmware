@@ -3,6 +3,7 @@
 CPPFLAGS      = $$(pkg-config --cflags gtkmm-3.0) -I. -I ../badge
 CFLAGS        = -Wall -Wextra -pedantic -std=c99   -Werror -O0 -g -fstack-protector-all
 CXXFLAGS      = -Wall -Wextra -pedantic -std=c++0x -Werror -O0 -g -fstack-protector-all
+LDLIBS        = $$(pkg-config --libs gtkmm-3.0)
 
 BADGE         = badge
 CONVERTER     = level-converter
@@ -43,7 +44,6 @@ CXXDEPS    = $(BADGE_CXXSRCS:%.cc=%.dep) $(CONVERTER_SRCS:%.cc=%.dep)
 FARDEPS    = $(BADGE_FAROBJS:%.o=%.dep)
 DEPS       = $(CDEPS) $(CXXDEPS) $(FARDEPS)
 
-LDLIBS     = $$(pkg-config --libs gtkmm-3.0)
 RM         = rm -f
 
 .PHONY: all dep clean distclean play
