@@ -196,6 +196,7 @@ void enemy_collision_tiles_bounce_horiz(jumpnrun_enemy            *self,
                                           lv,
                                           visible_tiles,
                                           &inertia_mod);
+  self->base.inertia.y = inertia_mod.y;
 
   if(killed) {
     jumpnrun_enemy_kill(self);
