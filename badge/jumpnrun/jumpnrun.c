@@ -16,12 +16,11 @@
 #include <stddef.h>
 #include <stdio.h>
 
-static vec2d       const gravity      = { FIXED_POINT_I(0,   0), FIXED_POINT_I(0,  56) };
-static vec2d       const move_max     = { FIXED_POINT_I(0, 600), FIXED_POINT_I(1, 300) };
-static fixed_point const accel_horiz  =   FIXED_POINT_I(0,  50);
-static fixed_point const accel_vert   =   FIXED_POINT_I(0, 167);
-static fixed_point const drag_factor  =   FIXED_POINT_I(0, 854);
-static fixed_point const speed_jump_x =   FIXED_POINT_I(0, 600);
+static vec2d       const gravity     () { return (vec2d) { FIXED_POINT(0,   0), FIXED_POINT(0,  56) }; }
+static vec2d       const move_max    () { return (vec2d) { FIXED_POINT(0, 600), FIXED_POINT(1, 300) }; }
+static fixed_point const accel_horiz () { return           FIXED_POINT(0,  50); }
+static fixed_point const accel_vert  () { return           FIXED_POINT(0, 167); }
+static fixed_point const drag_factor () { return           FIXED_POINT(0, 854); }
 
 static inline int imax(int x, int y) {
   return x < y ? y : x;
@@ -81,15 +80,15 @@ jumpnrun_tile_range jumpnrun_visible_tiles(jumpnrun_level const *lv,
 }
 
 void jumpnrun_apply_gravity(vec2d *inertia) {
-  *inertia = vec2d_add(*inertia, gravity);
+  *inertia = vec2d_add(*inertia, gravity());
 }
 
 void jumpnrun_passive_movement(vec2d *inertia)
 {
   jumpnrun_apply_gravity(inertia);
 
-  inertia->x = fixed_point_min(fixed_point_max(fixed_point_neg(move_max.x), inertia->x), move_max.x);
-  inertia->y = fixed_point_min(fixed_point_max(fixed_point_neg(move_max.y), inertia->y), move_max.y);
+  inertia->x = fixed_point_min(fixed_point_max(fixed_point_neg(move_max().x), inertia->x), move_max().x);
+  inertia->y = fixed_point_min(fixed_point_max(fixed_point_neg(move_max().y), inertia->y), move_max().y);
 }
 
 static void jumpnrun_apply_movement(jumpnrun_level      const *lv,
@@ -100,18 +99,18 @@ static void jumpnrun_apply_movement(jumpnrun_level      const *lv,
          (BADGE_EVENT_KEY_LEFT |
           BADGE_EVENT_KEY_RIGHT)) {
   case BADGE_EVENT_KEY_LEFT:
-    //    state->player.base.inertia.x = state->player.touching_ground ? fixed_point_sub(state->player.base.inertia.x, accel_horiz) : fixed_point_neg(speed_jump_x);
-    state->player.base.inertia.x = fixed_point_sub(state->player.base.inertia.x, accel_horiz);
+    //    state->player.base.inertia.x = state->player.touching_ground ? fixed_point_sub(state->player.base.inertia.x, accel_horiz()) : fixed_point_neg(speed_jump_x());
+    state->player.base.inertia.x = fixed_point_sub(state->player.base.inertia.x, accel_horiz());
     state->player.base.flags |= JUMPNRUN_MOVEABLE_MIRRORED;
     break;
   case BADGE_EVENT_KEY_RIGHT:
-    //    state->player.base.inertia.x = state->player.touching_ground ? fixed_point_add(state->player.base.inertia.x, accel_horiz) : speed_jump_x;
-    state->player.base.inertia.x = fixed_point_add(state->player.base.inertia.x, accel_horiz);
+    //    state->player.base.inertia.x = state->player.touching_ground ? fixed_point_add(state->player.base.inertia.x, accel_horiz()) : speed_jump_x();
+    state->player.base.inertia.x = fixed_point_add(state->player.base.inertia.x, accel_horiz());
     state->player.base.flags &= ~JUMPNRUN_MOVEABLE_MIRRORED;
     break;
   default:
     if(jumpnrun_moveable_touching_ground(&state->player.base)) {
-      state->player.base.inertia.x = fixed_point_mul(state->player.base.inertia.x, drag_factor);
+      state->player.base.inertia.x = fixed_point_mul(state->player.base.inertia.x, drag_factor());
     } //else {
       //state->player.base.inertia.x = FIXED_INT(0);
     //}
@@ -122,7 +121,7 @@ static void jumpnrun_apply_movement(jumpnrun_level      const *lv,
   if(state->player.base.jumpable_frames == 0) {
     // intentionally left blank.
   } else if(badge_event_current_input_state() & BADGE_EVENT_KEY_BTN_A) {
-    state->player.base.inertia.y = fixed_point_sub(state->player.base.inertia.y, accel_vert);
+    state->player.base.inertia.y = fixed_point_sub(state->player.base.inertia.y, accel_vert());
     --state->player.base.jumpable_frames;
   } else {
     state->player.base.jumpable_frames = 0;
@@ -286,7 +285,15 @@ uint8_t jumpnrun_play_level(char const *lvname) {
     }
   } while((gs.flags & JUMPNRUN_STATE_WON) == 0 && gs.player.lives-- != 0);
 
-  if(gs.flags & JUMPNRUN_STATE_WON) { return JUMPNRUN_WON; }
-  if(gs.player.lives == 0) return JUMPNRUN_LOST;
+  if(gs.flags & JUMPNRUN_STATE_WON) {
+    jumpnrun_show_you_rock();
+    return JUMPNRUN_WON;
+  }
+
+  if(++gs.player.lives == 0) {
+    jumpnrun_show_game_over();
+    return JUMPNRUN_LOST;
+  }
+
   return JUMPNRUN_ERROR;
 }

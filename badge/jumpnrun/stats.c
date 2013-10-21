@@ -47,3 +47,31 @@ void jumpnrun_show_lives_screen(jumpnrun_game_state const *state) {
     }
   }
 }
+
+static void jumpnrun_show_message(char const *msg) {
+  badge_framebuffer fb = { { { 0 } } };
+
+  size_t len = strlen(msg);
+  size_t wid = len * BADGE_FONT_WIDTH;
+  size_t off = (BADGE_DISPLAY_WIDTH - wid + 1) / 2;
+
+  badge_framebuffer_render_text(&fb, off, BADGE_DISPLAY_HEIGHT / 2 - BADGE_FONT_WIDTH, msg);
+  badge_framebuffer_flush(&fb);
+
+  for(uint8_t i = 0; i < 75; ) {
+    badge_event_t ev = badge_event_wait();
+    if(badge_event_type(ev) == BADGE_EVENT_GAME_TICK) {
+      ++i;
+    }
+  }
+}
+
+void jumpnrun_show_game_over(void) {
+  char msg[] = "GAME OVER";
+  jumpnrun_show_message(msg);
+}
+
+void jumpnrun_show_you_rock (void) {
+  char msg[] = "YOU ROCK!!1!";
+  jumpnrun_show_message(msg);
+}
