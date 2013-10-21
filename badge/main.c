@@ -205,79 +205,20 @@ int main(void)
   badge_init();
 #endif
 
-  /*
-  nrf_init();
-
-  for(uint8_t i = 1; ; ++i) {
-    badge_framebuffer fb = { { { 0 } } };
-
-    fb.data[2][86] = 0xff;
-    fb.data[3][87] = nrf_read_reg(R_CONFIG);
-    fb.data[4][86] = 0xff;
-    for(uint8_t j = 0; j < i; j += 3) {
-      fb.data[3][j / 3] = 0xff;
-    }
-
-    SCB_CLKOUTCLKDIV = i;
-    badge_framebuffer_flush(&fb);
-    systickDelay(200);
-  }
-  */
-
   FATFS fs;
   f_mount(0, &fs);
 
-  {
+  if(badge_input_raw() & BADGE_EVENT_KEY_DOWN) {
     badge_framebuffer fb = { { { 0 } } };
 
-    fb.data[0][0] = badge_framebuffer_render_text(&fb, 2, 10, "foobar");
-    fb.data[0][1] = badge_framebuffer_render_number(&fb, 10, 18, 99);
-
+    fb.data[0][0] = badge_framebuffer_render_text(&fb, 23, 30, "USB-Modus");
     badge_framebuffer_flush(&fb);
-  }
-
-  if(badge_input_raw() & BADGE_EVENT_KEY_DOWN) {
     usbMSCInit();
     for(;;);
   }
 
   badge_event_start();
-
   jumpnrun_play();
-
-  for(;;) {
-    if(JUMPNRUN_ERROR == jumpnrun_play_level("smb.lvl")) {
-      break;
-    }
-  }
-
-  uint8_t buttons = 0;
-
-  for(uint8_t i = 0; ; ++i) {
-    badge_event_t event = badge_event_wait();
-
-    switch(badge_event_type(event)) {
-    case BADGE_EVENT_USER_INPUT: {
-      buttons = badge_event_current_input_state();
-      break;
-    }
-    case BADGE_EVENT_GAME_TICK: {
-      badge_sprite const sp = { 4, 4, (uint8_t const *) "\xff\xff" };
-      badge_framebuffer fb = { { { 0x80 } } };
-
-      if(buttons & BADGE_EVENT_KEY_UP)    { badge_framebuffer_blt(&fb, 30, 10, &sp, 0); }
-      if(buttons & BADGE_EVENT_KEY_DOWN)  { badge_framebuffer_blt(&fb, 30, 50, &sp, 0); }
-      if(buttons & BADGE_EVENT_KEY_LEFT)  { badge_framebuffer_blt(&fb, 10, 30, &sp, 0); }
-      if(buttons & BADGE_EVENT_KEY_RIGHT) { badge_framebuffer_blt(&fb, 50, 30, &sp, 0); }
-      if(buttons & BADGE_EVENT_KEY_CENTER){ badge_framebuffer_blt(&fb, 30, 30, &sp, 0); }
-      if(buttons & BADGE_EVENT_KEY_BTN_A) { badge_framebuffer_blt(&fb, 70, 10, &sp, 0); }
-      if(buttons & BADGE_EVENT_KEY_BTN_B) { badge_framebuffer_blt(&fb, 70, 50, &sp, 0); }
-
-      badge_framebuffer_flush(&fb);
-      break;
-    }
-    }
-  }
 
   return 0;
 }

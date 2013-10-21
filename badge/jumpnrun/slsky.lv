@@ -1,0 +1,45 @@
+                                                                                                                             01                                      
+  P          W                                  W         W                    c                           W      W     W    23W                W                    
+                                   W                                           ??                  W                 W     W 23       W W                    W       
+                                                                                         W                                   23                                      
+010101                                  01    ?    ?     01                  W      ?                                       W23          W          01       W       
+232323              ???                 23               23W                                         01       ?????       01 23      W W            23     W         
+232323                                  23 W             23                               01        W23                   23 23                     23               
+232323     ???                 ???      23               23                    01        W23         23             W     23 23           01        23  W            
+232323                                  23               23         01        W23         23         23                   23 23           23    W  ?23              
+232323W                 W               23W              23         23         23         23?????????23     W             23 ?? 0101      23        23              
+232323                                  23             W 23        W23         23?????????23         23                   23    2323      23        23           d   
+232323          W                     W 23               23         23?????????23         23         23             W     23    2323      23        23           01  
+232323                                  23W              23         23         23         23         23                   23????2323      23        23           23  
+232323                                  23               23         23         23         23         23                   23    2323      23        23           23 
+
+[tiles]
+0 tube_top_left
+1 tube_top_right
+2 tube_left
+3 tube_right
+# brick
+? square
+^ spike_up
+v spike_down
+> spike_right
+< spike_left
+
+[items]
+d doc
+c checkpoint
+k key
+e doc_encrypted
+
+[enemies]
+C cat
+M mushroom
+B bunny
+S snake
+@ spiral
+R rotor
+H dog
+G giraffe
+V bird
+W bird_straight
+X bird_dip
