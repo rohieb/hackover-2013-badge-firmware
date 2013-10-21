@@ -14,8 +14,8 @@ struct jumpnrun_tile_range;
 struct jumpnrun_enemy;
 
 typedef struct jumpnrun_enemy_type {
-  unsigned            animation_ticks_per_frame;
-  size_t              animation_length;
+  uint8_t             animation_ticks_per_frame;
+  uint8_t             animation_length;
   badge_sprite const *animation_frames;
 
   rectangle           hitbox;

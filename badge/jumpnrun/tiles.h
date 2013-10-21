@@ -35,8 +35,8 @@ typedef struct jumpnrun_tile {
 } jumpnrun_tile;
 
 typedef struct jumpnrun_tile_range {
-  size_t first;
-  size_t last; // actually one past last.
+  uint16_t first;
+  uint16_t last; // actually one past last.
 } jumpnrun_tile_range;
 
 static inline fixed_point tile_left  (jumpnrun_tile const *tile) { return FIXED_INT(tile->pos.x * JUMPNRUN_TILE_PIXEL_WIDTH ); }

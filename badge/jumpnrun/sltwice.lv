@@ -42,3 +42,6 @@ G giraffe
 V bird
 W bird_straight
 X bird_dip
+
+[parameters]
+L 5

@@ -16,11 +16,11 @@
 #include <stddef.h>
 #include <stdio.h>
 
-static vec2d       const gravity     () { return (vec2d) { FIXED_POINT(0,   0), FIXED_POINT(0,  56) }; }
-static vec2d       const move_max    () { return (vec2d) { FIXED_POINT(0, 600), FIXED_POINT(1, 300) }; }
-static fixed_point const accel_horiz () { return           FIXED_POINT(0,  50); }
-static fixed_point const accel_vert  () { return           FIXED_POINT(0, 167); }
-static fixed_point const drag_factor () { return           FIXED_POINT(0, 854); }
+static vec2d       gravity     () { return (vec2d) { FIXED_POINT(0,   0), FIXED_POINT(0,  56) }; }
+static vec2d       move_max    () { return (vec2d) { FIXED_POINT(0, 600), FIXED_POINT(1, 300) }; }
+static fixed_point accel_horiz () { return           FIXED_POINT(0,  50); }
+static fixed_point accel_vert  () { return           FIXED_POINT(0, 167); }
+static fixed_point drag_factor () { return           FIXED_POINT(0, 854); }
 
 static inline int imax(int x, int y) {
   return x < y ? y : x;
@@ -162,11 +162,11 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
   if(state->tick == 0) {
     badge_framebuffer fb = { { { 0 } } };
 
-    for(size_t tile = tilerange.first; tile < tilerange.last; ++tile) {
+    for(uint16_t tile = tilerange.first; tile < tilerange.last; ++tile) {
       jumpnrun_render_tile(&fb, state, &lv->tiles[tile]);
     }
 
-    for(size_t item = 0; item < lv->header.item_count; ++item) {
+    for(uint16_t item = 0; item < lv->header.item_count; ++item) {
       jumpnrun_item *item_obj = &lv->items[item];
 
       if(item_obj->flags & JUMPNRUN_ITEM_COLLECTED) {
@@ -186,7 +186,7 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
       }
     }
 
-    for(size_t shot_ix = 0; shot_ix < JUMPNRUN_MAX_SHOTS; ++shot_ix) {
+    for(uint16_t shot_ix = 0; shot_ix < JUMPNRUN_MAX_SHOTS; ++shot_ix) {
       jumpnrun_shot *shot = &state->shots[shot_ix];
       jumpnrun_shot_process(shot);
       if(jumpnrun_shot_spawned(shot)) {
@@ -194,7 +194,7 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
       }
     }
 
-    for(size_t enemy_ix = 0; enemy_ix < lv->header.enemy_count; ++enemy_ix) {
+    for(uint16_t enemy_ix = 0; enemy_ix < lv->header.enemy_count; ++enemy_ix) {
       jumpnrun_enemy *enemy = &lv->enemies[enemy_ix];
       jumpnrun_process_enemy(enemy, &fb, state, lv, &tilerange, &inertia_mod);
     }
@@ -219,11 +219,11 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
       state->player.base.anim_frame = 0;
     }
   } else {
-    for(size_t shot_ix = 0; shot_ix < JUMPNRUN_MAX_SHOTS; ++shot_ix) {
+    for(uint16_t shot_ix = 0; shot_ix < JUMPNRUN_MAX_SHOTS; ++shot_ix) {
       jumpnrun_shot_process(&state->shots[shot_ix]);
     }
 
-    for(size_t enemy_ix = 0; enemy_ix < lv->header.enemy_count; ++enemy_ix) {
+    for(uint16_t enemy_ix = 0; enemy_ix < lv->header.enemy_count; ++enemy_ix) {
       jumpnrun_enemy *enemy = &lv->enemies[enemy_ix];
       jumpnrun_process_enemy(enemy, NULL, state, lv, &tilerange, &inertia_mod);
     }

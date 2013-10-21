@@ -100,6 +100,14 @@ int jumpnrun_load_level_from_file(jumpnrun_level *dest, FIL *fd) {
     dest->start_pos.y =                 FIXED_INT( spos[1]      * JUMPNRUN_TILE_PIXEL_HEIGHT);
   }
 
+#ifdef __linux__
+  if(1 != fread(&dest->start_lives, 1, 1, fd)) {
+#else
+  if(FR_OK != f_read(fd, &dest->start_lives, sizeof(dest->start_lives), &count) || count != sizeof(dest->start_lives)) {
+#endif
+    return JUMPNRUN_LEVEL_LOAD_ERROR;
+  }
+
   for(i = 0; i < dest->header.tile_count; ++i) {
 #ifdef __linux__
     if(1 != fread(buf, 3, 1, fd)) {

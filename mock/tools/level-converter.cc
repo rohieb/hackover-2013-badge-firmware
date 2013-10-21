@@ -114,6 +114,8 @@ namespace jnrcpp {
             objmap = &item_types;
           } else if(line == "[enemies]") {
             objmap = &enemy_types;
+          } else if(line == "[parameters]") {
+            objmap = &level_params;
           } else {
             throw std::invalid_argument("Unkown type: " + line);
           }
@@ -236,8 +238,21 @@ namespace jnrcpp {
         static_cast<uint16_t>(player_pos.second)
       };
 
-      dest.write(static_cast<char const *>(static_cast<void const *>(head)), sizeof(head));
-      dest.write(static_cast<char const *>(static_cast<void const *>(spos)), sizeof(spos));
+      uint8_t lives = 3;
+      {
+        std::map<char, std::string>::const_iterator iter = level_params.find('L');
+        if(iter != level_params.end()) {
+          unsigned x;
+          std::istringstream parser(iter->second);
+          if(parser >> x) {
+            lives = static_cast<uint8_t>(x);
+          }
+        }
+      }
+
+      dest.write(static_cast<char const *>(static_cast<void const *>(head  )), sizeof(head ));
+      dest.write(static_cast<char const *>(static_cast<void const *>(spos  )), sizeof(spos ));
+      dest.write(static_cast<char const *>(static_cast<void const *>(&lives)), sizeof(lives));
 
       dump_tiles(dest);
       dump_items(dest);
@@ -250,6 +265,7 @@ namespace jnrcpp {
     std::map<char, std::string> tile_types;
     std::map<char, std::string> item_types;
     std::map<char, std::string> enemy_types;
+    std::map<char, std::string> level_params;
   };
 }
 
