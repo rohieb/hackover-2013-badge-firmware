@@ -1,0 +1,45 @@
+                                                                       M  M  M  M  M                                                                         
+             W         W         W           W           W           W         W          W         W        W         W        W         W         W      W     W     W
+                                                                                                                             ?                                 
+                                                                                                                             ?    ^^^^                          
+                                                                                                                             ?    ????                          
+                                                                                                                            ??    ????             ???             d
+                                                                                                            W               ??    ????                            ????   
+                                                                                                                            ???                           ???    
+                              M                            W                                ?   ?   ?   ?   ?               ???                                 
+       ?                ???????                                                       c                                    ????              ???                
+                 01                       ?    ??    ??   ??   ?       ?    ?    ?    01                        01         ????                              
+                 23                      ??                    ??                     23                        23         ????                                 
+ P           M   23   M            M    ???^^^^^^^^^^^^^^^^^^^^???                    23   C    C    C    C     23    M    ???? S  S  S ?S  S      ############^^^^^^^^^^^^^
+############################################################################################################################################################################
+
+[tiles]
+0 tube_top_left
+1 tube_top_right
+2 tube_left
+3 tube_right
+# brick
+? square
+^ spike_up
+v spike_down
+> spike_right
+< spike_left
+
+[items]
+d doc
+c checkpoint
+k key
+e doc_encrypted
+
+[enemies]
+C cat
+M mushroom
+B bunny
+S snake
+@ spiral
+R rotor
+H dog
+G giraffe
+V bird
+W bird_straight
+X bird_dip

@@ -1,0 +1,45 @@
+                                                                                                                                                               
+             W         W         W           W           W           W         W          W         W        W         W        W         W         W      W  W  W  W
+                                                                                                                                                     01         
+       01      ?       ?   ^^  ?        ?      ?       ?        ?         ?                      ?         ?       ?      ?       ?       ?          23         
+       23                  01                                                                                                                        201        
+       201                 23                                                            01                X                                         223        
+      0123                 23                                                    01      23                                                         0123        
+      23201                23                        ?  ?                        23      23             ?             V                          V  23201       
+      23223        01      ##                                                    23      23             ?                          V                23223       
+      20123        23                                                   01   c   23  01  23        ?    ?                              01           20123       
+     0123201      013             01         01   ?  ?  ?  ?  01        23   01  23  23  23        ?    ?        01                    23          0123201     
+     2323223      233             23         23               23        23   23  23  23  23        ?    ?        23         01         23          2323223      
+ P   2323223^^^^^^233   01  S  S  23   G  G  23    M       C  23     ?  23   23  23  23  23  ?     ?    ?   B    23      M  23     C   23 H  B  M  2323223 d     
+######################################################################  23   23  23  23  23  ##################################################################^^^^^^
+
+[tiles]
+0 tube_top_left
+1 tube_top_right
+2 tube_left
+3 tube_right
+# brick
+? square
+^ spike_up
+v spike_down
+> spike_right
+< spike_left
+
+[items]
+d doc
+c checkpoint
+k key
+e doc_encrypted
+
+[enemies]
+C cat
+M mushroom
+B bunny
+S snake
+@ spiral
+R rotor
+H dog
+G giraffe
+V bird
+W bird_straight
+X bird_dip

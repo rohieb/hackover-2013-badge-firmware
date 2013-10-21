@@ -8,3 +8,6 @@ sleazy
 slsky
 slsnake
 sltwice
+slentry
+sljowy
+slpipe
