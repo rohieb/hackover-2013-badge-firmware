@@ -183,6 +183,20 @@ void rbInit() {
 
 #endif
 
+void usbmode(void) {
+    badge_framebuffer fb = { { { 0 } } };
+
+    badge_framebuffer_render_text(&fb, 23, 30, "USB-Modus");
+/*
+    badge_framebuffer_render_number(&fb, 23, 50, sizeof(jumpnrun_tile));
+    badge_framebuffer_render_number(&fb, 33, 50, sizeof(jumpnrun_item));
+    badge_framebuffer_render_number(&fb, 48, 50, sizeof(jumpnrun_enemy));
+*/
+    badge_framebuffer_flush(&fb);
+    usbMSCInit();
+    for(;;);
+}
+
 /**************************************************************************/
 /*!
     Main program entry point.  After reset, normal code execution will
@@ -209,12 +223,7 @@ int main(void)
   f_mount(0, &fs);
 
   if(badge_input_raw() & BADGE_EVENT_KEY_DOWN) {
-    badge_framebuffer fb = { { { 0 } } };
-
-    fb.data[0][0] = badge_framebuffer_render_text(&fb, 23, 30, "USB-Modus");
-    badge_framebuffer_flush(&fb);
-    usbMSCInit();
-    for(;;);
+    usbmode();
   }
 
   badge_event_start();

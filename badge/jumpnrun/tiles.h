@@ -22,7 +22,7 @@ enum {
 typedef struct jumpnrun_tile_position {
   int16_t x;
   int8_t  y;
-} jumpnrun_tile_position;
+} __attribute__((packed)) jumpnrun_tile_position;
 
 typedef struct jumpnrun_tile_type {
   uint8_t      lethal_sides;
@@ -32,7 +32,7 @@ typedef struct jumpnrun_tile_type {
 typedef struct jumpnrun_tile {
   jumpnrun_tile_position pos;
   uint8_t                type;
-} jumpnrun_tile;
+} __attribute__((packed)) jumpnrun_tile;
 
 typedef struct jumpnrun_tile_range {
   uint16_t first;
