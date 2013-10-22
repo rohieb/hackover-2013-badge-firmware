@@ -83,7 +83,7 @@ distclean: clean
 	$(RM) $(DEPS) $(wildcard *~)
 
 $(CONVERTER): $(CONVERTER_OBJS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) -o $@ $+
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ $+ $(LDLIBS)
 
 play: all
 	./$(CONVERTER)

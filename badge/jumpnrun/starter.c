@@ -92,7 +92,7 @@ void jumpnrun_play(void) {
 
   while(0 == jumpnrun_pick_level(buf, &first_visible, &selected, progress)) {
     if(JUMPNRUN_WON == jumpnrun_play_level(buf) && selected == progress) {
-      ++progress;
+      selected = ++progress;
       jumpnrun_save_progress(progress);
     }
   }
