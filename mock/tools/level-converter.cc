@@ -6,6 +6,7 @@ extern "C" {
 }
 
 #include <boost/spirit/include/qi_symbols.hpp>
+#include <boost/algorithm/string/trim.hpp>
 
 #include <algorithm>
 #include <fstream>
@@ -77,7 +78,7 @@ namespace jnrcpp {
 
       std::string name;
       while(std::getline(in, name)) {
-        if(name != "") {
+        if(boost::trim_copy(name) != "") {
           names.push_back(name);
         }
       }
@@ -119,7 +120,7 @@ namespace jnrcpp {
           } else {
             throw std::invalid_argument("Unkown type: " + line);
           }
-        } else if(line != "") {
+        } else if(boost::trim_right_copy(line) != "") {
           char c;
           std::string tok;
           std::istringstream parser(line);
