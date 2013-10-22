@@ -65,11 +65,21 @@ static void badge_menu_show(char const *const *menu,
 }
 
 size_t badge_menu(char const *const *menu,
-                   size_t  n,
-                   size_t *first_visible,
-                   size_t  selected)
+                  size_t  n,
+                  size_t *first_visible,
+                  size_t  selected)
 {
   for(;;) {
+    if(n <= MENU_ENTRIES_VISIBLE) {
+      *first_visible = 0;
+    } else if(selected + 1 == n) {
+      *first_visible = n - MENU_ENTRIES_VISIBLE;
+    } else if(selected <= *first_visible) {
+      *first_visible = selected == 0 ? 0 : selected - 1;
+    } else if(selected - *first_visible + 2 > MENU_ENTRIES_VISIBLE) {
+      *first_visible = selected - MENU_ENTRIES_VISIBLE + 2;
+    }
+
     badge_menu_show(menu, n, *first_visible, selected);
 
     badge_event_t ev;
@@ -86,14 +96,8 @@ size_t badge_menu(char const *const *menu,
       return selected;
     } else if((new_buttons & BADGE_EVENT_KEY_UP  ) && selected != 0) {
       --selected;
-      if(*first_visible != 0 && selected <= *first_visible) {
-        *first_visible = selected - 1;
-      }
     } else if(new_buttons & BADGE_EVENT_KEY_DOWN && selected + 1 < n) {
       ++selected;
-      if(*first_visible + (MENU_ENTRIES_VISIBLE - 2 + (selected + 1 == n)) < selected) {
-        *first_visible = selected - (MENU_ENTRIES_VISIBLE - 2 + (selected + 1 == n));
-      }
     }
   }
 }
