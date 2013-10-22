@@ -55,9 +55,10 @@
 
 #include "init.h"
 #include "ui/display.h"
-#include "ui/sprite.h"
 #include "ui/event.h"
 #include "ui/font.h"
+#include "ui/menu.h"
+#include "ui/sprite.h"
 #include "util/util.h"
 #include "jumpnrun/jumpnrun.h"
 
@@ -197,17 +198,50 @@ void usbmode(void) {
     for(;;);
 }
 
-/**************************************************************************/
-/*!
-    Main program entry point.  After reset, normal code execution will
-    begin here.
-*/
-/**************************************************************************/
+void scrolltest(void) {
+  char menu_buf[][15] = {
+    "foo",
+    "bar",
+    "baz",
+    "qux",
+    "foo",
+    "bar",
+    "baz",
+    "qux",
+    "foo",
+    "bar",
+    "baz",
+    "qux",
+    "foo",
+    "bar",
+    "baz",
+    "qux",
+  };
+
+  char const * menu_index[] = {
+    menu_buf[0],
+    menu_buf[1],
+    menu_buf[2],
+    menu_buf[3],
+    menu_buf[4],
+    menu_buf[5],
+    menu_buf[6],
+    menu_buf[7],
+    menu_buf[8],
+    menu_buf[9],
+    menu_buf[10],
+    menu_buf[11],
+    menu_buf[12],
+    menu_buf[13],
+    menu_buf[14],
+    menu_buf[15]
+  };
+
+  badge_scroll_text(menu_index, 16);
+}
+
 int main(void)
 {
-  // Configure cpu and mandatory peripherals
-  //systemInit();
-
   cpuInit();
   systickInit(CFG_SYSTICK_DELAY_IN_MS);
 
@@ -227,6 +261,10 @@ int main(void)
   }
 
   badge_event_start();
+
+  if(badge_input_raw() & BADGE_EVENT_KEY_UP) {
+    scrolltest();
+  }
 
   jumpnrun_play();
   usbmode();

@@ -24,7 +24,7 @@ static FRESULT open_font_file(FIL *fd) {
   *fd = fopen("../sprites/font.dat", "r");
   return fd ? 0 : -1;
 #else
-  return f_open(fd, "font.dat", FA_OPEN_EXISTING | FA_READ);
+  return f_open(fd, "/font.dat", FA_OPEN_EXISTING | FA_READ);
 #endif
 }
 

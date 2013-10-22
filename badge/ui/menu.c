@@ -8,7 +8,9 @@
 
 enum {
   MENU_ARROW_UP,
-  MENU_ARROW_DOWN
+  MENU_ARROW_DOWN,
+
+  MENU_SCROLL_TICKS = 25
 };
 
 static badge_sprite const arrows[] = {
@@ -26,8 +28,9 @@ enum {
 
 static void badge_menu_show(char const *const *menu,
                             size_t n,
-                            size_t first_visible,
-                            size_t selected)
+                            size_t *first_visible,
+                            size_t selected,
+                            char   selector)
 {
   badge_framebuffer fb = { { { 0 } } };
   bool arrow_up   = true;
@@ -37,16 +40,22 @@ static void badge_menu_show(char const *const *menu,
   size_t used_rows = MENU_ENTRIES_VISIBLE;
 
   if(n <= MENU_ENTRIES_VISIBLE) {
-    first_visible  = 0;
+    *first_visible = 0;
     used_rows      = n;
     first_used_row = (MENU_ENTRIES_VISIBLE - used_rows) / 2;
+  } else if(selected + 1 == n) {
+    *first_visible = n - MENU_ENTRIES_VISIBLE;
+  } else if(selected <= *first_visible) {
+    *first_visible = selected == 0 ? 0 : selected - 1;
+  } else if(selected - *first_visible + 2 > MENU_ENTRIES_VISIBLE) {
+    *first_visible = selected - MENU_ENTRIES_VISIBLE + 2;
   }
 
-  if(first_visible == 0) {
+  if(*first_visible == 0) {
     arrow_up = false;
   }
 
-  if(first_visible + MENU_ENTRIES_VISIBLE >= n) {
+  if(*first_visible + MENU_ENTRIES_VISIBLE >= n) {
     arrow_down = false;
   }
 
@@ -54,10 +63,10 @@ static void badge_menu_show(char const *const *menu,
     badge_framebuffer_render_text(&fb,
                                   (int8_t) (MENU_MARGIN_LEFT + BADGE_FONT_WIDTH),
                                   (int8_t) (MENU_MARGIN_TOP  + (first_used_row + i) * MENU_ENTRIES_HEIGHT),
-                                  menu[first_visible + i]);
+                                  menu[*first_visible + i]);
   }
 
-  badge_framebuffer_render_char(&fb, MENU_MARGIN_LEFT, MENU_MARGIN_TOP + MENU_ENTRIES_HEIGHT * (selected - first_visible + first_used_row), '*');
+  badge_framebuffer_render_char(&fb, MENU_MARGIN_LEFT, MENU_MARGIN_TOP + MENU_ENTRIES_HEIGHT * (selected - *first_visible + first_used_row), selector);
   if(arrow_up  ) { badge_framebuffer_blt(&fb, MENU_MARGIN_LEFT, MENU_MARGIN_TOP,                                                    &arrows[MENU_ARROW_UP  ], 0); }
   if(arrow_down) { badge_framebuffer_blt(&fb, MENU_MARGIN_LEFT, MENU_MARGIN_TOP + (MENU_ENTRIES_VISIBLE - 1) * MENU_ENTRIES_HEIGHT, &arrows[MENU_ARROW_DOWN], 0); }
 
@@ -80,19 +89,9 @@ size_t badge_menu(char const *const *menu,
         --selected;
       }
 
-      if(n <= MENU_ENTRIES_VISIBLE) {
-        *first_visible = 0;
-      } else if(selected + 1 == n) {
-        *first_visible = n - MENU_ENTRIES_VISIBLE;
-      } else if(selected <= *first_visible) {
-        *first_visible = selected == 0 ? 0 : selected - 1;
-      } else if(selected - *first_visible + 2 > MENU_ENTRIES_VISIBLE) {
-        *first_visible = selected - MENU_ENTRIES_VISIBLE + 2;
-      }
+      badge_menu_show(menu, n, first_visible, selected, '*');
 
-      badge_menu_show(menu, n, *first_visible, selected);
-
-      scroll_ticks = 25;
+      scroll_ticks = MENU_SCROLL_TICKS;
     }
 
     badge_event_t ev;
@@ -107,6 +106,56 @@ size_t badge_menu(char const *const *menu,
 
       if(new_buttons & (BADGE_EVENT_KEY_BTN_A | BADGE_EVENT_KEY_BTN_B)) {
         return selected;
+      } else if((new_buttons & BADGE_EVENT_KEY_UP  )) {
+        scroll_direction = -1;
+      } else if((new_buttons & BADGE_EVENT_KEY_DOWN)) {
+        scroll_direction =  1;
+      } else {
+        scroll_direction =  0;
+      }
+
+      scroll_ticks = 0;
+      break;
+    }
+    case BADGE_EVENT_GAME_TICK:
+    {
+      --scroll_ticks;
+      break;
+    }
+    }
+  }
+}
+
+void badge_scroll_text(char const *const *lines, size_t n) {
+  size_t first_visible  = 0;
+  int scroll_direction  = 0;
+  unsigned scroll_ticks = 0;
+
+  for(;;) {
+    if(scroll_ticks == 0) {
+      if       (scroll_direction ==  1 && first_visible + MENU_ENTRIES_VISIBLE < n) {
+        ++first_visible;
+      } else if(scroll_direction == -1 && first_visible != 0) {
+        --first_visible;
+      }
+
+      badge_menu_show(lines, n, &first_visible, first_visible + (first_visible + 1 == n ? 0 : 1), ' ');
+
+      scroll_ticks = MENU_SCROLL_TICKS;
+    }
+
+    badge_event_t ev;
+
+    ev = badge_event_wait();
+    switch(badge_event_type(ev)) {
+    case BADGE_EVENT_USER_INPUT:
+    {
+      uint8_t old_state = badge_event_old_input_state(ev);
+      uint8_t new_state = badge_event_new_input_state(ev);
+      uint8_t new_buttons = new_state & (old_state ^ new_state);
+
+      if(new_buttons & (BADGE_EVENT_KEY_BTN_A | BADGE_EVENT_KEY_BTN_B)) {
+        return;
       } else if((new_buttons & BADGE_EVENT_KEY_UP  )) {
         scroll_direction = -1;
       } else if((new_buttons & BADGE_EVENT_KEY_DOWN)) {
