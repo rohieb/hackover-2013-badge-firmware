@@ -22,7 +22,7 @@ enum {
   LEVEL_LINE_COUNT = 14
 };
 
-#define PATH_PREFIX "../badge/jumpnrun/"
+#define PATH_PREFIX "../badge/jumpnrun/levels/"
 
 namespace jnrcpp {
   struct descriptors {

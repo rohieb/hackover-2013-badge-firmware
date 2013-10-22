@@ -13,9 +13,11 @@
 
 #define MAX_LEVELS 1024
 
+#define PATH_PREFIX "../badge/jumpnrun/levels/"
+
 void badge_main_loop(void) {
   char menu_buf[MAX_LEVELS][32];
-  FILE *fd = fopen("../badge/jumpnrun/levels.txt", "r");
+  FILE *fd = fopen(PATH_PREFIX "levels.txt", "r");
 
   int i;
 
@@ -36,7 +38,7 @@ void badge_main_loop(void) {
   for(;;) {
     choice = badge_menu(menu, ARRAY_SIZE(menu), &first_visible, choice);
     char lvname[256];
-    sprintf(lvname, "../badge/jumpnrun/%s.lvl", menu[choice]);
+    sprintf(lvname, PATH_PREFIX "%s.lvl", menu[choice]);
 
     jumpnrun_play_level(lvname);
   }
