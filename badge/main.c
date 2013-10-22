@@ -227,7 +227,9 @@ int main(void)
   }
 
   badge_event_start();
+
   jumpnrun_play();
+  usbmode();
 
   return 0;
 }

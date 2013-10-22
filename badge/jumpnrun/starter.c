@@ -48,9 +48,9 @@ static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, siz
     return JUMPNRUN_ERROR;
   }
 
-  char menu_buf[levelcount][MENU_BUFLEN];
-  char const *menu_index[levelcount];
-  char const *fnames[levelcount];
+  char menu_buf[levelcount + 1][MENU_BUFLEN];
+  char const *menu_index[levelcount + 1];
+  char const *fnames[levelcount + 1];
   unsigned i;
 
   for(i = 0; i < levelcount && f_gets(menu_buf[i], MENU_BUFLEN, fd); ++i) {
@@ -64,8 +64,15 @@ static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, siz
     fnames[i] = p;
   }
 
-  *selected = badge_menu(menu_index, i, first_visible, *selected);
+  strcpy(menu_buf[i], "exit");
+  menu_index[i] = menu_buf[i];
+  size_t choice = badge_menu(menu_index, i + 1, first_visible, *selected);
 
+  if(choice == levelcount) {
+    return 1; // exit
+  }
+
+  *selected = choice;
   strcpy(buf, fnames[*selected]);
   return 0;
 }
