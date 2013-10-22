@@ -1,7 +1,7 @@
 loclhost
 router
-23xEntry
-23xHQ
+23xentry
+23xhq
 smb
 skynet
 wrongtrn
