@@ -69,35 +69,60 @@ size_t badge_menu(char const *const *menu,
                   size_t *first_visible,
                   size_t  selected)
 {
-  for(;;) {
-    if(n <= MENU_ENTRIES_VISIBLE) {
-      *first_visible = 0;
-    } else if(selected + 1 == n) {
-      *first_visible = n - MENU_ENTRIES_VISIBLE;
-    } else if(selected <= *first_visible) {
-      *first_visible = selected == 0 ? 0 : selected - 1;
-    } else if(selected - *first_visible + 2 > MENU_ENTRIES_VISIBLE) {
-      *first_visible = selected - MENU_ENTRIES_VISIBLE + 2;
-    }
+  unsigned scroll_ticks = 0;
+  int scroll_direction = 0;
 
-    badge_menu_show(menu, n, *first_visible, selected);
+  for(;;) {
+    if(scroll_ticks == 0) {
+      if       (scroll_direction ==  1 && selected + 1 <  n) {
+        ++selected;
+      } else if(scroll_direction == -1 && selected     != 0) {
+        --selected;
+      }
+
+      if(n <= MENU_ENTRIES_VISIBLE) {
+        *first_visible = 0;
+      } else if(selected + 1 == n) {
+        *first_visible = n - MENU_ENTRIES_VISIBLE;
+      } else if(selected <= *first_visible) {
+        *first_visible = selected == 0 ? 0 : selected - 1;
+      } else if(selected - *first_visible + 2 > MENU_ENTRIES_VISIBLE) {
+        *first_visible = selected - MENU_ENTRIES_VISIBLE + 2;
+      }
+
+      badge_menu_show(menu, n, *first_visible, selected);
+
+      scroll_ticks = 25;
+    }
 
     badge_event_t ev;
 
-    do {
-      ev = badge_event_wait();
-    } while(badge_event_type(ev) != BADGE_EVENT_USER_INPUT);
+    ev = badge_event_wait();
+    switch(badge_event_type(ev)) {
+    case BADGE_EVENT_USER_INPUT:
+    {
+      uint8_t old_state = badge_event_old_input_state(ev);
+      uint8_t new_state = badge_event_new_input_state(ev);
+      uint8_t new_buttons = new_state & (old_state ^ new_state);
 
-    uint8_t old_state = badge_event_old_input_state(ev);
-    uint8_t new_state = badge_event_new_input_state(ev);
-    uint8_t new_buttons = new_state & (old_state ^ new_state);
+      if(new_buttons & (BADGE_EVENT_KEY_BTN_A | BADGE_EVENT_KEY_BTN_B)) {
+        return selected;
+      } else if((new_buttons & BADGE_EVENT_KEY_UP  )) {
+        scroll_direction = -1;
+      } else if((new_buttons & BADGE_EVENT_KEY_DOWN)) {
+        scroll_direction =  1;
+      } else {
+        scroll_direction =  0;
+      }
 
-    if(new_buttons & (BADGE_EVENT_KEY_BTN_A | BADGE_EVENT_KEY_BTN_B)) {
-      return selected;
-    } else if((new_buttons & BADGE_EVENT_KEY_UP  ) && selected != 0) {
-      --selected;
-    } else if(new_buttons & BADGE_EVENT_KEY_DOWN && selected + 1 < n) {
-      ++selected;
+      scroll_ticks = 0;
+      break;
+    }
+    case BADGE_EVENT_GAME_TICK:
+    {
+      --scroll_ticks;
+      break;
+    }
     }
   }
 }
