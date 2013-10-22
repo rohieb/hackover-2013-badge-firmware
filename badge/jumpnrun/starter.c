@@ -9,12 +9,35 @@ enum {
   MENU_BUFLEN          = LEVELDESCRIPTION_MAX + 1 + LEVELFILE_MAX + 1
 };
 
-static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, size_t *selected, FIL *fd) {
+#define PROGRESS_FNAME "progress.dat"
+
+static uint8_t jumpnrun_load_progress(void) {
+  uint8_t progress = 0;
+  FIL fd;
+
+  if(FR_OK == f_open(&fd, PROGRESS_FNAME, FA_OPEN_EXISTING | FA_READ)) {
+    UINT bytes;
+    f_read(&fd, &progress, sizeof(progress), &bytes);
+  }
+
+  return progress;
+}
+
+static void jumpnrun_save_progress(uint8_t progress) {
+  FIL fd;
+
+  if(FR_OK == f_open(&fd, PROGRESS_FNAME, FA_CREATE_NEW | FA_WRITE)) {
+    UINT bytes;
+    f_write(&fd, &progress, sizeof(progress), &bytes);
+  }
+}
+
+static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, size_t *selected, uint8_t progress, FIL *fd) {
   unsigned levelcount = 0;
 
   {
     char buf[MENU_BUFLEN];
-    while(f_gets(buf, MENU_BUFLEN, fd)) {
+    while(f_gets(buf, MENU_BUFLEN, fd) && levelcount <= progress) {
       ++levelcount;
     }
   }
@@ -45,14 +68,14 @@ static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, siz
   return 0;
 }
 
-static uint8_t jumpnrun_pick_level(char *buf, size_t *first_visible, size_t *selected) {
+static uint8_t jumpnrun_pick_level(char *buf, size_t *first_visible, size_t *selected, uint8_t progress) {
   FIL fd;
 
   if(FR_OK != f_open(&fd, "levels.lst", FA_OPEN_EXISTING | FA_READ)) {
     return JUMPNRUN_ERROR;
   }
 
-  uint8_t err = jumpnrun_pick_level_from_fd(buf, first_visible, selected, &fd);
+  uint8_t err = jumpnrun_pick_level_from_fd(buf, first_visible, selected, progress, &fd);
 
   f_close(&fd);
 
@@ -63,8 +86,12 @@ void jumpnrun_play(void) {
   char buf[LEVELFILE_MAX + 1];
   size_t first_visible = 0;
   size_t selected = 0;
+  uint8_t progress = jumpnrun_load_progress();
 
-  while(0 == jumpnrun_pick_level(buf, &first_visible, &selected)) {
-    jumpnrun_play_level(buf);
+  while(0 == jumpnrun_pick_level(buf, &first_visible, &selected, progress)) {
+    if(JUMPNRUN_WON == jumpnrun_play_level(buf) && selected == progress) {
+      ++progress;
+      jumpnrun_save_progress(progress);
+    }
   }
 }
