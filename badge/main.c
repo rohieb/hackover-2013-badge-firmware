@@ -199,45 +199,7 @@ void usbmode(void) {
 }
 
 void scrolltest(void) {
-  char menu_buf[][15] = {
-    "foo",
-    "bar",
-    "baz",
-    "qux",
-    "foo",
-    "bar",
-    "baz",
-    "qux",
-    "foo",
-    "bar",
-    "baz",
-    "qux",
-    "foo",
-    "bar",
-    "baz",
-    "qux",
-  };
-
-  char const * menu_index[] = {
-    menu_buf[0],
-    menu_buf[1],
-    menu_buf[2],
-    menu_buf[3],
-    menu_buf[4],
-    menu_buf[5],
-    menu_buf[6],
-    menu_buf[7],
-    menu_buf[8],
-    menu_buf[9],
-    menu_buf[10],
-    menu_buf[11],
-    menu_buf[12],
-    menu_buf[13],
-    menu_buf[14],
-    menu_buf[15]
-  };
-
-  badge_scroll_text(menu_index, 16);
+  badge_browse_textfile("/fahrplan/test.txt");
 }
 
 int main(void)
