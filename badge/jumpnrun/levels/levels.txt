@@ -1,3 +1,5 @@
+loclhost
+router
 23xEntry
 23xHQ
 smb
