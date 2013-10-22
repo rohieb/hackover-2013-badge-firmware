@@ -18,6 +18,7 @@ static uint8_t jumpnrun_load_progress(void) {
   if(FR_OK == f_open(&fd, PROGRESS_FNAME, FA_OPEN_EXISTING | FA_READ)) {
     UINT bytes;
     f_read(&fd, &progress, sizeof(progress), &bytes);
+    f_close(&fd);
   }
 
   return progress;
@@ -26,9 +27,10 @@ static uint8_t jumpnrun_load_progress(void) {
 static void jumpnrun_save_progress(uint8_t progress) {
   FIL fd;
 
-  if(FR_OK == f_open(&fd, PROGRESS_FNAME, FA_CREATE_NEW | FA_WRITE)) {
+  if(FR_OK == f_open(&fd, PROGRESS_FNAME, FA_CREATE_ALWAYS | FA_WRITE)) {
     UINT bytes;
     f_write(&fd, &progress, sizeof(progress), &bytes);
+    f_close(&fd);
   }
 }
 
