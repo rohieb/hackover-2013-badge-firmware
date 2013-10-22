@@ -10,6 +10,8 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#define JUMPNRUN_PATH "/hackio"
+
 typedef struct jumpnrun_level_header {
   uint16_t tile_count;
   uint16_t item_count;
@@ -73,7 +75,8 @@ int jumpnrun_load_level_from_file       (jumpnrun_level *dest, FIL *fd);
 #define JUMPNRUN_LEVEL_LOAD(lv, lvname)                                 \
   memset(&(lv), 0, sizeof(lv));                                         \
   FIL fd;                                                               \
-  if(FR_OK != f_open(&fd, (lvname), FA_OPEN_EXISTING | FA_READ)) {      \
+  if(FR_OK != f_chdir(JUMPNRUN_PATH) ||                                 \
+     FR_OK != f_open(&fd, (lvname), FA_OPEN_EXISTING | FA_READ)) {      \
     return JUMPNRUN_ERROR;                                              \
   }                                                                     \
   if(0 != jumpnrun_load_level_header_from_file(&(lv), &fd)) {           \

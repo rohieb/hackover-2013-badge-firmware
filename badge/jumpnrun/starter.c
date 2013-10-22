@@ -15,7 +15,9 @@ static uint8_t jumpnrun_load_progress(void) {
   uint8_t progress = 0;
   FIL fd;
 
-  if(FR_OK == f_open(&fd, PROGRESS_FNAME, FA_OPEN_EXISTING | FA_READ)) {
+
+  if(FR_OK == f_chdir(JUMPNRUN_PATH) &&
+     FR_OK == f_open(&fd, PROGRESS_FNAME, FA_OPEN_EXISTING | FA_READ)) {
     UINT bytes;
     f_read(&fd, &progress, sizeof(progress), &bytes);
     f_close(&fd);
@@ -27,7 +29,8 @@ static uint8_t jumpnrun_load_progress(void) {
 static void jumpnrun_save_progress(uint8_t progress) {
   FIL fd;
 
-  if(FR_OK == f_open(&fd, PROGRESS_FNAME, FA_CREATE_ALWAYS | FA_WRITE)) {
+  if(FR_OK == f_chdir(JUMPNRUN_PATH) &&
+     FR_OK == f_open(&fd, PROGRESS_FNAME, FA_CREATE_ALWAYS | FA_WRITE)) {
     UINT bytes;
     f_write(&fd, &progress, sizeof(progress), &bytes);
     f_close(&fd);
@@ -80,7 +83,8 @@ static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, siz
 static uint8_t jumpnrun_pick_level(char *buf, size_t *first_visible, size_t *selected, uint8_t progress) {
   FIL fd;
 
-  if(FR_OK != f_open(&fd, "levels.lst", FA_OPEN_EXISTING | FA_READ)) {
+  if(FR_OK != f_chdir(JUMPNRUN_PATH) ||
+     FR_OK != f_open(&fd, "levels.lst", FA_OPEN_EXISTING | FA_READ)) {
     return JUMPNRUN_ERROR;
   }
 
