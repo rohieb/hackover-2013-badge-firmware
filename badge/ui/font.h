@@ -4,8 +4,9 @@
 #include "display.h"
 
 enum {
-  BADGE_FONT_WIDTH  = 6,
-  BADGE_FONT_HEIGHT = 8
+  BADGE_FONT_GLYPH_WIDTH = 5,
+  BADGE_FONT_WIDTH       = 6,
+  BADGE_FONT_HEIGHT      = 8
 };
 
 uint8_t badge_framebuffer_render_char(badge_framebuffer *fb, int8_t pos_x, int8_t pos_y, char c);
