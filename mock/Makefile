@@ -7,6 +7,7 @@ LDLIBS        = $$(pkg-config --libs gtkmm-3.0)
 
 BADGE         = badge
 CONVERTER     = level-converter
+LEVELLIST     = levels.txt
 
 GLADEFILES    = lcd-display.glade
 
@@ -86,5 +87,7 @@ $(CONVERTER): $(CONVERTER_OBJS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ $+ $(LDLIBS)
 
 play: all
+	echo > $(LEVELLIST)
+	ls ../badge/jumpnrun/levels/*.lv | xargs -n1 basename | cut -d . -f 1 > $(LEVELLIST)
 	./$(CONVERTER)
 	./$(BADGE)
