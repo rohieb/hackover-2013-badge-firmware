@@ -31,8 +31,9 @@ OPTDEFINES = -D __NEWLIB__ -DHOB_REV2
 ##########################################################################
 
 SRCS = \
-  badge/main.c \
+  badge/fahrplan.c \
   badge/init.c \
+  badge/main.c \
   badge/jumpnrun/collision.c \
   badge/jumpnrun/enemies.c \
   badge/jumpnrun/game_state.c \

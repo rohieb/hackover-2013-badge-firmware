@@ -107,12 +107,11 @@ void badge_browse_textfile(char const *fname) {
   }
 }
 
-void badge_browse_textfiles(char const *menufile) {
+void badge_browse_textfiles(char const *menufile, size_t *selected) {
   char buf[FNAME_MAX + 1];
   size_t first_visible = 0;
-  size_t selected = 0;
 
-  while(0 == badge_pick_filename(buf, menufile, &first_visible, &selected)) {
+  while(0 == badge_pick_filename(buf, menufile, &first_visible, selected)) {
     badge_browse_textfile(buf);
   }
 }

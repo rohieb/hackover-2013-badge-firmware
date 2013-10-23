@@ -39,6 +39,10 @@ static void badge_menu_show(char const *const *menu,
   size_t first_used_row = 0;
   size_t used_rows = MENU_ENTRIES_VISIBLE;
 
+  if(selected >= n) {
+    selected = n - 1;
+  }
+
   if(n <= MENU_ENTRIES_VISIBLE) {
     *first_visible = 0;
     used_rows      = n;

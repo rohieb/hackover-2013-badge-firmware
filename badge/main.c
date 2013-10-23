@@ -53,6 +53,7 @@
   #include "core/cmd/cmd.h"
 #endif
 
+#include "fahrplan.h"
 #include "init.h"
 #include "ui/browser.h"
 #include "ui/display.h"
@@ -202,11 +203,6 @@ static void usbmode(void) {
   for(;;);
 }
 
-static void fahrplan(void) {
-  f_chdir("/fahrplan");
-  badge_browse_textfiles("fahrplan.lst");
-}
-
 uint8_t main_menu_show(uint8_t selected) {
   char const menu_buf[][15] = {
     "Vanity-Screen",
@@ -234,7 +230,7 @@ void main_menu(void) {
     switch(selected) {
     case 0: badge_vanity_show(); break;
     case 1: jumpnrun_play    (); break;
-    case 2: fahrplan         (); break;
+    case 2: badge_fahrplan   (); break;
     case 3: usbmode          (); break;
     }
   }
