@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdio.h>
 
 unsigned char const font5x8[] = {
@@ -229,7 +230,11 @@ unsigned char const font5x8[] = {
 
 int main(void) {
   FILE *fd = fopen("font.dat", "wb");
+  size_t i;
 
-  fwrite(font5x8, 1, sizeof(font5x8), fd);
+  for(i = 0; i < sizeof(font5x8); ++i) {
+    fputc(font5x8[i] >> 1, fd);
+  }
+
   fclose(fd);
 }
