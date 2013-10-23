@@ -88,3 +88,7 @@ void badge_event_start(void) {
   timer32SetIntHandler(badge_event_irq);
   timer32Enable(0);
 }
+
+void badge_event_stop (void) {
+  timer32Disable(0);
+}

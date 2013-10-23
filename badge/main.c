@@ -54,6 +54,7 @@
 #endif
 
 #include "init.h"
+#include "ui/browser.h"
 #include "ui/display.h"
 #include "ui/event.h"
 #include "ui/font.h"
@@ -186,21 +187,56 @@ void rbInit() {
 #endif
 
 void usbmode(void) {
-    badge_framebuffer fb = { { { 0 } } };
+  badge_event_stop();
 
-    badge_framebuffer_render_text(&fb, 23, 30, "USB-Modus");
+  badge_framebuffer fb = { { { 0 } } };
+
+  badge_framebuffer_render_text(&fb, 23, 30, "USB-Modus");
 /*
     badge_framebuffer_render_number(&fb, 23, 50, sizeof(jumpnrun_tile));
     badge_framebuffer_render_number(&fb, 33, 50, sizeof(jumpnrun_item));
     badge_framebuffer_render_number(&fb, 48, 50, sizeof(jumpnrun_enemy));
 */
-    badge_framebuffer_flush(&fb);
-    usbMSCInit();
-    for(;;);
+  badge_framebuffer_flush(&fb);
+  usbMSCInit();
+  for(;;);
 }
 
 void scrolltest(void) {
   badge_browse_textfile("/fahrplan/test.txt");
+}
+
+uint8_t main_menu_show(uint8_t selected) {
+  char const menu_buf[][15] = {
+    "Vanity-Screen",
+    "Super Hackio",
+    "Fahrplan",
+    "USB-Modus"
+  };
+
+  char const *menu[ARRAY_SIZE(menu_buf)];
+  for(uint8_t i = 0; i < ARRAY_SIZE(menu_buf); ++i) {
+    menu[i] = menu_buf[i];
+  }
+
+  f_chdir("/");
+  // first_visible = 0, weil Menü so kurz. Ggf. Parameter aus main_menu empfangen und merken.
+  size_t first_visible = 0;
+  return (uint8_t) badge_menu(menu, ARRAY_SIZE(menu), &first_visible, selected);
+}
+
+void main_menu(void) {
+  uint8_t selected = 0;
+
+  for(;;) {
+    selected = main_menu_show(selected);
+    switch(selected) {
+    case 0: badge_vanity_show(); break;
+    case 1: jumpnrun_play    (); break;
+    case 2: scrolltest       (); break;
+    case 3: usbmode          (); break;
+    }
+  }
 }
 
 int main(void)
@@ -224,17 +260,7 @@ int main(void)
   }
 
   badge_event_start();
-
-  if(badge_input_raw() & BADGE_EVENT_KEY_UP) {
-    scrolltest();
-  }
-
-  if(badge_input_raw() & BADGE_EVENT_KEY_LEFT) {
-    badge_vanity_show();
-  }
-
-  jumpnrun_play();
-  usbmode();
+  main_menu();
 
   return 0;
 }

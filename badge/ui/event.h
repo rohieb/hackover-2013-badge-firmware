@@ -37,6 +37,7 @@ extern "C" {
 
   badge_event_t badge_event_wait(void);
   void          badge_event_start(void);
+  void          badge_event_stop (void);
 
 #ifdef __cplusplus
 }

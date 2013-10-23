@@ -15,7 +15,7 @@ void badge_vanity_show(void) {
   FIL fd;
   badge_framebuffer fb;
 
-  unsigned min_ticks = 75;
+  unsigned min_ticks = 50;
 
   if(FR_OK == f_open(&fd, VANITY_IMAGE_FILE, FA_OPEN_EXISTING | FA_READ)) {
     badge_vanity_read_from_fd(&fd, &fb);
