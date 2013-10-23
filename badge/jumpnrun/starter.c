@@ -76,7 +76,8 @@ static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, siz
   }
 
   *selected = choice;
-  strcpy(buf, fnames[*selected]);
+  strncpy(buf, fnames[*selected], LEVELFILE_MAX);
+  buf[LEVELFILE_MAX] = '\0';
   return 0;
 }
 

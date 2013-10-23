@@ -186,7 +186,7 @@ void rbInit() {
 
 #endif
 
-void usbmode(void) {
+static void usbmode(void) {
   badge_event_stop();
 
   badge_framebuffer fb = { { { 0 } } };
@@ -202,8 +202,9 @@ void usbmode(void) {
   for(;;);
 }
 
-void scrolltest(void) {
-  badge_browse_textfile("/fahrplan/test.txt");
+static void fahrplan(void) {
+  f_chdir("/fahrplan");
+  badge_browse_textfiles("fahrplan.lst");
 }
 
 uint8_t main_menu_show(uint8_t selected) {
@@ -233,7 +234,7 @@ void main_menu(void) {
     switch(selected) {
     case 0: badge_vanity_show(); break;
     case 1: jumpnrun_play    (); break;
-    case 2: scrolltest       (); break;
+    case 2: fahrplan         (); break;
     case 3: usbmode          (); break;
     }
   }
