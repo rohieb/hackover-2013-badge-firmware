@@ -50,7 +50,8 @@ SRCS = \
   badge/ui/event.c \
   badge/ui/font.c \
   badge/ui/menu.c \
-  badge/ui/sprite.c
+  badge/ui/sprite.c \
+  badge/ui/vanity.c
 
 SRCS += \
   dataflash/iobase.c \

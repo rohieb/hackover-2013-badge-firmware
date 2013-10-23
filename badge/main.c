@@ -59,6 +59,7 @@
 #include "ui/font.h"
 #include "ui/menu.h"
 #include "ui/sprite.h"
+#include "ui/vanity.h"
 #include "util/util.h"
 #include "jumpnrun/jumpnrun.h"
 
@@ -226,6 +227,10 @@ int main(void)
 
   if(badge_input_raw() & BADGE_EVENT_KEY_UP) {
     scrolltest();
+  }
+
+  if(badge_input_raw() & BADGE_EVENT_KEY_LEFT) {
+    badge_vanity_show();
   }
 
   jumpnrun_play();
