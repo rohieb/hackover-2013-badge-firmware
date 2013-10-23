@@ -70,10 +70,10 @@ namespace jnrcpp {
 
   struct level_name_map {
     level_name_map() {
-      std::ifstream in(PATH_PREFIX "levels.txt");
+      std::ifstream in("levels.txt");
 
       if(!in) {
-        throw std::logic_error(PATH_PREFIX "levels.txt konnte nicht geöffnet werden.");
+        throw std::logic_error("levels.txt konnte nicht geöffnet werden.");
       }
 
       std::string name;

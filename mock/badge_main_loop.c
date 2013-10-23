@@ -17,7 +17,7 @@
 
 void badge_main_loop(void) {
   char menu_buf[MAX_LEVELS][32];
-  FILE *fd = fopen(PATH_PREFIX "levels.txt", "r");
+  FILE *fd = fopen("levels.txt", "r");
 
   int i;
 
