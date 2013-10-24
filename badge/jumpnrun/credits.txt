@@ -4,17 +4,18 @@ Credits
 
 Engine
 ------
-wintermute
+Wintermute
 
 Sprites
 -------
 0717
-ambro
-wintermute
+Ambro
+Wintermute
 
 Level
 -----
-lubiana
+Lubiana
+McSilver
 SpilkZ
-wintermute
-wolfpro
+Wintermute
+Wolfpro

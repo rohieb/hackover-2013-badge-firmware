@@ -1,12 +1,22 @@
 #include "jumpnrun.h"
 #include "../ui/menu.h"
+#include "../ui/browser.h"
 
 #include <drivers/fatfs/ff.h>
+
+#define CREDITSFILE "credits.txt"
 
 enum {
   LEVELFILE_MAX        = 12,
   LEVELDESCRIPTION_MAX = 14,
   MENU_BUFLEN          = LEVELDESCRIPTION_MAX + 1 + LEVELFILE_MAX + 1
+};
+
+enum {
+  CHOICE_LEVEL,
+  CHOICE_CREDITS,
+  CHOICE_EXIT,
+  CHOICE_ERROR
 };
 
 #define PROGRESS_FNAME "progress.dat"
@@ -51,9 +61,11 @@ static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, siz
     return JUMPNRUN_ERROR;
   }
 
-  char menu_buf[levelcount + 1][MENU_BUFLEN];
-  char const *menu_index[levelcount + 1];
-  char const *fnames[levelcount + 1];
+  size_t menulen   = levelcount + (levelcount <= progress) + 1;
+
+  char        menu_buf  [menulen][MENU_BUFLEN];
+  char const *menu_index[menulen];
+  char const *fnames    [menulen];
   unsigned i;
 
   for(i = 0; i < levelcount && f_gets(menu_buf[i], MENU_BUFLEN, fd); ++i) {
@@ -67,18 +79,36 @@ static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, siz
     fnames[i] = p;
   }
 
-  strcpy(menu_buf[i], "exit");
-  menu_index[i] = menu_buf[i];
-  size_t choice = badge_menu(menu_index, i + 1, first_visible, *selected);
+  size_t creditspos = -1;
+  size_t exitpos   = i;
 
-  if(choice == levelcount) {
-    return 1; // exit
+  if(levelcount <= progress) {
+    creditspos = i;
+    strcpy(menu_buf[creditspos], "Credits");
+    menu_index[creditspos] = menu_buf[creditspos];
+
+    ++exitpos;
+  }
+
+  strcpy(menu_buf[exitpos], "Zurück");
+  menu_index[exitpos] = menu_buf[exitpos];
+
+  size_t choice = badge_menu(menu_index, exitpos + 1, first_visible, *selected);
+
+  if(choice == exitpos) {
+    return CHOICE_EXIT;
   }
 
   *selected = choice;
+
+  if(choice == creditspos) {
+    return CHOICE_CREDITS;
+  }
+
   strncpy(buf, fnames[*selected], LEVELFILE_MAX);
   buf[LEVELFILE_MAX] = '\0';
-  return 0;
+
+  return CHOICE_LEVEL;
 }
 
 static uint8_t jumpnrun_pick_level(char *buf, size_t *first_visible, size_t *selected, uint8_t progress) {
@@ -101,11 +131,21 @@ void jumpnrun_play(void) {
   size_t first_visible = 0;
   size_t selected = 0;
   uint8_t progress = jumpnrun_load_progress();
+  uint8_t choice;
 
-  while(0 == jumpnrun_pick_level(buf, &first_visible, &selected, progress)) {
-    if(JUMPNRUN_WON == jumpnrun_play_level(buf) && selected == progress) {
-      selected = ++progress;
-      jumpnrun_save_progress(progress);
+  do {
+    choice = jumpnrun_pick_level(buf, &first_visible, &selected, progress);
+
+    switch(choice) {
+    case CHOICE_LEVEL:
+      if(JUMPNRUN_WON == jumpnrun_play_level(buf) && selected == progress) {
+        selected = ++progress;
+        jumpnrun_save_progress(progress);
+      }
+      break;
+    case CHOICE_CREDITS:
+      badge_browse_textfile(CREDITSFILE);
+      break;
     }
-  }
+  } while(choice != CHOICE_EXIT);
 }

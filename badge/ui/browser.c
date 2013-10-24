@@ -71,7 +71,7 @@ static uint8_t badge_browse_pick_filename_from_fd(char *buf, size_t *first_visib
     fnames[i] = p;
   }
 
-  strcpy(menu_buf[i], "exit");
+  strcpy(menu_buf[i], "Zurück");
   menu_index[i] = menu_buf[i];
   size_t choice = badge_menu(menu_index, i + 1, first_visible, *selected);
 
