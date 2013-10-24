@@ -240,7 +240,6 @@ SRCS += \
   core/cmd/cmd.c \
   core/cpu/cpu.c \
   core/gpio/gpio.c \
-  core/i2c/i2c.c \
   core/iap/iap.c \
   core/libc/stdio.c \
   core/libc/string.c \
@@ -250,8 +249,6 @@ SRCS += \
   core/systick/systick.c \
   core/timer16/timer16.c \
   core/timer32/timer32.c \
-  core/uart/uart_buf.c \
-  core/uart/uart.c \
   core/usbcdc/cdc_buf.c \
   core/usbcdc/cdcuser.c \
   core/usbcdc/usbcore.c \
@@ -262,6 +259,10 @@ SRCS += \
   core/usbhid-rom/usbhid.c \
   core/usbhid-rom/usbmsc.c \
   core/wdt/wdt.c
+
+#  core/i2c/i2c.c
+#  core/uart/uart_buf.c
+#  core/uart/uart.c
 
 ##########################################################################
 # GNU GCC compiler prefix and location

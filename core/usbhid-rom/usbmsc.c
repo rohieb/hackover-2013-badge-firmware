@@ -6,9 +6,25 @@
 #include "usbconfig.h"
 #include "usbmsc.h"
 
-USB_DEV_INFO DeviceInfo;
-MSC_DEVICE_INFO MscDevInfo;
-ROM ** rom = (ROM **)0x1fff1ff8;
+MSC_DEVICE_INFO const MscDevInfo = {
+  .idVendor = USB_VENDOR_ID,
+  .idProduct = USB_PROD_ID,
+  .bcdDevice = USB_DEVICE,
+  .StrDescPtr = (uint32_t)&USB_MSCStringDescriptor[0],
+  .MSCInquiryStr = (uint32_t)&"Hackover-Badge DataFlash    ", // 28 char response to SCSI INQUIRY
+  .BlockCount = 1024,
+  .BlockSize = 512,
+  .MemorySize = 1024*512,
+  .MSC_Write = &usbMSCWrite,
+  .MSC_Read = &usbMSCRead,
+};
+
+USB_DEV_INFO const DeviceInfo = {
+  .DevType = USB_DEVICE_CLASS_STORAGE,
+  .DevDetailPtr = (uint32_t)&MscDevInfo
+};
+
+ROM **const rom = (ROM **)0x1fff1ff8;
 char usbMSCenabled=0;
 
 void usbMSCWrite(uint32_t offset, uint8_t src[], uint32_t length) {
@@ -56,26 +72,13 @@ void usbMSCInit(void) {
 
   // HID Device Info
   volatile int n;
-  MscDevInfo.idVendor = USB_VENDOR_ID;
-  MscDevInfo.idProduct = USB_PROD_ID;
-  MscDevInfo.bcdDevice = USB_DEVICE;
-  MscDevInfo.StrDescPtr = (uint32_t)&USB_MSCStringDescriptor[0];
-  MscDevInfo.MSCInquiryStr = (uint32_t)&"r0ket DataFlash             "; // 28 char response to SCSI INQUIRY
-  MscDevInfo.BlockCount = 1024;
-  MscDevInfo.BlockSize = 512;
-  MscDevInfo.MemorySize = 1024*512;
-  MscDevInfo.MSC_Write = &usbMSCWrite;
-  MscDevInfo.MSC_Read = &usbMSCRead;
 
-  DeviceInfo.DevType = USB_DEVICE_CLASS_STORAGE;
-  DeviceInfo.DevDetailPtr = (uint32_t)&MscDevInfo;
-  
   /* Enable Timer32_1, IOCON, and USB blocks (for USB ROM driver) */
   SCB_SYSAHBCLKCTRL |= (SCB_SYSAHBCLKCTRL_CT32B1 | SCB_SYSAHBCLKCTRL_IOCON | SCB_SYSAHBCLKCTRL_USB_REG);
 
   /* Use pll and pin init function in rom */
   /* Warning: This will also set the system clock to 48MHz! */
-  // (*rom)->pUSBD->init_clk_pins();   
+  // (*rom)->pUSBD->init_clk_pins();
 
   /* insert a delay between clk init and usb init */
   for (n = 0; n < 75; n++) {__asm("nop");}
@@ -95,4 +98,3 @@ void usbMSCOff(void) {
   (*rom)->pUSBD->connect(false);     /* USB Disconnect */
   usbMSCenabled&=~USB_MSC_ENABLEFLAG;
 }
-

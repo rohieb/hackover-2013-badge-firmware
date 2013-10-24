@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*! 
+/*!
     @file     projectconfig.h
     @author   K. Townsend (microBuilder.eu)
 
@@ -48,34 +48,34 @@
     are using by enabling one of the following definitions. The code base
     will then try to configure itself accordingly for that board.
 
-    CFG_BRD_LPC1343_REFDESIGN   
+    CFG_BRD_LPC1343_REFDESIGN
     =========================
 
         microBuilder.eu LPC1343 Reference Design base board with
         on-board peripherals initialised (EEPROM, USB or UART CLI, etc.)
-		
-		This is the recommended starting point for new development
-		since it makes it easy to send printf output to USB CDC, access
-		the on-board EEPROM, etc.
+
+                This is the recommended starting point for new development
+                since it makes it easy to send printf output to USB CDC, access
+                the on-board EEPROM, etc.
 
     CFG_BRD_LPC1343_REFDESIGN_MINIMAL
     =================================
 
-        microBuilder.eu LPC1343 Reference Design base board with 
-        only the most common peripherals initialised by default.  
-        
+        microBuilder.eu LPC1343 Reference Design base board with
+        only the most common peripherals initialised by default.
+
         Results in smallest code since EEPROM, USB, etc., are not
         initialised on startup.  By default, only the following
         peripherals are initialised by systemInit():
-        
+
               - CPU (Configures the PLL, etc.)
               - GPIO
               - SysTick Timer
               - UART (with printf support) *
-    
+
         * Can be removed to save 0.8kb in debug and 0.3 kb in
         release. Comment out 'CFG_PRINTF_UART' to disable it.
-  
+
         The code size can be further reduced by several KB by removing
         any IRQ Handlers that are not used.  The I2C IRQHandler, for
         example, uses ~1KB of flash in debug and ~400KB in release mode,
@@ -134,13 +134,13 @@
 /**************************************************************************
     PIN USAGE
     -----------------------------------------------------------------------
-    This table tries to give an indication of which GPIO pins and 
+    This table tries to give an indication of which GPIO pins and
     peripherals are used by the available drivers and SW examples.  Only
     dedicated GPIO pins available on the LPC1343 Reference Board are shown
     below.  Any unused peripheral blocks like I2C, SSP, ADC, etc., can
     also be used as GPIO if they are available.
 
-                PORT 1        PORT 2                PORT 3 
+                PORT 1        PORT 2                PORT 3
                 =========     =================     =======
                 8 9 10 11     1 2 3 4 5 6 7 8 9     0 1 2 3
 
@@ -155,7 +155,7 @@
     SSD1306 SPI . .  .  .     X X X . X X . . .     . . . .
     SSD1351     . .  .  .     X X X X X . . . .     . . . .
     MCP121      . .  .  .     . . . . . . . . .     . X . .
-    PN532 [3]   . .  .  .     . . . . . . . . .     . X X . 
+    PN532 [3]   . .  .  .     . . . . . . . . .     . X X .
 
                 TIMERS                    SSP     ADC         UART
                 ======================    ===     =======     ====
@@ -189,7 +189,7 @@
     The following addresses are used by the different I2C sensors included
     in the code base [1]
 
-                                HEX       BINARY  
+                                HEX       BINARY
                                 ====      ========
     ISL12022M (RTC)             0xDE      1101111x
     ISL12022M (SRAM)            0xAE      1010111x
@@ -300,7 +300,7 @@
       // #define GPIO_ENABLE_IRQ2
       // #define GPIO_ENABLE_IRQ3
     #endif
-	
+
     #ifdef CFG_BRD_LPC1343_OLIMEX_P
       // #define GPIO_ENABLE_IRQ0
       #define GPIO_ENABLE_IRQ1
@@ -340,9 +340,9 @@
     UART
     -----------------------------------------------------------------------
 
-    CFG_UART_BAUDRATE         The default UART speed.  This value is used 
-                              when initialising UART, and should be a 
-                              standard value like 57600, 9600, etc.  
+    CFG_UART_BAUDRATE         The default UART speed.  This value is used
+                              when initialising UART, and should be a
+                              standard value like 57600, 9600, etc.
                               NOTE: This value may be overridden if
                               another value is stored in EEPROM!
     CFG_UART_BUFSIZE          The length in bytes of the UART RX FIFO. This
@@ -374,7 +374,7 @@
       #define CFG_UART_BAUDRATE           (115200)
       #define CFG_UART_BUFSIZE            (512)
     #endif
-	
+
     #ifdef CFG_BRD_LPC1343_OLIMEX_P
       #define CFG_UART_BAUDRATE           (115200)
       #define CFG_UART_BUFSIZE            (512)
@@ -414,7 +414,7 @@
       // #define CFG_SSP0_SCKPIN_2_11
       #define CFG_SSP0_SCKPIN_0_6
     #endif
-	
+
     #ifdef CFG_BRD_LPC1343_OLIMEX_P
       #define CFG_SSP0_SCKPIN_2_11
       // #define CFG_SSP0_SCKPIN_0_6
@@ -435,7 +435,7 @@
                               a number of samples and return the average
                               value.  This is slower, but can give more
                               accurate results compared to single-reading.
-                              
+
                               To enable averaging, set ADC_AVERAGING_ENABLE
                               to a non-zero value.
     ADC_AVERAGING_SAMPLES     The number of ADC samples to read and
@@ -461,7 +461,7 @@
       #define ADC_AVERAGING_ENABLE    (0)
       #define ADC_AVERAGING_SAMPLES   (5)
     #endif
-	
+
     #ifdef CFG_BRD_LPC1343_OLIMEX_P
       #define ADC_AVERAGING_ENABLE    (0)
       #define ADC_AVERAGING_SAMPLES   (5)
@@ -511,7 +511,7 @@
       #define CFG_LED_ON                  (0)
       #define CFG_LED_OFF                 (1)
     #endif
-	
+
     #ifdef CFG_BRD_LPC1343_OLIMEX_P
       #define CFG_LED_PORT                (3)
       #define CFG_LED_PIN                 (2)
@@ -545,7 +545,7 @@
 
     BENCHMARK:                With SPI set to 6.0MHz, FATFS can read
                               ~300KB/s (w/512 byte read buffer)
-							  
+
     PIN LAYOUT:               The pin layout that is used by this driver
                               can be seen in the following schematic:
                               /tools/schematics/Breakout_TFTLCD_ILI9325_v1.3
@@ -579,7 +579,7 @@
       #define CFG_SDCARD_CDPORT           (3)
       #define CFG_SDCARD_CDPIN            (0)
     #endif
-	
+
     #ifdef CFG_BRD_LPC1343_OLIMEX_P
       // #define CFG_SDCARD
       #define CFG_SDCARD_READONLY         (1) // Must be 0 or 1
@@ -605,8 +605,8 @@
     CFG_USBCDC                If this field is defined USB CDC support will
                               be included, with the USB Serial Port speed
                               set to 115200 BPS by default
-    CFG_USBCDC_BAUDRATE       The default TX/RX speed.  This value is used 
-                              when initialising USBCDC, and should be a 
+    CFG_USBCDC_BAUDRATE       The default TX/RX speed.  This value is used
+                              when initialising USBCDC, and should be a
                               standard value like 57600, 9600, etc.
     CFG_USBCDC_INITTIMEOUT    The maximum delay in milliseconds to wait for
                               USB to connect.  Must be a multiple of 10!
@@ -622,7 +622,7 @@
 
     #define CFG_USB_VID                   (0x239A)
     #define CFG_USB_PID                   (0x1002)
-	
+
     #ifdef CFG_BRD_LPC1343_REFDESIGN
       // #define CFG_USBHID
       #define CFG_USBCDC
@@ -662,14 +662,14 @@
       #define CFG_USBCDC_INITTIMEOUT      (5000)
       #define CFG_USBCDC_BUFFERSIZE       (256)
     #endif
-	
+
     #ifdef CFG_BRD_LPC1343_OLIMEX_P
       // #define CFG_USBHID
       #define CFG_USBCDC
       #define CFG_USBCDC_BAUDRATE         (115200)
       #define CFG_USBCDC_INITTIMEOUT      (5000)
       #define CFG_USBCDC_BUFFERSIZE       (256)
-    #endif	
+    #endif
 
     #ifdef CFG_BRD_LPC1343_LPCXPRESSO
       // #define CFG_USBHID
@@ -686,7 +686,7 @@
     -----------------------------------------------------------------------
 
     CFG_PRINTF_MAXSTRINGSIZE  Maximum size of string buffer for printf
-    CFG_PRINTF_UART           Will cause all printf statements to be 
+    CFG_PRINTF_UART           Will cause all printf statements to be
                               redirected to UART
     CFG_PRINTF_USBCDC         Will cause all printf statements to be
                               redirect to USB Serial
@@ -705,7 +705,7 @@
 
     #ifdef CFG_BRD_LPC1343_REFDESIGN_MINIMAL
       #define CFG_PRINTF_MAXSTRINGSIZE    (255)
-      #define CFG_PRINTF_UART
+      // #define CFG_PRINTF_UART
       // #define CFG_PRINTF_USBCDC
       #define CFG_PRINTF_NEWLINE          "\r\n"
     #endif
@@ -730,13 +730,13 @@
       #define CFG_PRINTF_USBCDC
       #define CFG_PRINTF_NEWLINE          "\r\n"
     #endif
-	
+
     #ifdef CFG_BRD_LPC1343_OLIMEX_P
       #define CFG_PRINTF_MAXSTRINGSIZE    (255)
       // #define CFG_PRINTF_UART
       #define CFG_PRINTF_USBCDC
       #define CFG_PRINTF_NEWLINE          "\r\n"
-    #endif	
+    #endif
 
     #ifdef CFG_BRD_LPC1343_LPCXPRESSO
       #define CFG_PRINTF_MAXSTRINGSIZE    (255)
@@ -764,7 +764,7 @@
                               echoed back to the output buffer (allowing
                               you to see the text you have input).  This
                               is normally only desirable in a situation
-                              where another MCU is communicating with 
+                              where another MCU is communicating with
                               the LPC1343.
     CFG_INTERFACE_DROPCR      If this is set to 1 all incoming \r
                               characters will be dropped
@@ -790,14 +790,14 @@
     CFG_INTERFACE_LONGSYSINFO If this is set to 1 extra information will
                               be included in the Sys Info ('V') command
                               on the CLI. This can be useful when trying
-                              to debug problems on remote HW, or with 
+                              to debug problems on remote HW, or with
                               unknown firmware.  It will also use about
                               0.5KB flash, though, so only enable it is
                               necessary.
 
     NOTE:                     The command-line interface will use either
                               USB-CDC or UART depending on whether
-                              CFG_PRINTF_UART or CFG_PRINTF_USBCDC are 
+                              CFG_PRINTF_UART or CFG_PRINTF_USBCDC are
                               selected.
     -----------------------------------------------------------------------*/
     #ifdef CFG_BRD_LPC1343_REFDESIGN
@@ -877,7 +877,7 @@
       #define CFG_INTERFACE_CONFIRMREADY  (0)
       #define CFG_INTERFACE_LONGSYSINFO   (0)
     #endif
-	
+
     #ifdef CFG_BRD_LPC1343_OLIMEX_P
       #define CFG_INTERFACE
       #define CFG_INTERFACE_MAXMSGSIZE    (256)
@@ -936,7 +936,7 @@
     STEPPER MOTOR SETTINGS
     -----------------------------------------------------------------------
 
-    CFG_STEPPER                 If this is defined, a simple bi-polar 
+    CFG_STEPPER                 If this is defined, a simple bi-polar
                                 stepper motor will be included for common
                                 H-bridge chips like the L293D or SN754410N
 
@@ -979,7 +979,7 @@
     #ifdef CFG_BRD_LPC1343_OLIMEX_P
       // #define CFG_I2CEEPROM
       #define CFG_I2CEEPROM_SIZE          (3072)
-    #endif	
+    #endif
 
     #ifdef CFG_BRD_LPC1343_LPCXPRESSO
       // #define CFG_I2CEEPROM
@@ -1003,7 +1003,7 @@
           ===============================
           0 1 2 3 4 5 6 7 8 9 A B C D E F
     000x  x x x x x x x x . x x . . . . .   Chibi
-    001x  . . . . . . . . . . . . . . . .   
+    001x  . . . . . . . . . . . . . . . .
     002x  x x x x . . . . . . . . . . . .   UART
     003x  x x x x x x x x x x x x x x x x   Touch Screen Calibration
     004x  x x x x x x x x x x x x x x . .   Touch Screen Calibration
@@ -1114,7 +1114,7 @@
       #define CFG_CHIBI_PROMISCUOUS       (0)
       #define CFG_CHIBI_BUFFERSIZE        (1024)
     #endif
-	
+
     #ifdef CFG_BRD_LPC1343_OLIMEX_P
       // #define CFG_CHIBI
       #define CFG_CHIBI_MODE              (0)                 // OQPSK_868MHZ
@@ -1123,7 +1123,7 @@
       #define CFG_CHIBI_PANID             (0x1234)
       #define CFG_CHIBI_PROMISCUOUS       (0)
       #define CFG_CHIBI_BUFFERSIZE        (128)
-    #endif	
+    #endif
 
     #ifdef CFG_BRD_LPC1343_LPCXPRESSO
       // #define CFG_CHIBI
@@ -1143,7 +1143,7 @@
 
     CFG_TFTLCD                  If defined, this will cause drivers for
                                 a pre-determined LCD screen to be included
-                                during build.  Only one LCD driver can be 
+                                during build.  Only one LCD driver can be
                                 included during the build process (for ex.
                                 'drivers/displays/hw/ILI9325.c')
     CFG_TFTLCD_INCLUDESMALLFONTS If set to 1, smallfont support will be
@@ -1151,7 +1151,7 @@
                                 This should only be enabled if these small
                                 fonts are required since there is already
                                 support for larger fonts generated with
-                                Dot Factory 
+                                Dot Factory
                                 http://www.pavius.net/downloads/tools/53-the-dot-factory
     CFG_TFTLCD_USEAAFONTS       If set to a non-zero value, anti-aliased
                                 fonts will be used instead of regular 1-bit
@@ -1207,14 +1207,14 @@
       #define CFG_TFTLCD_TS_DEFAULTTHRESHOLD (50)
       #define CFG_TFTLCD_TS_KEYPADDELAY      (100)
     #endif
-	
+
     #ifdef CFG_BRD_LPC1343_OLIMEX_P
       // #define CFG_TFTLCD
       #define CFG_TFTLCD_INCLUDESMALLFONTS   (0)
       #define CFG_TFTLCD_USEAAFONTS          (0)
       #define CFG_TFTLCD_TS_DEFAULTTHRESHOLD (50)
       #define CFG_TFTLCD_TS_KEYPADDELAY      (100)
-    #endif	
+    #endif
 
     #ifdef CFG_BRD_LPC1343_LPCXPRESSO
       // #define CFG_TFTLCD
@@ -1262,7 +1262,7 @@
                                 with 64-bit providing higher security, and
                                 32-bit providing smaller encrypted text
                                 size.
-                                  
+
     NOTE:                       Please note that Printf can not be
                                 used to display 64-bit values (%lld)!
     -----------------------------------------------------------------------*/
@@ -1276,7 +1276,7 @@
 /*=========================================================================
   CONFIG FILE VALIDATION
   -------------------------------------------------------------------------
-  Basic error checking to make sure that incompatible defines are not 
+  Basic error checking to make sure that incompatible defines are not
   enabled at the same time, etc.
 
   =========================================================================*/
