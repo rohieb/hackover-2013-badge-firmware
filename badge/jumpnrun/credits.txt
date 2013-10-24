@@ -1,0 +1,20 @@
+Super Hackio
+Credits
+------------
+
+Engine
+------
+wintermute
+
+Sprites
+-------
+0717
+ambro
+wintermute
+
+Level
+-----
+lubiana
+SpilkZ
+wintermute
+wolfpro

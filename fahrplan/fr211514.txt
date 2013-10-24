@@ -1,0 +1,54 @@
+21:15
+Raum 1.4
+
+Flipdot-
+Simulator
+
+*klapperappel*
+
+Speaker: knoc
+--------------
+
+Aufbau / Fea-
+tures / Heran-
+gehensweise
+bei deir Ent-
+wicklung von
+einem Flipdot-
+Simulator zum
+Protoypen von
+Spielen fuer
+die Flipdot-
+Module.
+
+Zum einfachen
+Prototypen von
+Software fuer
+merkwuerdige
+Hardware eig-
+nen sich
+Simulatoren.
+Vorgestellt
+wird ein in
+Python (mit
+pysfml/opengl
+zum Rendern)
+geschriebener
+Simulator, der
+Entwicklung/
+Debugging
+stark
+erleichtert.
+
+Die Vorteile/
+und auch
+Schwierigkei-
+ten werden
+aufgezeigt,
+wobei die 
+Software
+letztendlich
+eigenstaendig
+auf Mikro-
+controllern
+laufen wird.

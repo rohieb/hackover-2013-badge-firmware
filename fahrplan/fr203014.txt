@@ -1,0 +1,84 @@
+Fr. 20:30
+Raum 1.4
+
+Reverse
+Engineering
+WhatsApp
+
+Speaker:
+Jannik Vogel/
+JayFoxRox
+--------------
+
+WhatsApp ist
+ein wachsender
+IM Client für
+Handys - wie
+funktioniert
+WhatsApp?
+
+Der Vortrag
+fasst meine
+Erfahrungen
+mit WhatsApp
+zusammen:
+WhatsApp ist
+unsicher, kann
+euch spio-
+nieren und
+kostet auch
+noch Geld..
+
+Meine ersten
+Erfahrungen
+mit WhatsApp
+hatte ich Ende
+2011. Dann ha-
+be ich wieder
+Mitte 2012 was
+von WhatsApp
+bezogenen Pr-
+ojekten mitbe-
+kommen und
+dann erneut
+Mitte 2013.
+
+Ich gehe da-
+rauf ein wie
+sich WhatsApp
+in der Zeit
+verändert hat
+und wie die
+Zukunft aus-
+sehen könnte
+(Sowohl offi-
+zieller Client
+als auch
+alternativen).
+
+Falls er-
+wünscht ver-
+suche ich das
+grobe Aufga-
+benfeld zu er-
+klären in dem
+man zu tun hat
+wenn man sich
+dazu entschei-
+det WhatsApp
+zu reverse
+engineeren und
+dessen Funk-
+tionsweise zu
+verstehen.
+
+Auf Wunsch /
+evtl. nach dem
+Vortrag: Er-
+klärung zu
+Lösung folgen-
+der Issue:
+https://github
+.com/venomous0
+x/WhatsAPI/iss
+ues/337
