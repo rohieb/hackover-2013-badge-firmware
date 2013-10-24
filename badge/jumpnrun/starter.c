@@ -52,7 +52,7 @@ static void    jumpnrun_save_selected(uint8_t selected) {        save_byte_to_fi
 static uint8_t jumpnrun_load_progress(void            ) { return read_byte_from_file(PROGRESS_FNAME          ); }
 static void    jumpnrun_save_progress(uint8_t progress) {        save_byte_to_file  (PROGRESS_FNAME, progress); }
 
-static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, size_t *selected, uint8_t progress, FIL *fd) {
+static uint8_t jumpnrun_pick_level_from_fd(char *buf, uint8_t *first_visible, uint8_t *selected, uint8_t progress, FIL *fd) {
   unsigned levelcount = 0;
 
   {
@@ -66,7 +66,7 @@ static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, siz
     return JUMPNRUN_ERROR;
   }
 
-  size_t menulen   = levelcount + (levelcount <= progress) + 1;
+  uint8_t menulen   = levelcount + (levelcount <= progress) + 1;
 
   char        menu_buf  [menulen][MENU_BUFLEN];
   char const *menu_index[menulen];
@@ -84,8 +84,8 @@ static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, siz
     fnames[i] = p;
   }
 
-  size_t creditspos = -1;
-  size_t exitpos   = i;
+  uint8_t creditspos = -1;
+  uint8_t exitpos   = i;
 
   if(levelcount <= progress) {
     creditspos = i;
@@ -98,7 +98,7 @@ static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, siz
   strcpy(menu_buf[exitpos], "Zurück");
   menu_index[exitpos] = menu_buf[exitpos];
 
-  size_t choice = badge_menu(menu_index, exitpos + 1, first_visible, *selected);
+  uint8_t choice = badge_menu(menu_index, exitpos + 1, first_visible, *selected);
 
   if(choice == exitpos) {
     return CHOICE_EXIT;
@@ -116,7 +116,7 @@ static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, siz
   return CHOICE_LEVEL;
 }
 
-static uint8_t jumpnrun_pick_level(char *buf, size_t *first_visible, size_t *selected, uint8_t progress) {
+static uint8_t jumpnrun_pick_level(char *buf, uint8_t *first_visible, uint8_t *selected, uint8_t progress) {
   FIL fd;
 
   if(FR_OK != f_chdir(JUMPNRUN_PATH) ||
@@ -133,11 +133,11 @@ static uint8_t jumpnrun_pick_level(char *buf, size_t *first_visible, size_t *sel
 
 void jumpnrun_play(void) {
   char    buf[LEVELFILE_MAX + 1];
-  size_t  first_visible = 0;
-  size_t  selected = jumpnrun_load_selected();
+  uint8_t selected = jumpnrun_load_selected();
   uint8_t progress = jumpnrun_load_progress();
+  uint8_t first_visible = selected;
   uint8_t choice;
-  size_t oldselected = selected;
+  uint8_t oldselected = selected;
 
   do {
     if(oldselected != selected) {

@@ -4,11 +4,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
-size_t badge_menu(char const *const * menu,
-                  size_t  n,
-                  size_t *first_visible,
-                  size_t  preselected);
+uint8_t badge_menu(char const *const * menu,
+                   uint8_t  n,
+                   uint8_t *first_visible,
+                   uint8_t  preselected);
 
-void badge_scroll_text(char const *const *lines, size_t n);
+void badge_scroll_text(char const *const *lines, uint8_t n);
 
 #endif

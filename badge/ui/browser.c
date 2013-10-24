@@ -35,8 +35,8 @@ static void badge_browse_textfile_fd(FIL *fd) {
   badge_scroll_text(lines, i);
 }
 
-static size_t badge_count_lines_in_file(FIL *fd) {
-  size_t count = 0;
+static uint8_t badge_count_lines_in_file(FIL *fd) {
+  uint8_t count = 0;
 
   if(FR_OK == f_lseek(fd, 0)) {
     char buf[BUFLEN];
@@ -48,7 +48,7 @@ static size_t badge_count_lines_in_file(FIL *fd) {
   return count;
 }
 
-static uint8_t badge_browse_pick_filename_from_fd(char *buf, size_t *first_visible, size_t *selected, FIL *fd) {
+static uint8_t badge_browse_pick_filename_from_fd(char *buf, uint8_t *first_visible, uint8_t *selected, FIL *fd) {
   unsigned linecount = badge_count_lines_in_file(fd);
 
   if(FR_OK != f_lseek(fd, 0)) {
@@ -73,7 +73,7 @@ static uint8_t badge_browse_pick_filename_from_fd(char *buf, size_t *first_visib
 
   strcpy(menu_buf[i], "Zurück");
   menu_index[i] = menu_buf[i];
-  size_t choice = badge_menu(menu_index, i + 1, first_visible, *selected);
+  uint8_t choice = badge_menu(menu_index, i + 1, first_visible, *selected);
 
   if(choice == linecount) {
     return 1; // exit
@@ -86,7 +86,7 @@ static uint8_t badge_browse_pick_filename_from_fd(char *buf, size_t *first_visib
   return 0;
 }
 
-static uint8_t badge_pick_filename(char *buf, char const *menufile, size_t *first_visible, size_t *selected) {
+static uint8_t badge_pick_filename(char *buf, char const *menufile, uint8_t *first_visible, uint8_t *selected) {
   FIL fd;
   uint8_t err = 1;
 
@@ -107,9 +107,9 @@ void badge_browse_textfile(char const *fname) {
   }
 }
 
-void badge_browse_textfiles(char const *menufile, size_t *selected) {
+void badge_browse_textfiles(char const *menufile, uint8_t *selected) {
   char buf[FNAME_MAX + 1];
-  size_t first_visible = 0;
+  uint8_t first_visible = *selected;
 
   while(0 == badge_pick_filename(buf, menufile, &first_visible, selected)) {
     badge_browse_textfile(buf);

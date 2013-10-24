@@ -209,7 +209,7 @@ static void usbmode(void) {
 uint8_t main_menu_show(uint8_t selected) {
   // first_visible = 0, weil das Menü so kurz ist. Sollte es
   // größer werden: Parameter aus main_menu empfangen und merken.
-  size_t first_visible = 0;
+  uint8_t first_visible = 0;
   char const *const menu[] = {
     "Vanity-Screen",
     "Super Hackio",

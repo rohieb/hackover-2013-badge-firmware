@@ -27,17 +27,17 @@ enum {
 };
 
 static void badge_menu_show(char const *const *menu,
-                            size_t n,
-                            size_t *first_visible,
-                            size_t selected,
+                            uint8_t n,
+                            uint8_t *first_visible,
+                            uint8_t selected,
                             char   selector)
 {
   badge_framebuffer fb = { { { 0 } } };
   bool arrow_up   = true;
   bool arrow_down = true;
 
-  size_t first_used_row = 0;
-  size_t used_rows = MENU_ENTRIES_VISIBLE;
+  uint8_t first_used_row = 0;
+  uint8_t used_rows = MENU_ENTRIES_VISIBLE;
 
   if(selected >= n) {
     selected = n - 1;
@@ -47,6 +47,8 @@ static void badge_menu_show(char const *const *menu,
     *first_visible = 0;
     used_rows      = n;
     first_used_row = (MENU_ENTRIES_VISIBLE - used_rows) / 2;
+  } else if(*first_visible + MENU_ENTRIES_VISIBLE > n) {
+    *first_visible = n - MENU_ENTRIES_VISIBLE;
   } else if(selected + 1 == n) {
     *first_visible = n - MENU_ENTRIES_VISIBLE;
   } else if(selected <= *first_visible) {
@@ -63,7 +65,7 @@ static void badge_menu_show(char const *const *menu,
     arrow_down = false;
   }
 
-  for(size_t i = 0; i < used_rows; ++i) {
+  for(uint8_t i = 0; i < used_rows; ++i) {
     badge_framebuffer_render_text(&fb,
                                   (int8_t) (MENU_MARGIN_LEFT + BADGE_FONT_WIDTH),
                                   (int8_t) (MENU_MARGIN_TOP  + (first_used_row + i) * MENU_ENTRIES_HEIGHT),
@@ -77,10 +79,10 @@ static void badge_menu_show(char const *const *menu,
   badge_framebuffer_flush(&fb);
 }
 
-size_t badge_menu(char const *const *menu,
-                  size_t  n,
-                  size_t *first_visible,
-                  size_t  selected)
+uint8_t badge_menu(char const *const *menu,
+                  uint8_t  n,
+                  uint8_t *first_visible,
+                  uint8_t  selected)
 {
   unsigned scroll_ticks = 0;
   int scroll_direction = 0;
@@ -130,8 +132,8 @@ size_t badge_menu(char const *const *menu,
   }
 }
 
-void badge_scroll_text(char const *const *lines, size_t n) {
-  size_t first_visible  = 0;
+void badge_scroll_text(char const *const *lines, uint8_t n) {
+  uint8_t first_visible  = 0;
   int scroll_direction  = 0;
   unsigned scroll_ticks = 0;
 

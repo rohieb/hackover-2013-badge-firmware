@@ -2,18 +2,19 @@
 #include "ui/browser.h"
 
 #include <drivers/fatfs/ff.h>
+#include <stdint.h>
 
 #define FAHRPLAN_PATH     "/fahrplan"
 #define FAHRPLAN_MENUFILE "fahrplan.lst"
 #define FAHRPLAN_POSFILE  "selected.dat"
 
-static size_t badge_load_fahrplan_pos(void) {
-  size_t pos = 0;
+static uint8_t badge_load_fahrplan_pos(void) {
+  uint8_t pos = 0;
   FIL fd;
 
   if(FR_OK == f_open(&fd, FAHRPLAN_POSFILE, FA_OPEN_EXISTING | FA_READ)) {
     UINT bytes;
-    size_t buf;
+    uint8_t buf;
     if(FR_OK == f_read(&fd, &buf, sizeof(buf), &bytes) && bytes == sizeof(buf)) {
       pos = buf;
     }
@@ -24,7 +25,7 @@ static size_t badge_load_fahrplan_pos(void) {
   return pos;
 }
 
-static void badge_save_fahrplan_pos(size_t pos) {
+static void badge_save_fahrplan_pos(uint8_t pos) {
   FIL fd;
 
   if(FR_OK == f_open(&fd, FAHRPLAN_POSFILE, FA_CREATE_ALWAYS | FA_WRITE)) {
@@ -37,8 +38,8 @@ static void badge_save_fahrplan_pos(size_t pos) {
 void badge_fahrplan(void) {
   f_chdir(FAHRPLAN_PATH);
 
-  size_t oldpos = badge_load_fahrplan_pos();
-  size_t pos = oldpos;
+  uint8_t oldpos = badge_load_fahrplan_pos();
+  uint8_t pos = oldpos;
 
   badge_browse_textfiles(FAHRPLAN_MENUFILE, &pos);
 
