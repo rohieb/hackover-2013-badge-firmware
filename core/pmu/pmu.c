@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*! 
+/*!
     @file     pmu.c
     @author   K. Townsend (microBuilder.eu)
     @date     22 March 2010
@@ -12,7 +12,7 @@
 
     For examples of how to enter either mode, see the comments for the
     functions pmuSleep(), pmuDeepSleep() and pmuPowerDown().
-	
+
     @section LICENSE
 
     Software License Agreement (BSD License)
@@ -59,10 +59,11 @@ void pmuRestoreHW(void);
 
 
 /**************************************************************************/
-/*! 
+/*!
     Wakeup interrupt handler
 */
 /**************************************************************************/
+
 void WAKEUP_IRQHandler(void)
 {
   uint32_t regVal;
@@ -104,7 +105,7 @@ void WAKEUP_IRQHandler(void)
 }
 
 /**************************************************************************/
-/*! 
+/*!
     Setup the clock for the watchdog timer.  The default is 7.8125kHz.
 */
 /**************************************************************************/
@@ -115,7 +116,7 @@ static void pmuWDTClockInit (void)
 
   /* Configure watchdog clock */
   /* Freq. = 0.5MHz, div = 64: WDT_OSC = 7.8125kHz  */
-  SCB_WDTOSCCTRL = SCB_WDTOSCCTRL_FREQSEL_0_5MHZ | 
+  SCB_WDTOSCCTRL = SCB_WDTOSCCTRL_FREQSEL_0_5MHZ |
                    SCB_WDTOSCCTRL_DIVSEL_DIV64;
 
   // Switch main clock to WDT output
@@ -129,22 +130,22 @@ static void pmuWDTClockInit (void)
 }
 
 /**************************************************************************/
-/*! 
+/*!
     @brief Initialises the power management unit
 */
 /**************************************************************************/
 void pmuInit( void )
 {
   /* Enable all clocks, even those turned off at power up. */
-  SCB_PDRUNCFG &= ~(SCB_PDRUNCFG_WDTOSC_MASK | 
-                    SCB_PDRUNCFG_SYSOSC_MASK | 
+  SCB_PDRUNCFG &= ~(SCB_PDRUNCFG_WDTOSC_MASK |
+                    SCB_PDRUNCFG_SYSOSC_MASK |
                     SCB_PDRUNCFG_ADC_MASK);
 
   return;
 }
 
 /**************************************************************************/
-/*! 
+/*!
     @brief Puts select peripherals in sleep mode.
 
     This function will put the device into sleep mode.  Most gpio pins
@@ -153,11 +154,11 @@ void pmuInit( void )
 
     @section Example
 
-    @code 
+    @code
     // Configure wakeup sources before going into sleep/deep-sleep.
     // By default, pin 0.1 is configured as wakeup source (falling edge)
     pmuInit();
-  
+
     // Enter sleep mode
     pmuSleep();
     @endcode
@@ -171,7 +172,7 @@ void pmuSleep()
 }
 
 /**************************************************************************/
-/*! 
+/*!
     @brief  Turns off select peripherals and puts the device in deep-sleep
             mode.
 
@@ -185,8 +186,8 @@ void pmuSleep()
 
     The sleepCtrl parameter is used to indicate which peripherals should
     be put in sleep mode (see the SCB_PDSLEEPCFG register for details).
-    
-    @param[in]  sleepCtrl  
+
+    @param[in]  sleepCtrl
                 The bits to set in the SCB_PDSLEEPCFG register.  This
                 controls which peripherals will be put in sleep mode.
     @param[in]  wakeupSeconds
@@ -194,12 +195,12 @@ void pmuSleep()
                 wakeup.  If you do not wish to wakeup after a specific
                 delay, enter a value of 0.
 
-    @code 
+    @code
     uint32_t pmuRegVal;
-  
+
     // Initialise power management unit
     pmuInit();
-  
+
     // Put peripherals into sleep mode
     pmuRegVal = SCB_PDSLEEPCFG_IRCOUT_PD |
                 SCB_PDSLEEPCFG_IRC_PD |
@@ -209,7 +210,7 @@ void pmuSleep()
                 SCB_PDSLEEPCFG_SYSOSC_PD |
                 SCB_PDSLEEPCFG_ADC_PD |
                 SCB_PDSLEEPCFG_BOD_PD;
-  
+
     // Enter deep sleep mode (wakeup after 5 seconds)
     // By default, pin 0.1 is configured as wakeup source
     pmuDeepSleep(pmuRegVal, 5);
@@ -240,17 +241,17 @@ void pmuDeepSleep(uint32_t sleepCtrl, uint32_t wakeupSeconds)
 
     /* Enable the clock for CT32B0 */
     SCB_SYSAHBCLKCTRL |= (SCB_SYSAHBCLKCTRL_CT32B0);
-  
+
     /* Configure 0.1 as Timer0_32 MAT2 */
     IOCON_PIO0_1 &= ~IOCON_PIO0_1_FUNC_MASK;
     IOCON_PIO0_1 |= IOCON_PIO0_1_FUNC_CT32B0_MAT2;
 
     /* Set appropriate timer delay */
     TMR_TMR32B0MR0 = PMU_WDTCLOCKSPEED_HZ * wakeupSeconds;
-  
+
     /* Configure match control register to raise an interrupt and reset on MR0 */
     TMR_TMR32B0MCR |= (TMR_TMR32B0MCR_MR0_INT_ENABLED | TMR_TMR32B0MCR_MR0_RESET_ENABLED);
-  
+
     /* Configure external match register to set 0.1 high on match */
     TMR_TMR32B0EMR &= ~(0xFF<<4);                   // Clear EMR config bits
     TMR_TMR32B0EMR |= TMR_TMR32B0EMR_EMC2_HIGH;     // Set MAT2 (0.1) high on match
@@ -296,11 +297,11 @@ void pmuDeepSleep(uint32_t sleepCtrl, uint32_t wakeupSeconds)
     //NVIC_EnableIRQ(WAKEUP37_IRQn);   // P3.1
     //NVIC_EnableIRQ(WAKEUP38_IRQn);   // P3.2
     //NVIC_EnableIRQ(WAKEUP39_IRQn);   // P3.3
-  
+
     /* Use RISING EDGE for wakeup detection. */
     SCB_STARTAPRP0 |= SCB_STARTAPRP0_APRPIO0_1;
-  
-    /* Clear all wakeup sources */ 
+
+    /* Clear all wakeup sources */
     SCB_STARTRSRP0CLR = SCB_STARTRSRP0CLR_MASK;
 
     /* Enable Port 0.1 as wakeup source. */
@@ -308,7 +309,7 @@ void pmuDeepSleep(uint32_t sleepCtrl, uint32_t wakeupSeconds)
 
     // Reconfigure clock to run from WDTOSC
     pmuWDTClockInit();
-  
+
     /* Start the timer */
     TMR_TMR32B0TCR = TMR_TMR32B0TCR_COUNTERENABLE_ENABLED;
   }
@@ -318,7 +319,7 @@ void pmuDeepSleep(uint32_t sleepCtrl, uint32_t wakeupSeconds)
 }
 
 /**************************************************************************/
-/*! 
+/*!
     @brief Puts the device in deep power-down mode.
 
     This function will configure the PMU control register and enter
@@ -334,7 +335,7 @@ void pmuDeepSleep(uint32_t sleepCtrl, uint32_t wakeupSeconds)
 
     @section Example
 
-    @code 
+    @code
     #include "core/cpu/cpu.h"
     #include "core/pmu/pmu.h"
 
@@ -366,7 +367,7 @@ void pmuPowerDown( void )
     /* Check sleep and deep power down bits. If sleep and/or
        deep power down mode are entered, clear the PCON bits. */
     regVal = PMU_PMUCTRL;
-    regVal |= ((0x1<<8) | 
+    regVal |= ((0x1<<8) |
                (PMU_PMUCTRL_DPDEN_SLEEP) |
                (PMU_PMUCTRL_DPDFLAG));
     PMU_PMUCTRL = regVal;
@@ -392,7 +393,7 @@ void pmuPowerDown( void )
 }
 
 /**************************************************************************/
-/*! 
+/*!
     @brief  Configures parts and system peripherals to use lower power
             before entering sleep mode
 */
@@ -405,7 +406,7 @@ void pmuSetupHW(void)
 }
 
 /**************************************************************************/
-/*! 
+/*!
     @brief  Restores parts and system peripherals to an appropriate
             state after waking up from deep-sleep mode
 */

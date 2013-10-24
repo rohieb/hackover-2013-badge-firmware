@@ -191,7 +191,6 @@ static void usbmode(void) {
   badge_event_stop();
 
   badge_framebuffer fb = { { { 0 } } };
-
   badge_framebuffer_render_text(&fb, 23, 30, "USB-Modus");
 /*
     badge_framebuffer_render_number(&fb, 23, 50, sizeof(jumpnrun_tile));
@@ -199,26 +198,26 @@ static void usbmode(void) {
     badge_framebuffer_render_number(&fb, 48, 50, sizeof(jumpnrun_enemy));
 */
   badge_framebuffer_flush(&fb);
+
   usbMSCInit();
-  for(;;);
+
+  for(;;) {
+    pmuSleep();
+  }
 }
 
 uint8_t main_menu_show(uint8_t selected) {
-  char const menu_buf[][15] = {
+  // first_visible = 0, weil das Menü so kurz ist. Sollte es
+  // größer werden: Parameter aus main_menu empfangen und merken.
+  size_t first_visible = 0;
+  char const *const menu[] = {
     "Vanity-Screen",
     "Super Hackio",
     "Fahrplan",
     "USB-Modus"
   };
 
-  char const *menu[ARRAY_SIZE(menu_buf)];
-  for(uint8_t i = 0; i < ARRAY_SIZE(menu_buf); ++i) {
-    menu[i] = menu_buf[i];
-  }
-
   f_chdir("/");
-  // first_visible = 0, weil Menü so kurz. Ggf. Parameter aus main_menu empfangen und merken.
-  size_t first_visible = 0;
   return (uint8_t) badge_menu(menu, ARRAY_SIZE(menu), &first_visible, selected);
 }
 
@@ -241,7 +240,7 @@ int main(void)
   cpuInit();
   systickInit(CFG_SYSTICK_DELAY_IN_MS);
 
-  // pmuInit();
+  pmuInit();
   // adcInit();
 #ifdef R0KET
   rbInit();
