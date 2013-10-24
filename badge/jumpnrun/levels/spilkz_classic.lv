@@ -1,0 +1,46 @@
+                                                                                                                                                     
+                   ?                                                                                                                                 
+                                                                W                                             W                                      
+                           W           V                                               X            ??                                 ^             
+                                   D                    ?                                                                       ^                     W  
+                  01          ######    W                       01                                                  W    ^                         M 
+            W     23          2    3                      W     23        ?                  ????                              W   ???           #####       e
+          C       23          2    3                            23                              W           01              ???                  2   3 @
+  ?      01       23      M   2    3        W        #######    23              ?????                       23      ????                         2   3
+         23   #############   2    3         ?       2     3    23           M                              23                                   2   3
+         23   2           3   2    3                 2     3    23    ########           ???                23 01                           ######   3
+###########   2           3   2    3            B    2     3    23    2      3                              23k23                           2        3
+2         3   2           3   2    3     #########   2     3    23    2      3                              23013                           2        3
+2         3   2           3   2    3     2       3   2     3    23    2      3                              23233                           2        3                       
+
+
+[tiles]
+0 tube_top_left
+1 tube_top_right
+2 tube_left
+3 tube_right
+# brick 
+? square
+^ spike_up
+v spike_down
+> spike_right
+< spike_left
+
+[items]
+d doc
+c checkpoint
+k key
+e doc_encrypted
+
+[enemies]
+C cat
+M mushroom
+B bunny
+S snake
+@ spiral
+R rotor
+H dog
+G giraffe
+V bird
+W bird_straight
+X bird_dip
