@@ -4,7 +4,9 @@
 
 #include <drivers/fatfs/ff.h>
 
-#define CREDITSFILE "credits.txt"
+#define CREDITS_FNAME  "credits.txt"
+#define POSITION_FNAME "selected.dat"
+#define PROGRESS_FNAME "progress.dat"
 
 enum {
   LEVELFILE_MAX        = 12,
@@ -19,33 +21,36 @@ enum {
   CHOICE_ERROR
 };
 
-#define PROGRESS_FNAME "progress.dat"
-
-static uint8_t jumpnrun_load_progress(void) {
-  uint8_t progress = 0;
+static uint8_t read_byte_from_file(char const *fname) {
   FIL fd;
-
+  uint8_t x = 0;
 
   if(FR_OK == f_chdir(JUMPNRUN_PATH) &&
-     FR_OK == f_open(&fd, PROGRESS_FNAME, FA_OPEN_EXISTING | FA_READ)) {
+     FR_OK == f_open(&fd, fname, FA_OPEN_EXISTING | FA_READ)) {
     UINT bytes;
-    f_read(&fd, &progress, sizeof(progress), &bytes);
+    f_read(&fd, &x, sizeof(x), &bytes);
     f_close(&fd);
   }
 
-  return progress;
+  return x;
 }
 
-static void jumpnrun_save_progress(uint8_t progress) {
+static void save_byte_to_file(char const *fname, uint8_t x) {
   FIL fd;
 
   if(FR_OK == f_chdir(JUMPNRUN_PATH) &&
-     FR_OK == f_open(&fd, PROGRESS_FNAME, FA_CREATE_ALWAYS | FA_WRITE)) {
+     FR_OK == f_open(&fd, fname, FA_CREATE_ALWAYS | FA_WRITE)) {
     UINT bytes;
-    f_write(&fd, &progress, sizeof(progress), &bytes);
+    f_write(&fd, &x, sizeof(x), &bytes);
     f_close(&fd);
   }
 }
+
+static uint8_t jumpnrun_load_selected(void            ) { return read_byte_from_file(POSITION_FNAME          ); }
+static void    jumpnrun_save_selected(uint8_t selected) {        save_byte_to_file  (POSITION_FNAME, selected); }
+
+static uint8_t jumpnrun_load_progress(void            ) { return read_byte_from_file(PROGRESS_FNAME          ); }
+static void    jumpnrun_save_progress(uint8_t progress) {        save_byte_to_file  (PROGRESS_FNAME, progress); }
 
 static uint8_t jumpnrun_pick_level_from_fd(char *buf, size_t *first_visible, size_t *selected, uint8_t progress, FIL *fd) {
   unsigned levelcount = 0;
@@ -127,13 +132,19 @@ static uint8_t jumpnrun_pick_level(char *buf, size_t *first_visible, size_t *sel
 }
 
 void jumpnrun_play(void) {
-  char buf[LEVELFILE_MAX + 1];
-  size_t first_visible = 0;
-  size_t selected = 0;
+  char    buf[LEVELFILE_MAX + 1];
+  size_t  first_visible = 0;
+  size_t  selected = jumpnrun_load_selected();
   uint8_t progress = jumpnrun_load_progress();
   uint8_t choice;
+  size_t oldselected = selected;
 
   do {
+    if(oldselected != selected) {
+      jumpnrun_save_selected((uint8_t) selected);
+      oldselected = selected;
+    }
+
     choice = jumpnrun_pick_level(buf, &first_visible, &selected, progress);
 
     switch(choice) {
@@ -144,7 +155,7 @@ void jumpnrun_play(void) {
       }
       break;
     case CHOICE_CREDITS:
-      badge_browse_textfile(CREDITSFILE);
+      badge_browse_textfile(CREDITS_FNAME);
       break;
     }
   } while(choice != CHOICE_EXIT);
