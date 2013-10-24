@@ -1,0 +1,115 @@
+15:00
+Raum 1.4
+
+SDR - Fluch,
+Segen,
+Möglichkeiten
+
+Der Einsatz
+von SDR-Tech-
+nik aus Sicht
+des Tech-
+nikers, sozia-
+ler Aspekt,
+Auswirkungen
+auf den Alltag
+
+Speaker: Ralph
+A. Schmid
+--------------
+
+Kurze Einfüh-
+rung in SDR-
+Technik,
+Demonstration
+des Einsatzes
+anhand Be-
+triebs einer
+GSM-BTS, Em-
+pfang diverser
+Signale, Aus-
+wirkungen der
+Technologie
+auf unseren
+Alltag
+
+In dem Vortrag
+sollen die
+Grundlagen der
+SDR-Technolo-
+gie erläuert
+werden, auch
+anhand von
+Beispielen. So
+wird eine GSM-
+Basisstation
+in Betrieb ge-
+hen, auf der
+alle Teilneh-
+mer mit ihren
+Mobiltelepho-
+nen einloggen
+können, der
+Empfang des
+Sekundärradars
+der Luftfahrt
+wird gezeigt,
+und auch an-
+dere Signale
+aus dem Äther
+werden visua-
+lisiert bzw.
+hörbar
+gemacht.
+
+Weiterhin wird
+der Einfluß
+von SDR-Tech-
+nologie auf
+unseren Alltag
+beleuchtet,
+die Auswirkun-
+gen auf die
+Gesellschaft,
+der Nutzen und
+auch die Ge-
+fahren des
+breiten Ein-
+satzes dieser
+Technik, wie
+zunehmende
+vereinfachte
+Überwachungs-
+möglichkeiten
+für Jedermann,
+Zugriff auf
+schützenswerte
+Daten durch
+übereifrige
+Ermittler vor-
+bei an rechts-
+staatlichen
+Kontrollin-
+stanzen, aber
+auch die Mög-
+lichkeiten für
+den wachen
+Bürger, wie er
+gerade unter
+Einsatz der
+SDR-Technik
+u.U. derlei
+Angriffe ent-
+decken kann.
+
+Die Veranstal-
+tung richtet
+sich an den
+interessierten
+Newcomer, dem
+bereits ver-
+sierten SDR-
+Anwender ver-
+mag ich wohl
+wenig Neues zu
+berichten :-)

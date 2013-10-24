@@ -1,0 +1,39 @@
+Sa. 18:00
+Raum 2.1
+
+Logic Bench +
+FTDI FIFO zum
+massiven Dum-
+pen von Daten
+in Echtzeit
+
+Speaker: knoc
+--------------
+
+Erfahrungen
+beim Hinzufue-
+gen einer FIFO
+(FTDI2232H) an
+einen Logic-
+Analyzer zum
+massiven Dum-
+pen von Daten
+in Echzeit.
+
+Inhalt:
+
+- wozu externe
+  FIFO
+- pc applica-
+  tion
+- ftdi treiber
+- fpga code
+
+Datenfluss:
+logic analyzer
+--> FIFO
+--> PC
+--> dump.vcd
+(value change
+dump)
+--> gtkwave
