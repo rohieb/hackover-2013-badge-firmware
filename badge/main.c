@@ -254,12 +254,16 @@ int main(void)
   FATFS fs;
   f_mount(0, &fs);
 
+#ifdef USBONLY
+  for(;;) usbmode();
+#else
   if(badge_input_raw() & BADGE_EVENT_KEY_DOWN) {
     usbmode();
   }
 
   badge_event_start();
   main_menu();
+#endif
 
   return 0;
 }

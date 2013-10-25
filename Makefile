@@ -26,6 +26,7 @@ DEBUGBUILD = FALSE
 ##########################################################################
 
 #OPTDEFINES = -D __NEWLIB__ -DR0KET
+#OPTDEFINES = -D __NEWLIB__ -DHOB_REV2 -DUSBONLY
 OPTDEFINES = -D __NEWLIB__ -DHOB_REV2
 ##########################################################################
 # Project-specific files 
