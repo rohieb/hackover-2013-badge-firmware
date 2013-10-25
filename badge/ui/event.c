@@ -1,6 +1,7 @@
 #include "event.h"
 
 #include <core/gpio/gpio.h>
+#include <core/pmu/pmu.h>
 #include <core/timer32/timer32.h>
 
 #ifdef R0KET
@@ -68,8 +69,9 @@ void badge_event_irq(void) {
 }
 
 badge_event_t badge_event_wait(void) {
-  while(!event_flag)
-    ;
+  while(!event_flag) {
+    pmuSleep();
+  }
 
   // User input takes precedence.
   if(event_flag & BADGE_EVENT_FLAG_INPUT) {
