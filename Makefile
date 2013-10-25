@@ -11,6 +11,7 @@ SRAM = 8K
 # For USB HID support the LPC134x reserves 384 bytes from the sram,
 # if you don't want to use the USB features, just use 0 here.
 SRAM_USB = 384
+#SRAM_USB = 0
 
 ##########################################################################
 # Debug settings

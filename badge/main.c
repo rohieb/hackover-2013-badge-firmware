@@ -191,7 +191,10 @@ static void usbmode(void) {
   badge_event_stop();
 
   badge_framebuffer fb = { { { 0 } } };
-  badge_framebuffer_render_text(&fb, 23, 30, "USB-Modus");
+  badge_framebuffer_render_text(&fb, 22, 20, "USB-Modus");
+//  badge_framebuffer_render_text(&fb, 10, 35, "Reset to exit");
+  badge_framebuffer_render_text(&fb, 16, 35, "Zurück mit");
+  badge_framebuffer_render_text(&fb, 32, 45, "Reset");
 /*
     badge_framebuffer_render_number(&fb, 23, 50, sizeof(jumpnrun_tile));
     badge_framebuffer_render_number(&fb, 33, 50, sizeof(jumpnrun_item));
@@ -207,8 +210,8 @@ static void usbmode(void) {
 }
 
 uint8_t main_menu_show(uint8_t selected) {
-  // first_visible = 0, weil das MenÃ¼ so kurz ist. Sollte es
-  // grÃ¶ÃŸer werden: Parameter aus main_menu empfangen und merken.
+  // first_visible = 0, weil das Menü so kurz ist. Sollte es
+  // größer werden: Parameter aus main_menu empfangen und merken.
   uint8_t first_visible = 0;
   char const *const menu[] = {
     "Vanity-Screen",
