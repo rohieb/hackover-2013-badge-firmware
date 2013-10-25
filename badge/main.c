@@ -214,7 +214,7 @@ uint8_t main_menu_show(uint8_t selected) {
   // größer werden: Parameter aus main_menu empfangen und merken.
   uint8_t first_visible = 0;
   char const *const menu[] = {
-    "Vanity-Screen",
+    "Titelbild",
     "Super Hackio",
     "Fahrplan",
     "USB-Modus"
@@ -262,6 +262,7 @@ int main(void)
   }
 
   badge_event_start();
+  badge_vanity_show();
   main_menu();
 #endif
 
