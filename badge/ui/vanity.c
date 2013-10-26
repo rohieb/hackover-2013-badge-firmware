@@ -4,7 +4,7 @@
 #include "event.h"
 #include <drivers/fatfs/ff.h>
 
-#define VANITY_IMAGE_FILE "/vanity.dat"
+#define VANITY_IMAGE_FILE "/titleimg.dat"
 
 void badge_vanity_read_from_fd(FIL *fd, badge_framebuffer *dest) {
   UINT bytes;
