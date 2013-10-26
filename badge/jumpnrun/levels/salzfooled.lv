@@ -1,0 +1,32 @@
+        ?     ?
+      ?  ?   ?  ?                                           B
+      ? ??????? ?
+####  ???#???#???                               B         e  
+#  #  ???????????                                            
+#d #   ?????????                    B                 #######
+#P #    ? B B ?                           #######          
+#  #   ?       ?        B     #######                        
+#  #              #######                                  B 
+#  #              
+#  #  ###########                              B          k
+#                                  B    
+#                      B                              c     
+#####^^^^^^^^^^^^^#######     #######     #######     #######
+[tiles]
+# brick
+? square
+^ spike_up
+v spike_down
+, tube_top_left
+. tube_top_right
+( tube_left
+) tube_right
+
+[items]
+d doc
+c checkpoint
+k key
+e doc_encrypted
+
+[enemies]
+B bunny
