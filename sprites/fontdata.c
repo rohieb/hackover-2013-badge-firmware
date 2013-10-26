@@ -229,12 +229,13 @@ unsigned char const font5x8[] = {
 };
 
 int main(void) {
-  FILE *fd = fopen("font.dat", "wb");
-  size_t i;
+  size_t i, j;
 
-  for(i = 0; i < sizeof(font5x8); ++i) {
-    fputc(font5x8[i] >> 1, fd);
+  for(i = 0; i < sizeof(font5x8) / 5; ++i) {
+    printf("  { ");
+    for(j = 0; j < 4; ++j) {
+      printf("0x%02x, ", font5x8[i * 5 + j] >> 1);
+    }
+    printf("0x%02x },\n", font5x8[i * 5 + 4] >> 1);
   }
-
-  fclose(fd);
 }
