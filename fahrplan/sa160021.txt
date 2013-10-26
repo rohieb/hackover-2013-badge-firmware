@@ -11,15 +11,15 @@ dungsaufbau
 Speaker: Salz
 --------------
 
-FÃ¼r den Aufbau
+Für den Aufbau
 einer sicheren
-Verbidung Ã¼ber
+Verbidung über
 unsichere Ka-
-nÃ¤le gibt es
+näle gibt es
 verschiedene
 Methoden. Der
 Vortrag soll
-einige gÃ¤ngige
+einige gängige
 Methoden vor-
 stellen und
 die parktische
@@ -33,20 +33,20 @@ Endpunkten
 aufzubauen ist
 es wichtig,
 sowohl die
-IdentitÃ¤t des
-GegenÃ¼ber prÃ¼-
-fen zu kÃ¶nnen
+Identität des
+Gegenüber prü-
+fen zu können
 als auch eine
 sichere Ini-
 tialisierung
 der Verbindung
-zu gewÃ¤hrlei-
+zu gewährlei-
 sten (z.B.
-Ãœbertragung
+Übertragung
 des Session
 Keys). Tie 
 Algorithmen
-fÃ¼r Needham-
+für Needham-
 Schroeder
 (Kerberos),
 Diffie-Hell-
@@ -56,7 +56,7 @@ tokolle werden
 im theoreti-
 schen Teil
 leicht ver-
-stÃ¤ndlich vor-
+ständlich vor-
 gestellt.
 Im praktischen
 Teil wird die
