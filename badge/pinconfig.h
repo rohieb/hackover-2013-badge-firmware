@@ -3,14 +3,12 @@
 
 #include <lpc134x.h>
 
-#ifdef HOB_REV2
-
 #define HOB_BTN_UP        (1, 11)
 #define HOB_BTN_RIGHT     (1,  7)
 #define HOB_BTN_DOWN      (1,  6)
 #define HOB_BTN_LEFT      (1,  5)
-#define HOB_BTN_A         (1,  9)
-#define HOB_BTN_B         (1,  8)
+#define HOB_BTN_A         (1,  8)
+#define HOB_BTN_B         (1,  9)
 
 #define HOB_LCD_CS        (3,  0)
 #define HOB_LCD_RST       (3,  1)
@@ -24,33 +22,8 @@
 
 #define HOB_USB_CONNECT   (0,  6)
 
-
 #define HOB_LED_LEFT      (2,  8)
 #define HOB_LED_RIGHT     (2,  6)
-
-#else
-
-#define HOB_BTN_UP        (3,  2)
-#define HOB_BTN_RIGHT     (1,  5)
-#define HOB_BTN_DOWN      (1,  6)
-#define HOB_BTN_LEFT      (3,  3)
-#define HOB_BTN_CENTER    (1,  7)
-#define HOB_BTN_A         (1, 11)
-#define HOB_BTN_B         (1,  4)
-
-#define HOB_LCD_CS        (1,  0)
-#define HOB_LCD_RST       (1,  1)
-#define HOB_LCD_BACKLIGHT (0,  1)
-
-#define HOB_DATAFLASH_CS  (0,  7)
-
-#define HOB_RADIO_CE      (2, 10)
-#define HOB_RADIO_CS      (2,  9)
-#define HOB_RADIO_IRQ     (2,  2)
-
-#define HOB_USB_CONNECT   (0,  6)
-
-#endif
 
 #define HOB_PIO0_0 nRESET_PIO0_0
 #define HOB_PIO0_1 PIO0_1
@@ -117,10 +90,10 @@
 #define HOB_BUILD_IOCON_MASK(pio, flag) HOB_BUILD_IOCON_MASK_I(pio, flag)
 #define HOB_IOCON_MASK(spec, flag) HOB_BUILD_IOCON_MASK(HOB_PIO_SUFFIX(spec), flag)
 
-#define HOB_SET_PIN_FUNC(spec, func) do {				\
-    HOB_IOCON(spec) =							\
-      (HOB_IOCON(spec) & ~HOB_IOCON_MASK(spec, FUNC_MASK))		\
-      | HOB_IOCON_MASK(spec, FUNC_ ## func);				\
+#define HOB_SET_PIN_FUNC(spec, func) do {                               \
+    HOB_IOCON(spec) =                                                   \
+      (HOB_IOCON(spec) & ~HOB_IOCON_MASK(spec, FUNC_MASK))              \
+      | HOB_IOCON_MASK(spec, FUNC_ ## func);                            \
   } while(0)
 
 #endif
