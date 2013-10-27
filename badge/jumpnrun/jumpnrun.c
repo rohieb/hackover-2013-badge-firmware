@@ -269,7 +269,7 @@ uint8_t jumpnrun_play_level(char const *lvname) {
           for(i = 0; i < JUMPNRUN_MAX_SHOTS && jumpnrun_shot_spawned(&gs.shots[i]); ++i)
             ;
 
-          if(i < JUMPNRUN_MAX_SHOTS) {
+          if(i < JUMPNRUN_MAX_SHOTS && jumpnrun_player_alive(&gs.player)) {
             jumpnrun_shot_spawn(gs.shots + i, &gs);
           }
         }
