@@ -1,4 +1,5 @@
 #include "event.h"
+#include "../backlight.h"
 
 #include <core/gpio/gpio.h>
 #include <core/pmu/pmu.h>
@@ -10,9 +11,14 @@
 #include <badge/pinconfig.h>
 #endif
 
+enum {
+  BACKLIGHT_ACTIVITY_TIMEOUT = 2307
+};
+
 // We depend on input being popped often, so no queue.
 static badge_event_t volatile event_buffer;
 static uint8_t       volatile event_flag;
+static uint16_t      volatile activity_counter = BACKLIGHT_ACTIVITY_TIMEOUT;
 
 enum {
   BADGE_EVENT_FLAG_INPUT = 1,
@@ -51,10 +57,21 @@ void badge_event_irq(void) {
   uint8_t new_state = badge_input_raw();
 
   if(new_state != old_state) {
+    if(activity_counter == 0) {
+      badge_backlight_enable();
+    }
+    activity_counter = BACKLIGHT_ACTIVITY_TIMEOUT;
+
     event_buffer = badge_event_new(BADGE_EVENT_USER_INPUT,
                                    old_state,
                                    new_state);
     event_flag |= BADGE_EVENT_FLAG_INPUT;
+  }
+
+  if(activity_counter == 0) {
+    badge_backlight_disable();
+  } else {
+    --activity_counter;
   }
 
   event_flag |= BADGE_EVENT_FLAG_TIMER;

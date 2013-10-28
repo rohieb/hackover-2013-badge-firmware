@@ -1,20 +1,11 @@
 #include "init.h"
+#include "backlight.h"
 #include "pinconfig.h"
 #include "util/util.h"
 #include "ui/display.h"
 
 #include <core/wdt/wdt.h>
 #include <core/gpio/gpio.h>
-
-static void badge_init_backlight(void) {
-  HOB_SET_PIN_FUNC(HOB_LCD_BACKLIGHT, CLKOUT);
-
-  wdtInit(false);
-  SCB_CLKOUTCLKSEL = SCB_MAINCLKSEL_SOURCE_WDTOSC;
-  SCB_CLKOUTCLKUEN = SCB_CLKOUTCLKUEN_DISABLE;
-  SCB_CLKOUTCLKUEN = SCB_CLKOUTCLKUEN_UPDATE;
-  SCB_CLKOUTCLKDIV = 75;
-}
 
 void badge_init(void) {
 #define INPUT_PIN_CONFIG(spec, mode) do {                               \
@@ -47,6 +38,6 @@ void badge_init(void) {
 
 #undef OUTPUT_PIN_CONFIG
 
-  badge_init_backlight();
+  badge_backlight_init();
   badge_display_init();
 }
