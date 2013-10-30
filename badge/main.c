@@ -194,7 +194,7 @@ static void usbmode(void) {
   usbMSCInit();
 
   for(;;) {
-    pmuSleep();
+//    pmuSleep();
   }
 }
 

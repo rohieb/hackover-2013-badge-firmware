@@ -9,11 +9,12 @@ Wintermute
 Sprites
 -------
 0717
-Ambro
+ambro
 Wintermute
 
 Level
 -----
+ambro
 Lubiana
 McSilver
 SpilkZ
