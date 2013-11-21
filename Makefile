@@ -280,7 +280,9 @@ OBJCOPY = $(CROSS_COMPILE)objcopy
 OBJDUMP = $(CROSS_COMPILE)objdump
 OUTFILE = firmware
 
-CC_FOR_BUILD = gcc
+CC_FOR_BUILD  = gcc
+CXX_FOR_BUILD = g++
+
 LPCRC = ./lpcrc
 
 ##########################################################################
@@ -327,7 +329,9 @@ LDFLAGS = -nostartfiles -mthumb -mcpu=$(CPU_TYPE) -Wl,--gc-sections
 LDLIBS  = -lm
 OCFLAGS = --strip-unneeded
 
-all: dep size $(OUTFILE).bin $(OUTFILE).hex
+LEVEL_CONVERTER = badge/tools/level-converter
+
+all: dep size $(OUTFILE).bin $(OUTFILE).hex $(LEVEL_CONVERTER)
 
 dep: $(DEPS)
 
@@ -359,13 +363,14 @@ size: $(OUTFILE).elf
 
 clean:
 	rm -f $(OBJS) $(LD_TEMP) $(OUTFILE).elf $(OUTFILE).bin $(OUTFILE).hex
+	$(MAKE) -C badge/tools clean
 
 distclean: clean
 	rm -f $(DEPS) $(LPCRC)
+	$(MAKE) -C badge/tools distclean
 
-.PHONY: all dep size clean distclean
-
-CFLAGS_FOR_BUILD = -Wall -Wextra -std=c99 -O0 -g
+CFLAGS_FOR_BUILD   = -Wall -Wextra -std=c99   -O0 -g
+CXXFLAGS_FOR_BUILD = -Wall -Wextra -std=c++11 -O0 -g
 
 LPCRC_SRCS = tools/lpcrc/lpcrc.c
 LPCRC_OBJS = $(LPCRC_SRCS:%.c=%.o)
@@ -379,3 +384,11 @@ $(LPCRC_OBJS): %.o : %.c
 
 $(LPCRC):  $(LPCRC_OBJS)
 	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) -o $@ $+ $(LDLIBS_FOR_BUILD)
+
+$(LEVEL_CONVERTER):
+	$(MAKE) -C badge/tools
+
+play:
+	$(MAKE) -C mock play
+
+.PHONY: all dep size clean distclean $(LEVEL_CONVERTER) play

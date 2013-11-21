@@ -6,7 +6,6 @@ CXXFLAGS      = -Wall -Wextra -pedantic -std=c++0x -Werror -O0 -g -fstack-protec
 LDLIBS        = $$(pkg-config --libs gtkmm-3.0)
 
 BADGE         = badge
-CONVERTER     = level-converter
 LEVELLIST     = levels.txt
 
 GLADEFILES    = lcd-display.glade
@@ -37,11 +36,8 @@ BADGE_CXXOBJS = $(BADGE_CXXSRCS:%.cc=%.o)
 BADGE_COBJS   = $(BADGE_CSRCS:%.c=%.o)
 BADGE_OBJS    = $(BADGE_CXXOBJS) $(BADGE_COBJS) $(BADGE_FAROBJS)
 
-CONVERTER_SRCS = tools/level-converter.cc
-CONVERTER_OBJS = $(CONVERTER_SRCS:%.cc=%.o)
-
 CDEPS      = $(BADGE_CSRCS:%.c=%.dep)
-CXXDEPS    = $(BADGE_CXXSRCS:%.cc=%.dep) $(CONVERTER_SRCS:%.cc=%.dep)
+CXXDEPS    = $(BADGE_CXXSRCS:%.cc=%.dep)
 FARDEPS    = $(BADGE_FAROBJS:%.o=%.dep)
 DEPS       = $(CDEPS) $(CXXDEPS) $(FARDEPS)
 
@@ -49,7 +45,7 @@ RM         = rm -f
 
 .PHONY: all dep clean distclean play
 
-all: dep $(BADGE) $(CONVERTER)
+all: dep $(BADGE)
 
 
 $(BADGE_COBJS) : %.o : %.c
@@ -78,16 +74,17 @@ $(FARDEPS): %.dep : ../badge/%.c
 sinclude $(DEPS)
 
 clean:
-	$(RM) $(BADGE_OBJS) $(CONVERTER_OBJS) $(BADGE) $(CONVERTER)
+	$(RM) $(BADGE_OBJS) $(BADGE)
 
 distclean: clean
 	$(RM) $(DEPS) $(wildcard *~)
 
-$(CONVERTER): $(CONVERTER_OBJS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ $+ $(LDLIBS)
+CONVERTER = ../badge/tools/level-converter
+LEVELS    = ../badge/jumpnrun/levels/*.lv
 
 play: all
+	$(MAKE) -C ../badge/tools
 	echo > $(LEVELLIST)
-	ls ../badge/jumpnrun/levels/*.lv | xargs -n1 basename | cut -d . -f 1 > $(LEVELLIST)
-	./$(CONVERTER)
+	ls $(LEVELS) | xargs -n1 basename | cut -d . -f 1 > $(LEVELLIST)
+	$(CONVERTER) $(LEVELS)
 	./$(BADGE)

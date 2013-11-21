@@ -89,14 +89,13 @@ namespace jnrcpp {
 
   class level {
   public:
-    level(std::string const &name)
-      : name(name),
-        level_lines(LEVEL_LINE_COUNT)
+    level(std::string const &filename)
+      : level_lines(LEVEL_LINE_COUNT)
     {
-      std::ifstream in((PATH_PREFIX + name + ".lv").c_str());
+      std::ifstream in(filename.c_str());
 
       if(!in) {
-        throw std::invalid_argument("Could not open file: " + name + ".lv");
+        throw std::invalid_argument("Could not open file: " + filename);
       }
 
       for(std::size_t i = 0; i < level_lines.size(); ++i) {
@@ -261,7 +260,6 @@ namespace jnrcpp {
     }
 
   private:
-    std::string name;
     std::vector<std::string> level_lines;
     std::map<char, std::string> tile_types;
     std::map<char, std::string> item_types;
@@ -270,20 +268,21 @@ namespace jnrcpp {
   };
 }
 
-void jumpnrun_level_dump(size_t level) {
-  std::string name = jnrcpp::level_names.names[level];
-  jnrcpp::level lv(name);
-  std::ofstream out((PATH_PREFIX + name + ".lvl").c_str());
-
-  lv.dump(out);
-}
-
-void jumpnrun_levels_dump(void) {
-  for(size_t i = 0; i < jnrcpp::level_names.names.size(); ++i) {
-    jumpnrun_level_dump(i);
+void jumpnrun_level_dump(std::string const &filename) {
+  try {
+    std::string outfilename = filename + 'l';
+    jnrcpp::level lv(filename);
+    std::ofstream out(outfilename.c_str());
+    lv.dump(out);
+  } catch(std::exception const &e) {
+    std::cerr << e.what() << std::endl;
+  } catch(...) {
+    std::cerr << "Unknown error." << std::endl;
   }
 }
 
-int main() {
-  jumpnrun_levels_dump();
+int main(int argc, char *argv[]) {
+  for(int i = 1; i < argc; ++i) {
+    jumpnrun_level_dump(argv[i]);
+  }
 }
