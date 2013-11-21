@@ -331,7 +331,7 @@ OCFLAGS = --strip-unneeded
 
 LEVEL_CONVERTER = badge/tools/level-converter
 
-all: dep size $(OUTFILE).bin $(OUTFILE).hex $(LEVEL_CONVERTER)
+all: dep size $(OUTFILE).bin $(OUTFILE).hex $(LEVEL_CONVERTER) mock
 
 dep: $(DEPS)
 
@@ -364,10 +364,12 @@ size: $(OUTFILE).elf
 clean:
 	rm -f $(OBJS) $(LD_TEMP) $(OUTFILE).elf $(OUTFILE).bin $(OUTFILE).hex
 	$(MAKE) -C badge/tools clean
+	$(MAKE) -C mock clean
 
 distclean: clean
 	rm -f $(DEPS) $(LPCRC)
 	$(MAKE) -C badge/tools distclean
+	$(MAKE) -C mock distclean
 
 CFLAGS_FOR_BUILD   = -Wall -Wextra -std=c99   -O0 -g
 CXXFLAGS_FOR_BUILD = -Wall -Wextra -std=c++11 -O0 -g
@@ -388,7 +390,10 @@ $(LPCRC):  $(LPCRC_OBJS)
 $(LEVEL_CONVERTER):
 	$(MAKE) -C badge/tools
 
+mock:
+	$(MAKE) -C mock
+
 play:
 	$(MAKE) -C mock play
 
-.PHONY: all dep size clean distclean $(LEVEL_CONVERTER) play
+.PHONY: all dep size clean distclean $(LEVEL_CONVERTER) mock play
