@@ -330,8 +330,11 @@ LDLIBS  = -lm
 OCFLAGS = --strip-unneeded
 
 LEVEL_CONVERTER = badge/tools/level-converter
+MKTITLEIMG      = badge/tools/mktitleimg
 
-all: dep size $(OUTFILE).bin $(OUTFILE).hex $(LEVEL_CONVERTER) mock
+normal: dep size $(OUTFILE).bin $(OUTFILE).hex $(LEVEL_CONVERTER) mock
+
+all: normal $(MKTITLEIMG)
 
 dep: $(DEPS)
 
@@ -388,7 +391,10 @@ $(LPCRC):  $(LPCRC_OBJS)
 	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) -o $@ $+ $(LDLIBS_FOR_BUILD)
 
 $(LEVEL_CONVERTER):
-	$(MAKE) -C badge/tools
+	$(MAKE) -C badge/tools $$(basename $@)
+
+$(MKTITLEIMG):
+	$(MAKE) -C badge/tools $$(basename $@)
 
 mock:
 	$(MAKE) -C mock
@@ -396,4 +402,4 @@ mock:
 play:
 	$(MAKE) -C mock play
 
-.PHONY: all dep size clean distclean $(LEVEL_CONVERTER) mock play
+.PHONY: all dep size clean distclean $(LEVEL_CONVERTER) $(MKTITLEIMG) mock play

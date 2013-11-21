@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  std::ofstream out("vanity.dat", std::ios::out | std::ios::binary);
+  std::ofstream out("titleimg.dat", std::ios::out | std::ios::binary);
 
   if(out) {
     out.write(static_cast<char const *>(static_cast<void const *>(&fb)), sizeof(fb));
