@@ -46,31 +46,10 @@ void jumpnrun_levels_dump(void);
   var.tiles   = var ## _tiles;                            \
   var.items   = var ## _items;                            \
   var.enemies = var ## _enemies;
-#else
 
-#ifdef __linux__
+#ifdef __thumb__
 
-int jumpnrun_load_level_header_from_file(jumpnrun_level *dest, FILE *fd);
-int jumpnrun_load_level_from_file       (jumpnrun_level *dest, FILE *fd);
-
-#define JUMPNRUN_LEVEL_LOAD(lv, lvname)                         \
-  memset(&(lv), 0, sizeof(lv));                                 \
-  FILE *fd = fopen((lvname), "r");                              \
-  if(fd == NULL) return JUMPNRUN_ERROR;                         \
-  int err = jumpnrun_load_level_header_from_file(&(lv), fd);    \
-  if(err != 0) {                                                \
-    fclose(fd);                                                 \
-    return JUMPNRUN_ERROR;                                      \
-  }                                                             \
-  JUMPNRUN_LEVEL_MAKE_SPACE(lv);                                \
-  err = jumpnrun_load_level_from_file(&(lv), fd);               \
-  fclose(fd);                                                   \
-  if(err != 0) return JUMPNRUN_ERROR;
-#else
 #include <drivers/fatfs/ff.h>
-
-int jumpnrun_load_level_header_from_file(jumpnrun_level *dest, FIL *fd);
-int jumpnrun_load_level_from_file       (jumpnrun_level *dest, FIL *fd);
 
 #define JUMPNRUN_LEVEL_LOAD(lv, lvname)                                 \
   memset(&(lv), 0, sizeof(lv));                                         \
@@ -89,6 +68,30 @@ int jumpnrun_load_level_from_file       (jumpnrun_level *dest, FIL *fd);
   if(err != 0) {                                                        \
     return JUMPNRUN_ERROR;                                              \
   }
+
+#else
+
+typedef FILE FIL;
+
+#define JUMPNRUN_LEVEL_LOAD(lv, lvname)                         \
+  memset(&(lv), 0, sizeof(lv));                                 \
+  FILE *fd = fopen((lvname), "r");                              \
+  if(fd == NULL) {                                              \
+    return JUMPNRUN_ERROR;                                      \
+  }                                                             \
+  int err = jumpnrun_load_level_header_from_file(&(lv), fd);    \
+  if(err != 0) {                                                \
+    fclose(fd);                                                 \
+    return JUMPNRUN_ERROR;                                      \
+  }                                                             \
+  JUMPNRUN_LEVEL_MAKE_SPACE(lv);                                \
+  err = jumpnrun_load_level_from_file(&(lv), fd);               \
+  fclose(fd);                                                   \
+  if(err != 0) return JUMPNRUN_ERROR;
+
 #endif
+
+int jumpnrun_load_level_header_from_file(jumpnrun_level *dest, FIL *fd);
+int jumpnrun_load_level_from_file       (jumpnrun_level *dest, FIL *fd);
 
 #endif

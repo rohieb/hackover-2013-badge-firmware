@@ -4,11 +4,21 @@
 #include "enemies.h"
 #include "jumpnrun.h"
 
-#ifndef __linux__
-#include <drivers/fatfs/ff.h>
-#endif
+#ifndef __thumb__
 
-#include <stdio.h>
+typedef enum {
+  FR_OK,
+  FR_SOME_ERROR
+} FRESULT;
+
+typedef size_t UINT;
+
+FRESULT f_read (FIL *fd, void *buf, UINT bufsize, UINT *bytes) {
+  *bytes = fread(buf, 1, bufsize, fd);
+  return *bytes == 0 ? FR_SOME_ERROR : FR_OK;
+}
+
+#endif
 
 typedef struct {
   uint16_t x;
@@ -56,19 +66,11 @@ static void jumpnrun_level_make_enemy(jumpnrun_enemy *dest, level_thing thing) {
   jumpnrun_enemy_despawn(dest);
 }
 
-#ifdef __linux__
-int jumpnrun_load_level_header_from_file(jumpnrun_level *dest, FILE *fd) {
-#else
 int jumpnrun_load_level_header_from_file(jumpnrun_level *dest, FIL *fd) {
   UINT count;
-#endif
   uint16_t head[3];
 
-#ifdef __linux__
-  if(1 != fread(&head, sizeof(head), 1, fd)) {
-#else
   if(FR_OK != f_read(fd, head, sizeof(head), &count) || count != sizeof(head)) {
-#endif
     return JUMPNRUN_LEVEL_LOAD_ERROR;
   }
 
@@ -79,41 +81,25 @@ int jumpnrun_load_level_header_from_file(jumpnrun_level *dest, FIL *fd) {
   return JUMPNRUN_LEVEL_LOAD_OK;
 }
 
-#ifdef __linux__
-int jumpnrun_load_level_from_file(jumpnrun_level *dest, FILE *fd) {
-#else
 int jumpnrun_load_level_from_file(jumpnrun_level *dest, FIL *fd) {
   UINT count;
-#endif
   size_t i;
   unsigned char buf[3];
   uint16_t spos[2];
 
-#ifdef __linux__
-  if(1 != fread(spos, sizeof(spos), 1, fd)) {
-#else
   if(FR_OK != f_read(fd, spos, sizeof(spos), &count) || count != sizeof(spos)) {
-#endif
     return JUMPNRUN_LEVEL_LOAD_ERROR;
   } else {
     dest->start_pos.x = fixed_point_sub(FIXED_INT((spos[0] + 1) * JUMPNRUN_TILE_PIXEL_WIDTH ), jumpnrun_player_extents().x);
     dest->start_pos.y =                 FIXED_INT( spos[1]      * JUMPNRUN_TILE_PIXEL_HEIGHT);
   }
 
-#ifdef __linux__
-  if(1 != fread(&dest->start_lives, 1, 1, fd)) {
-#else
   if(FR_OK != f_read(fd, &dest->start_lives, sizeof(dest->start_lives), &count) || count != sizeof(dest->start_lives)) {
-#endif
     return JUMPNRUN_LEVEL_LOAD_ERROR;
   }
 
   for(i = 0; i < dest->header.tile_count; ++i) {
-#ifdef __linux__
-    if(1 != fread(buf, 3, 1, fd)) {
-#else
     if(FR_OK != f_read(fd, buf, sizeof(buf), &count) || count != sizeof(buf)) {
-#endif
       return JUMPNRUN_LEVEL_LOAD_ERROR;
     }
 
@@ -126,11 +112,7 @@ int jumpnrun_load_level_from_file(jumpnrun_level *dest, FIL *fd) {
   }
 
   for(i = 0; i < dest->header.item_count; ++i) {
-#ifdef __linux__
-    if(1 != fread(buf, 3, 1, fd)) {
-#else
     if(FR_OK != f_read(fd, buf, sizeof(buf), &count) || count != sizeof(buf)) {
-#endif
       return JUMPNRUN_LEVEL_LOAD_ERROR;
     }
 
@@ -143,11 +125,7 @@ int jumpnrun_load_level_from_file(jumpnrun_level *dest, FIL *fd) {
   }
 
   for(i = 0; i < dest->header.enemy_count; ++i) {
-#ifdef __linux__
-    if(1 != fread(buf, 3, 1, fd)) {
-#else
     if(FR_OK != f_read(fd, buf, sizeof(buf), &count) || count != sizeof(buf)) {
-#endif
       return JUMPNRUN_LEVEL_LOAD_ERROR;
     }
 
