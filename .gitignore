@@ -6,3 +6,6 @@
 *.dep
 *.lvl
 lpcrc
+badge/tools/level-converter
+mock/badge
+mock/levels.txt
