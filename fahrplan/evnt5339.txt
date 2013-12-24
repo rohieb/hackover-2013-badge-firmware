@@ -1,0 +1,35 @@
+Dec 28, 18:30
+Saal 1
+
+The Year in
+Crypto
+--------------
+Nadia
+Heninger, djb,
+Tanja Lange
+
+Track:
+Security &
+Safety
+
+This was a
+busy year for
+crypto.  TLS
+was broken.
+And then
+broken again.
+Discrete logs
+were computed.
+And then
+computed
+again.  Is the
+cryptopocalyps
+e nigh?  Has
+the NSA
+backdoored
+everything in
+sight?  Also,
+answers to
+last year's
+exercises will
+be given.

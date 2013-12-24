@@ -1,0 +1,119 @@
+Dec 29, 14:00
+Saal 2
+
+RFID Treehouse
+of Horror
+
+Hacking City-
+Wide Access
+Control
+Systems
+--------------
+Adrian
+Dabrowski
+
+Track:
+Security &
+Safety
+
+In this
+lecture, we
+present a
+black-box
+analysis of an
+electronic
+contact-less
+system that
+has been
+steadily
+replacing a
+conventional
+mechanical key
+on multi-party
+houses in a
+big European
+city. So far,
+there are est.
+10.000
+installations
+of the
+electronic
+system. The
+mechanical key
+has been
+introduced
+about 40 years
+ago to allow
+mail delivery
+services to
+access multi-
+party houses
+but has since
+then
+aggregated
+many
+additional
+users, such as
+garbage
+collection,
+police, fire
+brigade and
+other
+emergency
+services. Over
+92% of
+residential
+buildings in
+this city are
+equipped with
+such a
+solution.  We
+have found
+several vulner
+abilities in
+the new system
+caused by the
+design,
+technology
+used,
+organization,
+and its implem
+entation. We
+have further
+shown that the
+new system is
+circumventable
+with little
+costs (not
+higher than
+the old key is
+sold under the
+counter).   To
+acquire keys
+samples we
+packed an
+active mid-
+range RFID
+reader with a
+battery pack
+into a parcel
+and send it
+via post. On
+its way, the
+reader
+wirelessly
+collected the
+key(s) of the
+handling
+personnel.
+As a side
+project, we
+also present
+security
+shortcomings
+in other
+access control
+systems and
+electronic
+purse
+solutions.

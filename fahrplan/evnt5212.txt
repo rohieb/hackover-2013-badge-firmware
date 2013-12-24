@@ -1,0 +1,166 @@
+Dec 27, 21:45
+Saal 6
+
+The GNU Name
+System
+
+A
+Decentralized
+PKI For Social
+Movements
+--------------
+grothoff
+
+Track:
+Security &
+Safety
+
+DNS, DNSSEC
+and the X.509
+CA system leak
+private
+information
+about users to
+server
+operators and
+fail to
+provide
+adequate
+security
+against modern
+adversaries.
+The fully
+decentralized
+GNU Name
+System
+provides a
+privacy-
+enhancing and
+censorship-
+resistant
+alternative.
+The Domain
+Name System
+(DNS) is vital
+for access to
+information on
+the Web. It is
+thus a target
+for attackers
+trying to
+suppress free
+access to
+information.
+This talk
+introduces the
+design and
+implementation
+of the GNU
+Name System
+(GNS), a fully
+decentralized
+and
+censorship-
+resistant name
+system.  GNS
+provides an
+privacy-
+enhancing
+alternative to
+DNS and
+existing
+public key inf
+rastructures
+(such as X.509
+certificate
+authorities),
+while giving
+users the
+desirable
+property of
+memorable
+names.  The
+design of GNS
+incorporates
+the
+possibility of
+integration
+and
+coexistence
+with DNS.  GNS
+builds on
+ideas from the
+Simple
+Distributed
+Security
+Infrastructure
+(SDSI),
+addressing a
+central issue
+with the
+decentralized
+mapping of
+secure
+identifiers to
+memorable
+names: namely
+the
+impossibility
+of providing a
+global, secure
+and memorable
+mapping
+without a
+trusted
+authority,
+also known as
+Zooko's
+triangle. GNS
+uses the
+transitivity
+in the SDSI
+design to
+replace the
+trusted root
+with secure
+delegation of
+authority,
+thus making
+petnames
+useful to
+other users
+while
+operating
+under the
+strong
+adversary
+model assumed
+by Zooko.  In
+addition to
+describing the
+GNS design,
+this talk also
+discusses some
+of the
+mechanisms
+that are
+needed to
+smoothly
+integrate GNS
+with existing
+processes and
+procedures in
+Web browsers.
+Specifically,
+we show how
+GNS is able to
+transparently
+support many
+assumptions
+that the
+existing
+HTTP(S)
+infrastructure
+makes about
+globally
+unique names.

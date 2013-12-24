@@ -1,0 +1,90 @@
+Dec 29, 23:30
+Saal 1
+
+CounterStrike
+
+Lawful
+Interception
+--------------
+FX
+
+Track:
+Security &
+Safety
+
+Lawful
+Interception
+is a
+monitoring
+access for law
+enforcement
+agencies, but
+also one of
+the primary
+data sources
+of many
+surveillance
+programs.
+(Almost?)
+every Internet
+service
+provider needs
+to provide LI
+functionality
+in its
+routers.
+However, LI
+exposes a
+larger attack
+surface to the
+one being
+surveilled
+than any
+router should.
+Could this be
+a mistake?
+This short
+talk will
+cover the
+standards,
+devices and
+implementation
+of a mandatory
+part of our
+western
+Internet infra
+structure. The
+central
+question is
+whether an
+overarching
+interception
+functionality
+might actually
+put national
+Internet
+infrastructure
+at a higher
+risk of being
+attacked
+successfully.
+The question
+is approached
+in this talk
+from a purely
+technical
+point of view,
+looking at how
+LI
+functionality
+is implemented
+by a major
+vendor and
+what issues
+arise from
+that implement
+ation. Routers
+and other
+devices may
+get hurt in
+the process.

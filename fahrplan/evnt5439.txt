@@ -1,0 +1,255 @@
+Dec 30, 11:30
+Saal 2
+
+To Protect And
+Infect
+
+The
+militarization
+of the
+Internet
+--------------
+Claudio
+Guarnieri,
+Jacob, Morgan
+Marquis-Boire
+
+Track:
+Security &
+Safety
+
+2013 will be
+remembered as
+the year that
+the Internet
+lost its
+innocence for
+nearly
+everyone as
+light was shed
+on the
+widespread use
+of dragnet
+surveillance
+by the NSA and
+intelligence
+agencies
+globally. With
+the uprisings
+of the Arab
+Spring where
+people raided
+the offices of
+their regimes
+to bring
+evidence to
+light, we've
+seen a
+tremendous
+phenomenon: a
+large numbers
+of
+whistleblowers
+have taken
+action to
+inform the
+public about
+important
+details. The
+WikiLeaks
+SpyFiles
+series also
+shows us
+important
+details to
+corroborate
+these claims.
+There is ample
+evidence about
+the use and
+abuses of a
+multi-billion
+dollar
+industry that
+have now come
+to light. This
+evidence
+includes
+increasing use
+of targeted
+attacks to
+establish even
+more invasive
+control over
+corporate,
+government or
+other so-
+called
+legitimate
+targets.  2013
+will be
+remembered as
+the year that
+the Internet
+lost its
+innocence for
+nearly
+everyone as
+light was shed
+on the
+widespread use
+of dragnet
+surveillance
+by the NSA and
+intelligence
+agencies
+globally. With
+the uprisings
+of the Arab
+Spring where
+people raided
+the offices of
+their regimes
+to bring
+evidence to
+light, we've
+seen a
+tremendous
+phenomenon: a
+large numbers
+of
+whistleblowers
+have taken
+action to
+inform the
+public about
+important
+details. The
+WikiLeaks
+SpyFiles
+series also
+shows us
+important
+details to
+corroborate
+these claims.
+There is ample
+evidence about
+the use and
+abuses of a
+multi-billion
+dollar
+industry that
+have now come
+to light. This
+evidence
+includes
+increasing use
+of targeted
+attacks to
+establish even
+more invasive
+control over
+corporate,
+government or
+other so-
+called
+legitimate
+targets.
+Everything
+transiting our
+network
+connections is
+under
+surveillance
+to some
+degree. It's
+also common
+for law
+enforcement
+and
+intelligence
+agencies to
+use exploits
+and malware to
+infect and
+monitor
+computers,
+mobile devices
+and to spy on
+networks.
+They're able
+to bug our
+rooms with our
+own
+telephones,
+read encrypted
+emails, log
+keystrokes -
+they invade
+the most
+personal
+spaces in the
+very core of a
+person's life
+with minimal
+economic
+impact to
+their budget.
+In this talk
+we'll discuss
+the nature of
+targeted and
+untargeted
+surveillance,
+exploitation
+and
+intelligence
+gathering.
+This active
+surveillance
+is produced
+and operated
+not only by
+governments
+but by
+corporations
+and
+mercenaries
+that provide
+their
+intrusion
+services to
+the highest
+bidders who
+often have the
+lowest respect
+for human
+rights.  We'll
+introduce you
+to the players
+in the
+business of
+active,
+passive,
+tactical and
+strategic
+surveillance
+and the
+products they
+provide. We'll
+also discuss
+examples of
+specific
+attacks on
+journalists
+and human
+rights
+activists
+worldwide in
+the last
+couple of
+years.
+Surprises
+won't be
+missing.

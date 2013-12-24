@@ -1,0 +1,222 @@
+Dec 29, 16:00
+Saal 6
+
+Towards an
+affordable
+brain-
+computer-
+interface
+--------------
+Dominic, Anne
+
+Track: Science
+& Engineering
+
+The brain can
+be understood
+as a highly
+specialized
+information
+processing
+device.
+Because
+computers
+basically do
+the same
+thing, it's
+not too absurd
+to try to link
+these two
+together. The
+result is a
+brain-
+computer-
+interface.
+This talk
+explains the
+core
+functionality
+of our brain
+and how to
+access the
+stored data
+from the
+outside.
+Software and
+hardware have
+already
+reached a
+somewhat
+hacker-
+friendly
+state, and we
+want to show
+you how we got
+there. We're
+also here to
+answer all
+your questions
+about the
+brain.
+Communication
+between humans
+and computers
+has great
+tradition, but
+also underlies
+several
+disadvantages.
+Interfaces
+like mice,
+keyboards or
+microphones
+essentially
+link the
+user's body
+parts to a
+computer. When
+creating new
+content, these
+interfaces
+prove to be
+relatively
+inefficient,
+inaccurate and
+limited by the
+user's skill.
+A good brain-
+computer-
+interface
+would take
+body movements
+out of the
+process. Less
+required skill
+and more
+information
+flow density
+are only the
+most obvious
+benefits. It
+is a potential
+replacement
+for dozens of
+today's
+specialized
+devices. And,
+just as a
+microphone
+does for
+voice, it
+would also
+allow the
+transfer of
+visual
+imaginations.
+Before we
+explain how to
+create the
+most advanced
+brain-
+computer-
+interface
+possible
+today, Dominic
+dives quite
+deeply into
+the signal
+processing
+structure in
+the brain. He
+presents the
+most recent
+findings in
+cognitive
+science and
+explains what
+happens - step
+for step -
+when we
+imagine the
+image of a red
+ball. At the
+end of this
+first section,
+he arrives at
+the level of
+electrical
+signals.  Anne
+then takes
+over with the
+groundwork
+necessary to
+capture and
+process these
+electrical
+signals. She
+isn't afraid
+to use proper
+math for a
+deeper
+understanding,
+but she made
+sure that her
+talk is easy
+to follow for
+non-tech
+majors too.
+The foundation
+for a
+contemporary
+brain-
+computer-
+interface
+consists of
+several core
+algorithms,
+which are used
+in lab
+settings today
+and by
+enthusiasts
+tomorrow. She
+calls out the
+pitfalls when
+dealing with
+signals from
+live brains,
+and covers the
+technical
+limitations
+with crunching
+the data.  We
+finish with a
+real-world
+perspective.
+The power of
+today's
+available
+hardware and
+software is
+still limited,
+but our
+understanding
+of
+informations
+inside and
+outside the
+brain has
+improved
+drastically.
+We've come a
+long way since
+electrode-
+level pattern
+matching, and
+we'd be
+excited to
+show you some
+examples of
+what's
+possible
+today.

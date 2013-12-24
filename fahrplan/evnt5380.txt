@@ -1,0 +1,633 @@
+Dec 29, 18:30
+Saal 2
+
+Persistent,
+Stealthy,
+Remote-
+controlled
+Dedicated
+Hardware
+Malware
+--------------
+Patrick Stewin
+
+Track:
+Security &
+Safety
+
+In this work
+we present a
+stealthy
+malware that
+exploits
+dedicated
+hardware on
+the target
+system and
+remains
+persistant
+across boot
+cycles. The
+malware is
+capable of
+gathering
+valuable
+information
+such as
+passwords.
+Because the
+infected
+hardware can
+perform
+arbitrary main
+memory
+accesses, the
+malware can
+modify kernel
+data
+structures and
+escalate
+privileges of
+processes
+executed on
+the system.
+The malware
+itself is a
+DMA malware
+implementation
+referred to as
+DAGGER. DAGGER
+exploits
+Intel's
+Manageability
+Engine (ME),
+that executes
+firmware code
+such as
+Intel's Active
+Management
+Technology
+(iAMT), as
+well as its
+OOB network
+channel. We
+have recently
+improved
+DAGGER's
+capabilites to
+include
+support for
+64-bit
+operating
+systems and a
+stealthy
+update
+mechanism to
+download new
+attack code.
+Dedicated
+hardware such
+as network
+interface
+cards and
+video
+controllers
+can be
+exploited to
+conduct a
+direct memory
+access (DMA)
+attack. Direct
+access means
+main memory
+access without
+the
+involvement of
+the host CPU,
+which in turn
+means that
+existing host
+security
+software
+cannot detect
+or prevent the
+attack.  Our
+presentation
+covers a DMA
+malware that
+benefits from
+an isolated
+network
+channel to
+update the
+attack code
+and to
+exfiltrate
+captured data.
+To be more
+precise, we
+show how to
+conduct a DMA
+attack using
+Intel's
+Manageability
+Engine (ME).
+Our attack
+environment is
+dedicated
+hardware based
+on a 32-bit
+RISC processor
+called
+ARCtangent-A4
+(ARC4, x86-inc
+ompatible)
+implemented in
+the chipset of
+modern Intel
+platforms.
+Intel's ME
+executes
+special
+firmware such
+as Intel's
+Active
+Management
+Technology
+(iAMT). The
+ME/iAMT
+environment
+provides an
+administrator
+with an Out-
+of-Band (OOB)
+network
+channel to
+maintain the
+computer
+platform
+remotely. A
+prominent iAMT
+feature is the
+capability to
+remotely
+reinstall an
+operating
+system that
+got corrupted
+and does not
+boot anymore.
+iAMT is also
+available when
+the platform
+is in a
+standby or
+powered off
+state. This
+can be
+exploited to
+implement
+persistent DMA
+malware. It is
+needless to
+say that such
+a powerful
+environment
+must be well
+protected.
+Hence, Intel
+enforces
+strong
+isolation of
+the ME
+execution
+environment
+that makes it
+perfect to
+hide malware.
+The ME is not
+only
+implemented in
+business
+platforms, but
+also in
+consumer
+platforms.
+Our work does
+not only show,
+that an
+arbitrary
+attacker is
+able to
+perform one of
+the most
+dangerous
+attacks
+against an
+iAMT featured
+platform, but
+also, that the
+ME provides a
+perfect
+environment
+for
+undetectable
+sensitive data
+leakage on
+behalf of the
+attacker. Our
+presentation
+consists of
+three parts.
+The first part
+addresses how
+to find
+valuable data
+in the main
+memory of the
+host. The
+second part
+exploits the
+ME's OOB
+network
+channel to
+exfiltrate
+captured data
+to an external
+platform and
+to inject new
+attack code to
+target other
+interesting
+data
+structures
+available in
+the host
+runtime
+memory. The
+last part
+deals with the
+implementation
+of a covert
+network
+channel based
+on JitterBug.
+In the first
+part of our
+presentation
+we exploit the
+DMA engine of
+Intel's ME to
+find valuable
+data in the
+host runtime
+memory. We
+have two
+memory
+targets. Our
+first target
+is the
+keyboard
+buffer. We
+demonstrate
+how to find
+the buffer on
+a Linux as
+well as on a
+Windows
+operating
+system. Our
+implementation
+is called
+DAGGER - DmA
+based
+keyloGGER. We
+implemented
+different
+search
+strategies for
+the operating
+system
+targets. On
+Windows we
+need to find
+the
+corresponding
+CR3 processor
+register value
+to get the
+page directory
+entries that
+are needed to
+map virtual
+memory
+addresses into
+physical ones.
+We also had to
+take address
+randomization
+into account.
+The search
+strategy for
+the Windows
+keyboard
+buffer is
+mainly based
+on finding and
+traversing the
+so called
+Object Manager
+Namespace
+Directory
+(OMND). On
+Linux we
+implemented a
+different
+search
+strategy. On
+Linux we have
+a different
+starting point
+for the search
+phase than on
+Windows. The
+implementation
+to map virtual
+memory
+addresses into
+physical ones
+is also
+different. On
+Linux we can
+go without
+page tables.
+Due to the
+availability
+of the Linux
+source code it
+was easier to
+derive a
+signature for
+our target
+structure used
+by the USB HID
+driver.   We
+can
+permanently
+monitor the
+keyboard
+buffer on both
+operating
+system
+targets.
+Hence, we can
+capture all
+user input
+(passwords,
+instant
+messenger
+sessions,
+etc.) done via
+the associated
+keyboard. Our
+second memory
+target
+concerns the
+privilege data
+of an
+arbitrary
+process.
+Again, we use
+the DMA engine
+of the ME to
+find the
+appropriate
+data
+structure.
+Then we
+overwrite the
+existing
+privileges
+with root
+privileges via
+DMA.  The
+privilege
+escalation
+attack
+actually
+belongs to the
+second part of
+our attack
+scenario. The
+implementation
+is based on an
+updated
+version of
+DAGGER that is
+able to attack
+64-bit
+operation
+systems. We
+demonstrate
+how to
+remotely load
+new attack
+code (to
+escalate
+privileges) to
+be executed on
+Intel's ME
+using the
+isolated OOB
+channel. To
+figure out how
+to exploit the
+DMA engine to
+read from the
+host runtime
+memory was
+comparatively
+easy due to
+previous work.
+To figure out
+how to exploit
+the ME OOB
+feature was
+more
+challenging.
+We had to find
+the ring
+buffers that
+iAMT uses to
+send and
+receive
+network
+packets and
+the
+corresponding
+ring buffer
+pointers. We
+also had to
+find code that
+is responsible
+for sending
+data to an
+external
+platform in
+the 16MB iAMT
+firmware
+runtime
+memory. To get
+the OOB
+channel under
+our control we
+implemented a
+breakpoint
+helper tool.
+That tool
+disassembles
+and displays
+iAMT code
+present in the
+iAMT runtime
+memory on-the-
+fly. This
+enables us to
+set
+breakpoints
+(based on
+hooks) to
+check the
+register
+content of the
+ARC4
+processor. We
+were able to
+identify all
+necessary OOB
+channel parts
+by setting
+breakpoints
+and by
+triggering
+network
+events.  The
+last part of
+our
+presentation
+deals with a
+covert network
+channel based
+on JitterBug.
+The OOB
+channel is
+perfect to
+hide malicious
+network
+packets from
+the host, but
+not from other
+monitors
+present in the
+network. The
+aim of the
+JitterBug
+based covert
+network
+channel is to
+demonstrate
+how far an
+attacker can
+go with
+stealthy data
+exfiltration
+when using
+Intel's ME as
+attack
+environment.
+Using the
+JitterBug
+technique the
+attacker
+exfiltrates
+information by
+introducing
+seemingly
+random delays
+to some
+outgoing
+network
+packets. The
+delay pattern
+can be decoded
+by an external
+platform that
+is under the
+control of the
+attacker.
+Since timing
+is very
+important to
+implement a
+JitterBug, we
+had to figure
+out how to
+exactly
+measure time
+in the ME
+execution
+environment.
+Furthermore,
+we had to
+determine
+which network
+packets are
+"delayable"
+and how to
+delay them. To
+learn how to
+use the
+required
+ME/iAMT
+components for
+a JitterBug
+implementation
+we developed a
+more advanced
+debug tool.
+This debug
+tool is based
+on ARC4 code
+emulation and
+it enabled us
+to collect a
+huge amount of
+firmware trace
+logs that
+eventually
+revealed the
+required parts
+of the ME/iAMT
+inner
+workings.   In
+our talk we
+will present
+important
+runtime memory
+areas and ARC4
+disassemblies
+of the ARC4
+based code.
+Furthermore,
+we will
+present demo
+videos of our
+attack
+scenarios.
+Please note,
+we do not
+present a new
+security
+vulnerability
+to exploit
+Intel's ME.

@@ -1,0 +1,276 @@
+Dec 29, 11:30
+Saal 2
+
+Europe, the
+USA and
+Identity
+Ecosystems
+--------------
+NoisyNarrowBan
+dDevice
+
+Track: Ethics,
+Society &
+Politics
+
+Talk
+introducing
+NSTIC and COM
+238, i.e. the
+current
+digital
+identity
+policy
+proposals in
+the USA and
+European
+discussing
+their
+similarities,
+differences
+and possible
+conflicts.  In
+the past two
+years both the
+US Government
+as well as the
+European
+Commission
+have declared
+their intend
+to create
+"Identity
+Ecosystems"
+and are
+actively
+pursuing the
+creation of
+regulatory and
+technical
+frameworks for
+digital
+authentication
+of their
+citizens. Both
+the USA and
+the European
+Union expect
+the
+implementation
+of state-
+recognized
+digital
+identities in
+the coming
+three to five
+years.  The
+American
+initiative is
+called
+"National
+Strategy for
+Trusted
+Identities in
+Cyberspace
+(NSTIC), its
+European
+counterpart
+"electronic
+identification
+and trust
+services for
+electronic
+transactions
+in the
+internal
+market"
+(COM(2012)
+238).   Given
+the scope of
+these
+programs, the
+number of
+people
+affected and
+the fact that
+identity
+technologies
+necessarily
+have to
+negotiate
+conflicting
+values of
+individual
+liberty and
+social
+control, it is
+reasonable to
+expect that
+the
+developments
+around NSTIC
+and COM (2012)
+238 will
+become
+dominant in
+the debate on
+the future of
+the Internet.
+In my talk I
+will introduce
+the basics of
+the White
+Houses NSTIC
+initiative and
+the European
+Unions
+COM(2012) 238,
+explaining the
+common traits
+as well as the
+conflicting
+aspects of the
+electronic
+identity
+programs of
+two of the
+worlds largest
+and most
+influential
+state
+entities.   I
+will outline
+how both
+programs share
+the assumption
+that providing
+"secure" and
+"trusted"
+identities is
+essential for
+the future
+development of
+the Internet,
+is necessary
+to fully
+realize
+citizenship
+status on the
+Net as well as
+to foster
+further
+economic
+growth. I will
+also
+scrutinize the
+importance and
+function of
+the term
+"transaction"
+that is
+prominent in
+both NSTIC and
+COM (2012)
+238.
+Subsequently I
+will show that
+NSTIC and COM
+(2012) 238
+differ
+fundamentally
+in their view
+on the role of
+the state, of
+the private
+sector and of
+civil society
+in providing
+and
+controlling
+the standards,
+protocols and 
+infrastructure
+s of digital
+identities.
+Here I will
+outline how
+the NSTIC
+employs a
+neoliberal
+market
+rhetoric,
+declaring that
+"the Identity
+Ecosystem
+should be
+market-
+driven" while
+the European
+Union follows
+an etaistic
+vision of
+governmental
+identity
+provision. In
+this context I
+will show the
+importance of
+the different
+approaches
+between Europe
+and the USA
+concerning the
+relation of
+existing
+offline and
+online
+identity
+solutions.
+The goal of
+the talk is to
+raise
+awareness to
+the importance
+of these
+programs, to
+enable an
+understanding
+of the
+paradoxes of
+digital
+identity
+provision and
+its function
+in both
+enabling and
+sustaining
+statehood and
+capitalism.
+The talk will
+close with a
+statement
+locating the
+differences
+between the
+European and
+the United
+States
+approach in
+the larger
+conflict on
+the question
+of means and
+legitimacy of
+intervening
+and regulating
+capitalism.
+Duration 40
+mins + 20 min
+discussion,
+presentation
+style will be
+slides and
+accompanying
+talk,
+discussion
+afterwards.

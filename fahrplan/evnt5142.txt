@@ -1,0 +1,165 @@
+Dec 27, 19:00
+Saal 6
+
+Monitoring the
+Spectrum:
+Building Your
+Own
+Distributed RF
+Scanner Array
+--------------
+Andrew Reiter
+(arr,awr)
+
+Track:
+Hardware &
+Making
+
+Software-
+Defined Radio
+(SDR) has
+increased in
+popularity in
+recent years
+due to the
+decrease in
+hardware costs
+and increase
+in processing
+power. One
+example of
+such a class
+of devices is
+the RTL-SDR
+USB dongles
+based on the
+Realtek
+RTL2832U
+demodulator.
+This talk will
+discuss my
+experience in
+building a
+distributed RF
+scanner array
+for monitoring
+and spectrum
+mapping using
+such cheap SDR
+devices. The
+goal is to
+help the
+audience
+understand the
+what, why, and
+how of
+building their
+own RF
+monitoring
+array so that
+they will be
+able to do it
+themselves. In
+this era of
+increasingly
+being
+``watched'',
+we must be
+prepared to do
+our own
+``watching''.
+Software-
+Defined Radio
+(SDR) has
+increased in
+popularity in
+recent years
+due to the
+decrease in
+hardware costs
+and increase
+in processing
+power.One
+example of
+such a class
+of devices is
+the RTL-SDR
+USB dongles
+based on the
+Realtek
+RTL2832U
+demodulator.
+This work
+investigates
+building and
+running an RF
+scanner array
+for monitoring
+and spectrum
+mapping using
+cheap SDR
+devices. The
+array allows
+for both RF
+sampling and
+power analysis
+to be split
+over multiple
+systems in
+order to
+increase
+capture and
+spectrum
+analysis
+capabilities.
+The system
+allows for
+"strong signal
+capture" as
+well as,
+simply, signal
+modeling with
+"strong signal
+alerting".
+Also discussed
+will be using
+the array
+versus USRPs
+and the issue
+of antennae
+for all of the
+devices. I
+will explain
+the mistakes I
+made in
+building the
+array and what
+I did to
+attempt
+toovercome
+such pitfalls.
+The code for
+running the
+array will be
+introduced and
+released for
+public
+consumption.
+In addition,
+while we
+target the
+RTL-SDR
+devices, we
+will discuss
+the
+feasibility of
+including non-
+traditional
+SDR hardware
+in the array,
+including non-
+Realtek tuner
+cards and
+inclusion of
+HackRF
+devices.

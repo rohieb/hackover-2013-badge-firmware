@@ -1,0 +1,135 @@
+Dec 28, 16:00
+Saal 2
+
+Script Your
+Car!
+
+Using existing
+hardware
+platforms to
+integrate
+python into
+your dashboard
+--------------
+Felix "tmbinc"
+Domke
+
+Track:
+Hardware &
+Making
+
+Almost all
+higher-end
+cars come with
+very beefy in-
+car
+entertainment
+hardware. In
+this talk,
+I'll describe
+how to take
+advantage of
+an existing
+hands-free kit
+to connect
+your car to
+the internet
+and script
+your dashboard
+in python.
+The German
+company
+"novero"
+builds a range
+of hands-free
+kits that are
+used in most
+modern
+Volkswagen-
+Group cars.
+They handle
+the Bluetooth
+"Hands Free
+Profile" and
+A2DP (Audio
+Streaming),
+but also
+support RSAP
+(Remote Sim
+Access
+Profile) -
+which means
+that they have
+their own 3G
+modem,
+separate from
+the mobile
+phone. Some of
+these kits use
+this to
+provide an
+integrated
+WiFi access
+point to share
+an internet
+connection
+into the car.
+It was found
+that some of
+these devices
+are Linux-
+based, with
+pretty decent
+hardware
+specs, running
+on modern ARM
+processors. A
+very flexible
+software
+architecture,
+based on GLib
+and D-Bus,
+allows to
+easily replace
+or extend the
+existing
+functionality
+with simple
+user-space
+programs -
+which means
+that you can
+interact with
+the in-
+dashboard
+screens and
+buttons, get
+access to
+various data
+sources like
+GPS, and have
+an internet
+connection.
+This talk will
+show how to
+get root
+access on this
+hardware, run
+your own
+software,
+present a
+python-based
+framework for
+scripting your
+car, with full
+dashboard
+integration.
+With a CAN
+adapter, the
+module can be
+run stand-
+alone with a
+PC simulating
+the car, to
+simplify
+development.

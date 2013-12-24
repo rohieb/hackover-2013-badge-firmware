@@ -1,0 +1,249 @@
+Dec 28, 11:30
+Saal G
+
+BREACH in Agda
+--------------
+Nicolas
+Pouillard
+
+Track: Science
+& Engineering
+
+Software
+engineering is
+in a
+unsustainable
+state:
+software is
+mainly
+developed in a
+trial and
+error fashion,
+which always
+leads to
+vulnerable
+systems.
+Several
+decades ago
+the
+correspondence
+between logics
+and
+programming
+(Curry-Howard)
+was found.
+This
+correspondence
+is now being
+used in modern
+programming
+languages
+using
+dependent
+types, such as
+Agda, Coq, and
+Idris.  In
+this talk I
+show our
+development of
+attacks and
+security
+notions within
+Agda, using
+the recent <a 
+href="https://
+en.wikipedia.o
+rg/wiki/BREACH
+_%28security_e
+xploit%29">BRE
+ACH</a>
+exploit as an
+example. Our
+development is
+a constructive
+step towards
+verified
+software and
+bridges a gap
+between theory
+and practice.
+I will explain
+the details
+about the
+Curry-Howard c
+orrespondence.
+The target
+audience are
+interested
+people with
+some
+programming
+experience.
+<p>Using the
+recent <a href
+="https://en.w
+ikipedia.org/w
+iki/BREACH_%28
+security_explo
+it%29">BREACH<
+/a> exploit as
+an example, I
+will present
+how to
+represent
+attacks and
+security
+notions within
+the Type
+Theory of <a h
+ref="http://wi
+ki.portal.chal
+mers.se/agda/"
+>Agda</a>.</p>
+<p>Using
+security
+notions such
+as semantic
+security
+(<code>IND-
+CPA</code>,
+<code>IND-
+CCA</code>),
+it is
+intuitive to
+show how the
+use of
+compression
+leads to a not
+semantically
+secure
+encryption,
+and thus
+potential
+issues. Indeed
+the length of
+the ciphertext
+can now be
+controlled by
+the adversary
+who can
+control the
+plaintext. I
+will show how
+this intuitive
+result can be
+formalized
+using <a href=
+"http://wiki.p
+ortal.chalmers
+.se/agda/">Agd
+a</a>.</p>
+<p>A note on
+<a href="http:
+//wiki.portal.
+chalmers.se/ag
+da/">Agda</a>:
+It is both a
+programming
+language and a
+proof system.
+The
+programming
+language
+features pure,
+exhaustive,
+and
+terminating
+functions over
+rich user
+defined data
+types
+(inductive and
+co-inductive).
+This powerful
+?-calculus is
+equipped with
+a rich type-
+system
+featuring
+dependent-
+types. Through
+the Curry-
+Howard
+correspondence
+this
+programming
+language can
+also be used
+as a proof
+system. With
+such a
+combined
+system it
+becomes
+possible to
+write programs
+and proofs
+about these
+programs in a
+unified way.
+Additionally
+using this
+approach, one
+can start
+proving
+properties
+starting only
+with
+programming
+skills and
+gradually
+learn more
+proof
+techniques by
+exploring the
+type
+system.</p>
+<p>I claim
+that
+functional
+programming
+and dependent
+types can be
+of a great
+help to
+formalize
+cryptography
+and thus
+privacy
+enhancing
+tools. I will
+present how
+functions are
+convenient at
+describing
+these games
+and
+adversaries. I
+will also give
+an overview of
+the crypto-
+agda project:
+how type-
+isomorphisms
+can ease
+probabilistic
+reasoning; how
+circuits can
+help capturing
+the
+requirements
+on the
+complexity
+bounds; and
+how all of
+these aspects
+can fit
+together
+thanks to poly
+morphism!</p>

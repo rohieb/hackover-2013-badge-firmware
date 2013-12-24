@@ -1,0 +1,122 @@
+Dec 29, 20:30
+Saal 2
+
+The Internet
+(Doesn't) Need
+Another
+Security Guide
+
+Creating
+Internet
+Privacy and
+Security
+Resources That
+Don't Suck
+--------------
+evacide
+
+Track: Science
+& Engineering
+
+As Internet pr
+ivacy/security
+professionals
+and amateur
+enthusiasts,
+we are often
+asked to give
+advice about
+best practices
+in this field.
+Sometimes this
+takes the form
+of one-on-one
+advice to our
+friends,
+sometimes it's
+training a
+room full of
+people, and
+sometimes you
+may be asked
+to write a
+blog post or a
+brief guide or
+an entire
+curriculum.
+This talk will
+survey the
+current
+Internet
+privacy guide
+landscape and
+discuss the
+perils and
+pitfalls of
+creating this
+type of
+resource,
+using the
+Electronic
+Frontier
+Foundation's
+Surveillance
+Self Defense
+project as a
+case study.
+As a result of
+the Snowden
+leaks, we are
+learning more
+and more about
+the
+capabilities
+of potential
+adversaries
+such as the
+NSA, GCHQ, and
+agencies
+within China,
+Russia, and
+Israel with
+every passing
+day. With each
+new
+revelation,
+there is
+greater
+uncertainty
+about privacy
+and security
+best
+practices,
+especially if
+your threat
+model includes
+a state-level
+adversary.
+This talk will
+discuss the
+following
+points:  What
+resources
+already exist?
+How should
+best practices
+change in
+light of the
+Snowden leaks?
+What makes a
+good security/
+privacy
+resource?  How
+did the
+Electronic
+Frontier
+Foundation
+confront these
+questions
+while
+rewriting
+their Internet
+privacy guide?

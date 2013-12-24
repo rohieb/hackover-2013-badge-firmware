@@ -1,0 +1,152 @@
+Dec 27, 18:30
+Saal 2
+
+Hardening
+hardware and
+choosing a
+#goodBIOS
+
+Clean boot
+every boot -
+rejecting
+persistence of
+malicious
+software and
+tripping up
+the evil maid
+--------------
+Peter Stuge
+
+Track:
+Security &
+Safety
+
+A commodity
+laptop is
+analyzed to
+identify
+exposed attack
+surfaces and
+is then
+secured on
+both the
+hardware and
+the firmware
+level against
+permanent
+modifications
+by malicious
+software as
+well as quick
+drive-by
+hardware
+attacks by
+evil maids,
+ensuring that
+the machine
+always powers
+up to a known
+good state and
+significantly
+raising the
+bar for an
+attacker who
+wants to use
+the machine
+against its
+owner.
+Commodity
+computers by
+design include
+attack vectors
+that allow
+malicious
+software and
+attackers who
+gain brief
+physical
+access, so-
+called evil
+maids, to take
+full control
+over the
+machine
+without the
+owner ever
+noticing.  The
+presentation
+briefly
+enumerates
+well-known
+attacks such
+as remote DMA
+over IEEE1349/
+FireWire, BIOS
+bootkits, AMT
+and closed
+source
+operating
+system updates
+to arrive at a
+problem
+statement, and
+moves on in
+search of
+solutions
+which can
+block the
+attacks
+completely or
+at least
+hinder them
+from becoming
+persistent,
+starting a
+layer below
+them all; with
+the schematic
+of a laptop
+mainboard.  A
+few relatively
+simple
+hardware
+modifications
+are
+identified,
+which together
+with the
+coreboot
+#goodBIOS
+firmware
+prevent two
+entire classes
+of attacks.
+The result is
+a machine
+which always
+powers up in a
+known good
+state and
+which must be
+under attacker
+control for 20
+minutes in
+order to be
+compromised,
+rather than
+just 20
+seconds.  In
+closing the
+presentation
+starts a
+discussion
+about what we
+can do to
+address this
+problem, which
+exists in
+every single
+computer on
+the market, on
+a larger
+scale.

@@ -1,0 +1,109 @@
+Dec 29, 23:00
+Saal 6
+
+Das FlipDot
+Projekt
+
+Spaß mit
+mechanischer
+Anzeige
+--------------
+RFguy
+
+Track:
+Hardware &
+Making
+
+Inbetriebname
+alter Flip Dot
+Anzeigemodule
+eines Autobahn
+Parkleitsystem
+zu einer
+interaktiven
+Anzeige.
+Reverse
+Engineering
+des Ansteuer
+Protokolls und
+entwickeln
+einer
+Steuerplatine
+mit Raspberry
+Pi  Der MuCCC
+hat das
+Innenleben
+eines Parkleit
+schildes von
+der Münchener 
+Autobahnmeiste
+rei geschenkt
+bekommen. Es
+ergaben sich
+hieraus 192
+Module von 24
+x 32 cm mit 16
+x 20 Pixeln
+die auf neue
+Verwendung
+warteten. In
+zusammenarbeit
+mit anderen
+Hackerspaces
+konnte das Ans
+teuerprotokoll
+heraus
+gefunden
+werden. Nach
+ersten
+Versuchen mit
+dem Net I/O
+Board ist
+daraus einen
+neues
+Ansteuersystem
+Entwickelt
+worden, was
+24V und 5V
+Netzteil, SPI
+Portexpander
+und Raspberry
+PI beinhaltet.
+Das System
+kann bis zu 4
+Modulspalten
+gleichzeitig
+ansteuern und
+mit weiteren
+Modulboards zu
+einer großen
+Anzeige zusamm
+engeschaltet
+werden.
+Beschreibung
+der Hardware
+und des
+Protokolls,
+details zum
+verwendet
+Treiber und
+der Ansteuerso
+ftware auf dem
+Raspberry,
+sowie Live
+Demo an der
+mitgebrachten
+Anzeige.
+Veschieden
+Retro Games
+wie Tetris
+oder Snake
+wurde bereits
+umgesetzt.
+Diskussion
+über den
+weitere
+Projekte mit
+den Modulen
+ausdrücklich
+erwünscht.

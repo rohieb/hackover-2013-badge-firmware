@@ -1,0 +1,426 @@
+Dec 28, 12:45
+Saal 2
+
+Fast Internet-
+wide Scanning
+and its
+Security
+Applications
+--------------
+J. Alex
+Halderman
+
+Track:
+Security &
+Safety
+
+Internet-wide
+network
+scanning has
+powerful
+security
+applications,
+including
+exposing new v
+ulnerabilities
+, tracking
+their
+mitigation,
+and exposing
+hidden
+services.
+Unfortunately,
+probing the
+entire public
+address space
+with standard
+tools like
+Nmap requires
+either months
+of time or
+large clusters
+of machines.
+In this talk,
+I'll
+demonstrate <a
+href="https://
+zmap.io">ZMap<
+/a>, an open-
+source network
+scanner
+developed by
+my research
+group that is
+designed from
+the ground up
+to perform
+Internet-wide
+scans
+efficiently.
+We've used
+ZMap with a
+gigabit
+Ethernet
+uplink to
+survey the
+entire IPv4
+address space
+in under 45
+minutes from a
+single
+machine, more
+than 1300
+times faster
+than Nmap.
+I'll explain
+how ZMap's
+architecture
+enables such
+high
+performance.
+We'll then
+work through a
+series of
+practical
+examples that
+explore the
+security
+applications
+of very fast
+Internet-scale
+scanning, both
+offensive and
+defensive.
+I'll talk
+about results
+and
+experiences
+from
+conducting
+more than 300
+Internet-wide
+scans over the
+past 18
+months,
+including new
+revelations
+about the
+state of the
+HTTPS CA
+ecosystem.
+I'll discuss
+the reactions
+our scans have
+generated--on
+one occasion
+we were
+mistaken for
+an Iranian
+attack against
+U.S. banks and
+we received a
+visit from the
+FBI--and I'll
+suggest
+guidelines and
+best practices
+for good
+Internet
+citizenship
+while
+scanning.
+Internet-scale
+network
+surveys
+collect data
+by probing
+large subsets
+of the public
+IP address
+space.  While
+such scanning
+behavior is
+often
+associated
+with botnets
+and worms, it
+also has
+proved to be a
+powerful
+methodology
+for security
+research.
+Recent
+studies,
+beginning with
+the EFF's SSL
+Observatory,
+have
+demonstrated
+that Internet-
+wide scanning
+can help
+reveal new
+kinds of vulne
+rabilities,
+monitor
+deployment of
+mitigations,
+and shed light
+on previously
+opaque
+distributed
+ecosystems.
+Unfortunately,
+this
+methodology
+has been more
+accessible to
+attackers than
+to researchers
+without access
+to botnets or
+willingness to
+spread self-
+replicating
+code.  Compreh
+ensively
+scanning the
+public address
+space with
+off-the-shelf
+tools like
+Nmap requires
+weeks of time
+or many
+machines.  To
+make Internet-
+wide scanning
+more
+accessible, my
+research team
+recently
+introduced <a 
+href="https://
+zmap.io">ZMap<
+/a>, an open-
+source network
+scanner that
+is designed
+from the
+ground up to
+perform
+Internet-scale
+port scans.
+In our tests
+using a
+gigabit
+Ethernet
+uplink, ZMap
+scans the
+entire IPv4
+address space
+in under 45
+minutes from a
+single
+machine, more
+than 1300
+times faster
+than Nmap.  By
+the time of
+the talk,
+we'll have
+switched to a
+10 gigE
+uplink, which
+should
+theoretically
+support
+scanning the
+entire address
+space in under
+5 minutes.
+I'll explain
+how ZMap's
+architecture
+enables such
+high
+performance by
+taking
+advantage of
+fast modern
+hardware and
+recent
+improvements
+to the Linux
+kernel.  We'll
+work through a
+series of
+practical
+examples that
+explore the
+security
+applications
+of very fast
+Internet-scale
+scanning, both
+offensive and
+defensive, and
+I'll share
+experiences
+from
+conducting
+more than 300
+Internet-wide
+scans over the
+past 18
+months,
+totaling well
+over 1
+trillion
+probes.  I'll
+describe how
+we completed
+hundreds of
+scans
+targeting
+every public
+HTTPS server
+(each scan
+larger than
+the entire SSL
+Observatory)
+in order to
+shed light on
+the growth of
+HTTPS
+deployments
+and expose
+security
+problems
+within the
+HTTPS
+ecosystem,
+such as
+misissued CA
+certs and
+widespread
+server misconf
+iguration.
+I'll show how
+high-speed
+scanning can
+be used to
+expose
+vulnerable
+hosts, using
+IPMI and UPnP 
+vulnerabilitie
+s as recent
+examples.
+Malicious
+attackers
+could abuse
+this
+capability to
+exploit 0day v
+ulnerabilities
+affecting
+millions of
+hosts within
+hours of a
+problem's
+discovery, and
+better
+defenses are
+badly needed.
+Finally, I'll
+discuss
+applications
+to Internet
+freedom,
+including
+discovering
+unadvertised
+services such
+as hidden Tor
+bridges (used
+for censorship
+resistance)
+and Bluecoat
+devices (used
+for state-
+sponsored
+censorship).
+High-speed
+scanning can
+be a powerful
+tool in the
+hands of
+security
+researchers,
+but users must
+be careful not
+to cause harm
+by
+inadvertently
+overloading
+networks or
+causing
+unnecessary
+work for
+network admini
+strators.
+I'll discuss
+the complaints
+and other
+reactions my
+group's
+scanning has
+generated--on
+one occasion
+we were
+mistaken for
+an Iranian DoS
+attack on U.S.
+banks, and we
+received a
+visit from the
+FBI--and I'll
+suggest
+several
+guidelines and
+best practices
+for good
+Internet
+citizenship
+while
+scanning.  We
+are living in
+a unique
+period in the
+history of the
+Internet:
+widely
+available
+networks are
+becoming fast
+enough to
+quickly and
+exhaustively
+scan the IPv4
+address space,
+yet IPv6 (with
+its much
+larger address
+space) has not
+yet been
+widely
+deployed.  I
+hope this talk
+will help
+researchers
+make the most
+of this window
+of
+opportunity.

@@ -1,0 +1,214 @@
+Dec 29, 20:30
+Saal G
+
+Reverse
+engineering
+the Wii U
+Gamepad
+--------------
+delroth
+
+Track:
+Hardware &
+Making
+
+A year ago in
+November 2012,
+Nintendo
+released their
+latest home
+video game
+console: the
+Wii U. While
+most video
+game consoles
+use
+controllers
+that are very
+basic, the Wii
+U took the
+opposite route
+with a very
+featureful
+gamepad:
+wireless with
+a fairly high
+range, touch
+screen,
+speakers,
+accelerometer,
+video camera,
+and even NFC
+are supported
+by the Wii U
+gamepad.
+However, as of
+today, this
+interesting
+piece of
+hardware can
+only be used
+in conjunction
+with a Wii U:
+wireless
+communications
+are encrypted
+and
+obfuscated,
+and there is
+no
+documentation
+about the
+protocols used
+for data
+exchange
+between the
+console and
+its
+controller.
+Around
+december 2012,
+I started
+working with
+two other
+hackers in
+order to
+reverse
+engineer,
+document and
+implement the
+Wii U gamepad
+communication
+protocols on a
+PC. This talk
+will present
+our findings
+and show the
+current state
+of our reverse
+engineering
+efforts.  When
+the Wii U was
+released, a
+few console
+hackers and I
+were talking
+about
+potential uses
+for the Wii U
+gamepad.
+However,
+before being
+able to use a
+Wii U gamepad
+as a remote
+controller for
+a robot or a
+quadricopter,
+the first step
+was to
+understand how
+it worked and
+how to
+communicate
+with it. This
+started our
+long journey
+of soldering
+wires on Flash
+chips, reading
+the h.264
+specification
+and
+complaining
+about the lack
+of features in
+most Wi-Fi
+drivers and
+devices (on
+all platforms,
+Linux and
+ath9k devices
+being the
+least
+horrible).
+While some
+"journalists"
+reported that
+the Wii U
+gamepad is
+using the
+Miracast?
+technology, a
+Wi-Fi
+standard, it
+turned out
+that this was
+never the
+case. Instead,
+Nintendo
+decided to
+reinvent four
+different
+protocols
+(video
+streaming,
+audio
+streaming,
+input
+streaming as
+well as a
+light request-
+reply RPC
+protocol), and
+embed them in
+a slightly
+obfuscated
+version of
+WPA2, sent
+over the air
+using 5GHz Wi-
+Fi 802.11n. A
+small ARM CPU
+is embedded in
+the Wii U
+Gamepad
+(codenamed
+DRC) and runs
+a realtime
+operating
+system to
+handle network
+communication.
+In the Wii U,
+another ARM
+CPU (codenamed
+DRH) does the
+same thing.
+In this
+presentation,
+we will go
+into the
+details of how
+we went from a
+32MB binary
+blob to a
+proof of
+concept of Wii
+U gamepad
+"emulation" on
+a PC,
+including full
+documentation
+of the
+wireless
+communications
+obfuscation
+layer and
+partial
+documentation
+of the four
+data exchange
+protocols used
+on the
+gamepad.

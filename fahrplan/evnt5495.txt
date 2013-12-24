@@ -1,0 +1,148 @@
+Dec 30, 16:00
+Saal 2
+
+Concepts for
+global TSCM
+
+getting out of
+surveillance
+state mode
+--------------
+andy
+
+Track: Ethics,
+Society &
+Politics
+
+After studying
+the various
+levels of
+activities
+that come
+together in
+BuggedPlanet
+and realizing
+the scope and
+level of
+implementation
+of NSA´s
+SIGINT
+theatre, it´s
+propably time
+to step back,
+summarize the
+big picture
+and ask how we
+handle it
+properly.  The
+talk will be
+structured in
+three parts:
+Part 1:
+Technical
+Abilities &
+Affected Areas
+Technologies
+of
+surveillance, 
+telecommunicat
+ion
+interception
+and SIGINT, cr
+yptoanalytics,
+cryptocircumve
+ntion and what
+areas of data
+processing
+must be
+considered
+practically
+targeted and
+compromised.
+Part 2: What
+this means for
+governments,
+societies,
+citizens  How
+the theory of
+democratic
+governments,
+human rights,
+justice and
+legal
+frameworks are
+being affected
+by the
+interception
+and how this
+practically
+affects the
+processes of
+governments
+and its
+players. I
+will herefore
+give examples
+which SIGINT
+material is
+used in the
+form of
+Kompromat and
+Intelligence
+Operations to
+influence
+decisions and
+decision
+makers from
+different
+countries and
+continents to
+show the
+principles and
+methods and
+how this
+impacts
+governmental
+and other
+businesses.
+Part 3:
+Concepts for
+global TSCM
+(Technical
+Surveillance
+Counter
+Measures)
+What are the
+necessary
+steps to "de-
+bug" our
+countries and
+how to
+immunitize
+against
+intelligence
+propaganda in
+order to
+achieve data.
+This part
+shall be a
+framework
+showing some
+ideas and
+principles to
+act, as well
+as necessary
+relationships
+to understand.
+The idea is to
+invite the
+audience to
+participate in
+this part and
+come up with
+ideas to
+create a
+broader
+concept and
+agree on the
+next steps.

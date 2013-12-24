@@ -1,0 +1,175 @@
+Dec 30, 16:00
+Saal G
+
+Attacking
+HomeMatic
+--------------
+sathya, Malli
+
+Track:
+Security &
+Safety
+
+HomeMatic is a
+good working,
+inexpensive
+and quickly
+spreading home
+automation
+system
+supporting
+wired as well
+as (partly AES
+handshake
+protected)
+wireless
+communication.
+The first part
+of our talk
+deals with
+security
+issues of
+HomeMatic
+devices and
+their wireless
+communication
+protocol
+called BidCoS
+(Bidirectional
+Communication
+Standard). In
+the second
+part we
+introduce
+Homegear, our
+own interface
+software to
+control
+HomeMatic
+devices.  In
+the past few
+years wireless
+home
+automation
+systems have
+become
+increasingly
+available as a
+good
+alternative to
+wired systems.
+Since wireless
+devices are
+installable
+without
+ripping open
+walls, it is
+now possible
+to easily
+integrate them
+into an
+existing
+building infra
+structure. We
+chose to work
+with
+HomeMatic,
+because we
+think that
+through its
+affordable
+prices, its
+good quality
+and its fast
+growing
+portfolio it
+will become
+the most
+widely spread
+wireless home
+automation
+system in
+Germany. In
+this live
+hacking
+presentation
+we will
+introduce
+different
+mechanisms to
+attack a
+HomeMatic
+system. We
+will show how
+to sniff
+BidCoS
+packets, how
+to send
+arbitrary
+packets in
+order to
+emulate a
+device (e. g.
+a HomeMatic
+central) and
+to control
+devices. Some
+devices use an
+AES handshake
+to verify the
+sender of a
+command. But
+not all
+devices
+support the
+handshake and
+for many
+devices it is
+disabled by
+default. We
+will
+demonstrate
+several
+attacks making
+use of this
+security
+issue. After
+the live
+hacking part
+we will give a
+short
+introduction
+into Homegear.
+Homegear is an
+interface
+software,
+which directly
+communicates
+with BidCoS
+devices and is
+controllable
+through XML
+RPC (XML
+Remote
+Procedure
+Call). It is
+possible to
+fully control
+most HomeMatic
+devices. We
+developed it
+to add
+features which
+are not
+integrated
+into the
+official
+system like
+controlling
+valve drives
+directly to
+implement
+custom room
+temperature
+control
+algorithms.

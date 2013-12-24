@@ -1,0 +1,75 @@
+Dec 27, 18:30
+Saal G
+
+Long Distance
+Quantum
+Communication
+
+Concepts and
+components for
+intercontinal
+communication
+with single
+photons.
+--------------
+C B
+
+Track: Science
+& Engineering
+
+This talk
+should
+introduce the
+general 30c3
+participant
+with several
+components of
+long distance
+quantum
+communication.
+Quantum key
+distrution,
+popularized
+under the name
+quantum
+cryptography,
+is the widest
+known branch
+of quantum
+communication.
+It describes
+the secure
+exchange of a
+secret key in
+public,
+protected by
+physical laws.
+Several
+components are
+necessary to
+extend over
+long
+distances,
+which are
+actively
+researched. An
+introduction
+will be given
+into the
+theoretical
+and
+experimental
+requirements
+for quantum
+communication.
+The concept of
+the quantum
+repeater, with
+its
+components,
+quantum memory
+and
+entanglement
+swapping, will
+be discussed
+in detail.

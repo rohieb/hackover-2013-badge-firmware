@@ -1,0 +1,138 @@
+Dec 29, 13:45
+Saal 6
+
+calc.pw
+
+Passwortgeneri
+erung mit
+Arduino
+[Generating
+passwords with
+Arduino]
+--------------
+Kenneth
+Newwood
+
+Track:
+Hardware &
+Making
+
+Bei calc.pw
+handelt es
+sich um DIY
+Hardware, mit
+deren Hilfe
+man Passwörter
+aus einem
+Masterpasswort
+und einfach
+merkbaren
+Informationen
+(z.B. "ebay",
+"amazon",
+etc.)
+generieren
+kann. Im
+Vortrag soll
+es um die
+Probleme
+vorhandener Pa
+sswortverfahre
+n (Passwortsch
+emen, Passwort
+datenbanken)
+gehen. Es soll
+die Theorie
+hinter der Pas
+swortberechnun
+g erläutert
+und eine
+praktische Imp
+lementierung
+dieser
+Berechnung
+vorgestellt
+werden.  Bei
+dem Vortrag
+geht es um
+mein neustes
+Projekt
+"calc.pw",
+einer Open-
+Source
+Hardware zur
+Generierung
+von
+Passworten.
+Hierzu wird
+ein
+Masterpasswort
+und eine diens
+tabhängige
+Information
+verwendet, die
+anhand kryptog
+raphischer
+Methoden (Arc4
+und SHA-1) zu
+einem
+Dienstpasswort
+überführt
+werden.  Das
+ganze ist mit
+Arduino-
+Hardware
+aufgebaut
+worden und
+kann mit Hilfe
+der zur
+Verfügung
+gestellten Auf
+bauinformation
+en und des
+Quelltextes,
+der unter
+GPLv3 steht,
+nachgebaut
+werden.  Im
+Vortag soll
+die Idee
+hinter calc.pw
+erklärt
+werden, es
+soll der Grund
+für die Veröff
+entlichung als
+Open-Source
+beleuchtet
+werden und es
+sollen die
+Besonderheiten
+der
+Einzelteile
+erklärt werden
+(Stichwort
+Key-Schedule
+des RC4,
+Stichwort Spei
+chermanagent
+des ATMEL,
+etc.).
+Weitere
+Informationen
+zum Projekt
+finden sich
+hier: http://c
+alc.pw/de
+Ähnliche
+Vorträge zu
+dem Thema
+konnte ich
+bereits als
+Lightning Talk
+bei der
+#SIGINT13 und
+als Lecture
+bei den
+#MRMCD2013
+halten.

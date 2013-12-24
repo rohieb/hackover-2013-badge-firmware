@@ -1,0 +1,165 @@
+Dec 28, 12:45
+Saal 6
+
+Extracting
+keys from
+FPGAs, OTP
+Tokens and
+Door Locks
+
+Side-Channel
+(and other)
+Attacks in
+Practice
+--------------
+David
+
+Track:
+Security &
+Safety
+
+Side-channel
+analysis (SCA)
+and related
+methods
+exploit
+physical chara
+cteristics of
+a (cryptograph
+ic) implementa
+tions to
+bypass
+security
+mechanisms and
+extract secret
+keys. Yet, SCA
+is often
+considered a
+purely
+academic
+exercise with
+no impact on
+real systems.
+In this talk,
+we show that
+this is not
+the case:
+Using the
+example of
+several wide-
+spread real-
+world devices,
+we demonstrate
+that even
+seemingly
+secure systems
+can be
+attacked by
+means of SCA
+with limited
+effort.  This
+talk briefly
+introduces
+implementation
+attacks and
+side-channel
+analysis (SCA)
+in particular.
+Typical side-
+channels like
+the power
+consumption
+and the EM
+emanation are
+introduced.
+The main focus
+is then on
+three case
+studies that
+have been
+conducted as
+part of the
+SCA research
+of the Chair
+for Embedded
+Security
+(Ruhr-Uni
+Bochum) since
+2008:  The
+first example
+are FPGAs that
+can be
+protected
+against
+reverse-
+engineering
+and product
+counterfeit
+with a feature
+called
+"bitstream
+encryption".
+Although the
+major vendors
+(Xilinx and
+Altera) use
+secure ciphers
+like AES, no c
+ountermeasures
+against SCA
+were
+implemented.
+As a second
+example, a
+wide-spread
+electronic
+locking system
+based on
+proprietary
+cryptography
+is analyzed.
+The target of
+the third case
+study is a
+popular one-
+time password
+token for two-
+factor authent
+ication, the
+Yubikey 2.  In
+all three
+cases, the
+cryptographic
+secrets could
+be recovered
+within a few
+minutes to a
+few hours of
+measurements,
+allowing an
+adversary to
+decrypt FPGA
+bitstreams, to
+clone
+Yubikeys, and
+to open all
+locks in an
+entire
+installation,
+respectively.
+In conclusion,
+we summarize
+possible count
+ermeasures
+against the
+presented
+attacks and
+describe the
+communication
+with the
+respective
+vendors as
+part of a
+responsible
+disclosure
+process.

@@ -1,0 +1,110 @@
+Dec 28, 16:00
+Saal G
+
+My journey
+into FM-RDS
+--------------
+Oona Räisänen
+
+Track:
+Hardware &
+Making
+
+How I
+discovered
+mysterious
+hidden signals
+on a public
+radio channel
+and eventually
+found out
+their meaning
+through
+hardware
+hacking,
+reverse
+engineering
+and little
+cryptanalysis.
+A story about
+my experiences
+with FM-RDS
+(Radio Data
+System), a
+digital
+subcarrier
+embedded in FM
+broadcast
+transmissions,
+and also
+cryptanalysis
+of the weakly
+encrypted TMC
+traffic
+messages
+contained
+therein.  I
+originally
+found about
+the existence
+of such
+transmissions
+in a
+roundabout
+way, by using
+a spectrum
+analyzer
+program to
+examine interm
+odulation
+distortion in
+my radio's
+Line Out
+audio. As it
+turned out,
+the inaudibly
+quiet
+distortion,
+probably
+caused by the
+radio's stereo
+demuxer
+circuitry,
+contained all
+the
+information
+needed to
+decode all RDS
+data present
+in the
+transmission.
+I will
+demonstrate
+the journey I
+took and give
+a short
+introduction
+to how the
+data is
+actually
+encoded. Live
+acquisition of
+local RDS data
+depending on
+signal
+conditions in
+the premises.
+As a bonus,
+I'm
+introducing
+yet another
+little-known
+FM subcarrier
+called DARC,
+and my recent
+reverse
+engineering of
+the bus stop
+display radio
+protocol used
+in Helsinki.

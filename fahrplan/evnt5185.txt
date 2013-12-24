@@ -1,0 +1,97 @@
+Dec 28, 17:15
+Saal G
+
+FPGA 101
+
+Making awesome
+stuff with
+FPGAs
+--------------
+Karsten Becker
+
+Track:
+Hardware &
+Making
+
+In this talk I
+want to show
+you around in
+the mysterious
+world of Field
+Programmable
+Gate Arrays,
+or short
+FPGAs. The aim
+is to enable
+you to get a
+rough
+understanding
+on what FPGAs
+are good at
+and how they
+can be used in
+areas where
+conventional
+CPUs and Micro
+controllers
+are failing
+upon us. FPGAs
+open up the
+world of high-
+speed serial
+interconnects,
+nano-second
+event
+reactions and
+hardware
+fuzzing.  In
+this lecture I
+will present
+you the basics
+of how FPGAs
+work and how
+to program
+them. I will
+also show-case
+some tasks
+where FPGAs
+really shine.
+As an example
+I will show
+how a 200 MHz
+FPGA can
+perform a
+discrete
+wavelet twice
+as fast as an
+2.6 GHz i7. I
+will also show
+other
+applications
+where FPGAs
+are almost
+unbeatable,
+compared to a
+CPU. At the
+end I will
+give you an
+overview of
+the market.
+What are
+hacker
+friendly
+boards, which
+vendors tool
+chain sucks
+the least etc.
+After this
+lecture you
+should be able
+to decide
+whether a CPU,
+a GPU or an
+FPGA could
+solve your
+problem the
+most
+efficient.

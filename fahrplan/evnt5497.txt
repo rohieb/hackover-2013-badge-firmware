@@ -1,0 +1,160 @@
+Dec 27, 14:00
+Saal G
+
+10 Years of
+Fun with
+Embedded
+Devices
+
+How OpenWrt
+evolved from a
+WRT54G
+firmware to an
+universal
+Embedded Linux
+OS
+--------------
+nbd
+
+Track:
+Hardware &
+Making
+
+A review of
+the 10 year
+history of the
+OpenWrt
+project,
+current
+events, and
+upcoming
+developments.
+This year we
+are
+celebrating
+ten years of
+OpenWrt and a
+long time has
+passed and a
+lot has
+happend since
+people first
+started
+hacking on
+devices like
+the WRT54G.
+Both the
+hardware and
+the software
+landscape has
+completely
+changed since
+then. In this
+talk we would
+like to take
+the chance,
+together with
+the audience,
+to look back
+on how the
+OpenWrt
+distribution
+did evolve
+over time and
+how it has
+changed its
+goals, its
+processes and
+its software
+stack.  We
+will show
+examples of
+the current
+state-of-the-
+art, invite
+guests on
+stage, display
+things to
+come. And in
+general,
+celebrate that
+10 years have
+passed and
+that many more
+are to come.
+The talk will
+start by
+looking back
+into the
+ancient
+history of
+OpenWrt - how
+it all got
+started -
+continue to
+the present
+time and give
+an overview of
+current and
+recent
+developments
+and then
+finish with an
+outlook onto
+future
+changes.
+During the
+talk we will
+look at the
+politics of
+what we have
+learned, what
+we think is
+broken in the
+CPE market,
+and how
+OpenWrt can
+help to change
+this.  OpenWrt
+has, over the
+course of the
+past 10 years,
+created a
+territory of
+its own, a
+territory
+situated in a
+landscape
+criscrossed by
+relations,
+friction and i
+nterconnection
+s. It is a
+journey that
+on its way
+created an
+universal
+embedded Linux
+operating
+system.
+OpenWrt is one
+of many
+islands in the
+Net which
+thrives by
+giving away
+its work to
+friends,
+associates and
+all those many
+people we
+don't know.
+All this is a
+good reason to
+celebrate and
+the talk will
+finish with
+beer, exotic
+drinks and
+more fun to
+come.

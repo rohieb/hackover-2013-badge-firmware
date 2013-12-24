@@ -1,0 +1,243 @@
+Dec 27, 14:00
+Saal 6
+
+Triggering
+Deep Vulnerabi
+lities Using
+Symbolic
+Execution
+
+Deep program
+analysis
+without the
+headache
+--------------
+gannimo
+
+Track:
+Security &
+Safety
+
+Symbolic
+Execution (SE)
+is a powerful
+way to analyze
+programs.
+Instead of
+using concrete
+data values SE
+uses symbolic
+values to
+evaluate a
+large set of
+parallel
+program paths
+at once. A
+drawback of
+many systems
+is that they
+need source
+code access
+and only scale
+to few lines
+of code. This
+talk explains
+how SE and
+binary
+analysis can
+be used to (i)
+reverse-
+engineer
+components of
+binary only
+applications
+and (ii)
+construct
+specific
+concrete input
+that triggers
+a given
+condition deep
+inside the
+application
+(think of
+defining an
+error
+condition and
+the SE engine
+constructs the
+input to the
+application
+that triggers
+the error).
+Analysis and
+reverse
+engineering of
+binary
+programs is
+cumbersome.
+Consider the
+problem that
+we have a
+given
+interesting
+(error)
+condition
+inside the
+program that
+we want to
+trigger. How
+can we
+generate a
+specific input
+to the program
+that, during
+the execution
+of the
+program, will
+trigger the
+condition. In
+this talk we
+use a
+combination of
+binary
+analysis
+techniques
+that recover
+high-level
+control-flow
+and data-flow
+information
+from a binary-
+only
+application
+and Symbolic
+Execution (SE)
+to automate
+the analysis
+of such
+problems.
+Existing SE
+tools have
+often been
+used to
+achieve high
+coverage
+across all
+code paths in
+an application
+to find
+implementation
+bugs. We use
+SE for a
+different
+purpose; given
+a
+vulnerability
+condition
+hidden deep
+inside the
+application
+what is the
+input that
+triggers that
+condition.  We
+tackle the
+given problem
+in three major
+steps: (i)
+gathering
+information
+about the
+binary, (ii)
+analyzing the
+information-
+flow and
+control-flow
+of the binary,
+and (iii)
+using symbolic
+execution to
+generate a
+specific input
+example that
+triggers the
+specified
+condition.
+During the
+information
+gathering
+process we
+define the
+interesting
+condition and
+use regular
+analysis
+techniques to
+set-up later
+stages. In the
+information-
+flow and
+control-flow
+analysis we
+use a given
+sample input
+to collect a
+complete
+execution
+trace of the
+application
+that is then
+parsed into a
+graph that
+dissects the
+computation of
+the
+application
+into
+individual
+components.
+The last steps
+uses fuzzBall,
+our open-
+source SE
+engine to
+compute
+specific
+vulnerability-
+triggering
+inputs for the
+identified
+components.
+To evaluate
+our technique
+we will show
+several
+examples using
+real programs,
+showing how we
+can use
+specific
+vulnerability
+conditions to
+automatically
+generate input
+that triggers
+this
+condition. In
+addition, we
+will show how
+our SE engine
+can be used
+for other
+interesting
+analysis on
+binary only
+applications.
+Our tools are
+available as
+open-source
+and we invite
+other hackers
+to join in on
+this project.

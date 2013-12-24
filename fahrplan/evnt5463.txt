@@ -1,0 +1,106 @@
+Dec 28, 14:00
+Saal 1
+
+Hillbilly
+Tracking of
+Low Earth
+Orbit
+
+Repurposing an
+Inmarsat Dish
+--------------
+Travis
+Goodspeed
+
+Track: Science
+& Engineering
+
+Satellites in
+Low Earth
+Orbit have
+tons of nifty
+signals, but
+they move
+quickly though
+the sky and
+are difficult
+to track with
+fine accuracy.
+This lecture
+describes a
+remotely
+operable
+satellite
+tracking
+system that
+the author
+built from a
+Navy-surplus
+Inmarsat dish
+in Southern
+Appalachia.
+Satellites in
+Low Earth
+Orbit have
+tons of nifty
+signals, but
+they move
+quickly though
+the sky and
+are difficult
+to track with
+fine accuracy.
+This lecture
+describes a
+remotely
+operable
+satellite
+tracking
+system that
+the author
+built from a
+Navy-surplus
+Inmarsat dish
+in Southern
+Appalachia.
+The entire
+system is
+controlled
+through a
+Postgres
+database, fed
+by various
+daemons spread
+across
+multiple
+machines.  So
+when I click
+on a satellite
+on my laptop
+or cellphone,
+it runs
+"UPDATE target
+SET
+name='Voyager
+1';" and the
+motor daemon
+then begins to
+track the new
+target while
+the prediction
+daemon
+maintains
+accurate
+estimates of
+its position
+in the sky.
+Additional
+daemons take
+spectral
+prints or
+software-
+defined radio
+recordings of
+the targeted
+object for
+later review.
