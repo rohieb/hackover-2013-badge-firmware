@@ -8,7 +8,6 @@
 # Written by Roland Hieber <rohieb@rohieb.name>
 #
 # TODOs:
-# - split into two fahrplan.lst's so badge does not crash when reading > 4KB
 # - fetch current schedule.xml
 # - hyphenation
 
@@ -101,4 +100,14 @@ for event in root.iter("event"):
 
     events.append((id, date, room))
 
-write_index("fahrplan.lst", events)
+# split into two index files so badge does not crash when reading > 4KB
+events1 = []
+events2 = []
+for e in events:
+    if e[1].day in (27, 28):
+        events1.append(e)
+    elif e[1].day in (29, 30):
+        events2.append(e)
+
+write_index("fahrplan.lst", events1)
+write_index("fahrpla2.lst", events2)
