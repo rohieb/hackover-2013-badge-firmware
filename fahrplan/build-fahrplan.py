@@ -19,6 +19,14 @@ import string
 from datetime import datetime
 
 LINE_LENGTH = 14
+SHORT_ROOMS = {
+    "Saal 1": "S.1",
+    "Saal 17": "S.17",
+    "Saal 2": "S.2",
+    "Saal 6": "S.6",
+    "Saal G": "S.G",
+    "Lounge": "Lnge"
+}
 
 wr = textwrap.TextWrapper(width=LINE_LENGTH, expand_tabs=False)
 events = []
@@ -31,6 +39,15 @@ def sanitize(s):
         replace(u"‚","'").replace(u"‘","'").replace(u"’","'")
     s = s.encode("latin1", errors="replace")
     return s.strip()
+
+def write_index(filename, events):
+    events = sorted(events,
+        key=lambda x: datetime.strftime(x[1], "%Y-%m-%dT%H:%M"))
+    f = open(filename, "w")
+    for e in events:
+        f.write("%s %s|evnt%d.txt\n" % (datetime.strftime(e[1], "%a %H:%M"),
+            SHORT_ROOMS[e[2]], int(e[0])))
+    f.close()
 
 for event in root.iter("event"):
     id = event.attrib["id"]
@@ -84,17 +101,4 @@ for event in root.iter("event"):
 
     events.append((id, date, room))
 
-short_rooms = {
-    "Saal 1": "S.1",
-    "Saal 17": "S.17",
-    "Saal 2": "S.2",
-    "Saal 6": "S.6",
-    "Saal G": "S.G",
-    "Lounge": "Lnge"
-}
-events = sorted(events, key=lambda x: datetime.strftime(x[1], "%Y-%m-%dT%H:%M"))
-f = open("fahrplan.lst", "w")
-for e in events:
-    f.write("%s %s|evnt%d.txt\n" % (datetime.strftime(e[1], "%a %H:%M"),
-        short_rooms[e[2]], int(e[0])))
-f.close()
+write_index("fahrplan.lst", events)
