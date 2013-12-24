@@ -13,7 +13,8 @@ project with
 Blender and
 Github
 --------------
-Bram de Vries
+Bram de Vries,
+Morris Winkler
 
 Track:
 Hardware &

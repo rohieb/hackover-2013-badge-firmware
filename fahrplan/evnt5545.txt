@@ -47,9 +47,4 @@ and various
 challenges we
 had to cope
 with in the
-process. We'll
-end the
-presentation
-with the live
-demo of the
-device.
+process.

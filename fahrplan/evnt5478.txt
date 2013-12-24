@@ -1,0 +1,142 @@
+Dec 29, 21:45
+Saal G
+
+Backdoors,
+Government
+Hacking and
+The Next
+Crypto Wars
+--------------
+Christopher
+Soghoian
+
+Track: Ethics,
+Society &
+Politics
+
+Law
+enforcement
+agencies claim
+they are
+"going dark".
+Encryption
+technologies
+have finally
+been deployed
+by software
+companies, and
+critically,
+enabled by
+default, such
+that emails
+are flowing
+over HTTPS,
+and disk
+encryption is
+now frequently
+used. Friendly
+telcos, who
+were once a
+one-stop-shop
+for
+surveillance
+can no longer
+meet the needs
+of our
+government.
+What are the
+FBI and other
+law
+enforcement
+agencies doing
+to preserve
+their spying
+capabilities?
+The FBI is
+rallying
+political
+support in
+Washington, DC
+for
+legislation
+that will give
+it the ability
+to fine
+Internet
+companies
+unwilling to
+build
+surveillance
+backdoors into
+their
+products. Even
+without such
+legislation,
+the US
+government has
+started to
+wage war
+against
+companies that
+offer secure
+communications
+services to
+their users.
+As the FBI's
+top lawyer
+said in 2010,
+"[Companies]
+can promise
+strong
+encryption.
+They just need
+to figure out
+how they can
+provide us
+plain text."
+At the same
+time, law
+enforcement
+agencies in
+the United
+States and
+elsewhere are
+acquiring the
+tools to hack
+into the
+computers of
+their own
+citizens. The
+FBI has
+purchased
+custom-built
+software,
+while other
+law
+enforcement
+agencies in
+the US and
+elsewhere use
+off-the-shelf
+spyware from
+companies like
+Gamma and
+Hacking Team.
+Regardless of
+the software
+they use, the
+capabilities
+are generally
+similar: They
+can enable a
+computer's
+webcam and
+microphone;
+collect real-
+time location
+data; and copy
+emails, web
+browsing
+records, and
+other
+documents.

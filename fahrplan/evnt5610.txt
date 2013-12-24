@@ -21,11 +21,10 @@ mit Netz,
 Telefon etc.
 dieses Jahr
 auch erstmalig
-(?) ein
-Rohrpost-
+ein Rohrpost-
 System mit dem
 schönen Namen
-Seidenstrasse
+Seidenstraße
 geben. Als
 Inspiration
 dient die auf
@@ -38,14 +37,12 @@ Installation
 OCTO der
 Künstlergruppe
 Telekommuniste
-n (http://tele
-kommunisten.ne
-t/octo/), die
-einigen von
-der letzten
+n, die einigen
+von der
+letzten
 transmediale
 bekannt sein
-dürfte. Wir
+dürfte.  Wir
 werden die
 Idee und
 Funktionsweise
@@ -54,11 +51,11 @@ Installation
 vorstellen,
 ihre Evolution
 von OCTO zur
-Seidenstrasse
+Seidenstraße
 als Offenes
 Kunstwerk,
-neue Features,
-von
+neue Features
+sowie von
 Entwicklung
 und Aufbau
 erzählen und
@@ -73,12 +70,12 @@ telephone
 etc., 30C3
 will feature
 for the first
-(?) time a
+time a
 pneumatic tube
 system, with
 the pretty
 name
-Seidenstrasse.
+Seidenstraße.
 The
 installation
 OCTO, built
@@ -94,21 +91,19 @@ as inspiration
 might remember
 it from the
 last
-transmediale: 
-http://telekom
-munisten.net/o
-cto/ We will
+transmediale.
+We will
 present the
 concept of the
 installation,
 its evolution
 from OCTO to
-Seidenstrasse
+Seidenstraße
 as an Open
 Artwork, new
 features, and
 talk about the
-setup, Making
+setup, making
 of and of
 course, how to
 participate!  
@@ -136,15 +131,4 @@ background of
 OCTO and open
 up the
 discussion for
-further input:
-https://events
-.ccc.de/congre
-ss/2013/wiki/S
-ession:Telekom
-munisten_-_wor
-kshop_on_techn
-iques_for_soci
-al_outcomes#_3
-43db6cc741d7f7
-fe0d830b1498b4
-720
+further input.

@@ -5,6 +5,11 @@ Basics of
 Digital
 Wireless
 Communication
+
+introduction
+to software
+radio
+principles
 --------------
 Clemens Hopfer
 

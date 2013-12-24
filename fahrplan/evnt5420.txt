@@ -28,7 +28,7 @@ Masterpasswort
 und einfach
 merkbaren
 Informationen
-(z.B. "ebay",
+(z. B. "ebay",
 "amazon",
 etc.)
 generieren
@@ -55,11 +55,11 @@ vorgestellt
 werden.  Bei
 dem Vortrag
 geht es um
-mein neustes
+mein neuestes
 Projekt
 "calc.pw",
 einer Open-
-Source
+Source-
 Hardware zur
 Generierung
 von
@@ -79,7 +79,7 @@ einem
 Dienstpasswort
 überführt
 werden.  Das
-ganze ist mit
+Ganze ist mit
 Arduino-
 Hardware
 aufgebaut
@@ -95,18 +95,18 @@ der unter
 GPLv3 steht,
 nachgebaut
 werden.  Im
-Vortag soll
+Vortrag soll
 die Idee
 hinter calc.pw
-erklärt
-werden, es
+erklärt, es
 soll der Grund
 für die Veröff
 entlichung als
-Open-Source
+Open Source
 beleuchtet
-werden und es
-sollen die
+werden. Es
+sollen
+außerdem die
 Besonderheiten
 der
 Einzelteile
@@ -118,12 +118,6 @@ Stichwort Spei
 chermanagent
 des ATMEL,
 etc.).
-Weitere
-Informationen
-zum Projekt
-finden sich
-hier: http://c
-alc.pw/de
 Ähnliche
 Vorträge zu
 dem Thema

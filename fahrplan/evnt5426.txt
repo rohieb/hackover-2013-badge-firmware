@@ -14,25 +14,27 @@ Track:
 Hardware &
 Making
 
-Inbetriebname
-alter Flip Dot
+Inbetriebnahme
+alter Flip-
+Dot-
 Anzeigemodule
-eines Autobahn
-Parkleitsystem
-zu einer
+eines
+Autobahn-Parkl
+eitsystems zu
+einer
 interaktiven
 Anzeige.
 Reverse
 Engineering
-des Ansteuer
-Protokolls und
-entwickeln
+des Protokolls
+und
+Entwicklung
 einer
 Steuerplatine
-mit Raspberry
-Pi  Der MuCCC
-hat das
-Innenleben
+auf Basis des
+Raspberry Pi.
+Der MuCCC hat
+das Innenleben
 eines Parkleit
 schildes von
 der Münchener 
@@ -47,25 +49,25 @@ x 20 Pixeln
 die auf neue
 Verwendung
 warteten. In
-zusammenarbeit
+Zusammenarbeit
 mit anderen
 Hackerspaces
 konnte das Ans
 teuerprotokoll
-heraus
-gefunden
+herausgefunden
 werden. Nach
 ersten
 Versuchen mit
-dem Net I/O
-Board ist
-daraus einen
-neues
+dem
+Net-I/O-Board
+ist daraus
+einen neues
 Ansteuersystem
-Entwickelt
-worden, was
-24V und 5V
-Netzteil, SPI
+entwickelt
+worden, das
+24V- und 5V-
+Netzteile,
+SPI-
 Portexpander
 und Raspberry
 PI beinhaltet.
@@ -80,25 +82,25 @@ einer großen
 Anzeige zusamm
 engeschaltet
 werden.
-Beschreibung
-der Hardware
-und des
-Protokolls,
-details zum
-verwendet
-Treiber und
+Vorstellung
+von Hardware
+und Protokoll,
+Details des
+verwendeten
+Treibers und
 der Ansteuerso
 ftware auf dem
 Raspberry,
-sowie Live
-Demo an der
+Live-Demo mit
+der
 mitgebrachten
+Flip-Dot-
 Anzeige.
-Veschieden
-Retro Games
+Veschiedene
+Retro-Games
 wie Tetris
 oder Snake
-wurde bereits
+wurden bereits
 umgesetzt.
 Diskussion
 über den

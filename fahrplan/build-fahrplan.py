@@ -24,6 +24,8 @@ SHORT_ROOMS = {
     "Saal 2": "S.2",
     "Saal 6": "S.6",
     "Saal G": "S.G",
+    "Villa Straylight": "Vlla",
+    "Wordlounge": "Wdlg",
     "Lounge": "Lnge"
 }
 
