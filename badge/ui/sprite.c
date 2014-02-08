@@ -13,7 +13,7 @@ typedef struct  {
 static inline  int8_t i8min( int8_t x,  int8_t y) { return x < y ? x : y; }
 static inline  int8_t i8max( int8_t x,  int8_t y) { return x < y ? y : x; }
 static inline uint8_t u8min(uint8_t x, uint8_t y) { return x < y ? x : y; }
-static inline uint8_t u8max(uint8_t x, uint8_t y) { return x < y ? y : x; }
+//static inline uint8_t u8max(uint8_t x, uint8_t y) { return x < y ? y : x; }
 
 static inline sprite_column_iterator sprite_column_iterator_init(badge_sprite const *sprite, uint8_t xskip) {
   sprite_column_iterator result = { sprite->data, CHAR_BIT };

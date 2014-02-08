@@ -26,11 +26,6 @@ static inline int imax(int x, int y) {
   return x < y ? y : x;
 }
 
-static inline fixed_point hacker_left  (vec2d const *pos, jumpnrun_game_state const *state) { (void) state; return pos->x; }
-static inline fixed_point hacker_top   (vec2d const *pos, jumpnrun_game_state const *state) { (void) state; return pos->y; }
-static inline fixed_point hacker_right (vec2d const *pos, jumpnrun_game_state const *state) { return fixed_point_add(hacker_left(pos, state), jumpnrun_player_extents().x); }
-static inline fixed_point hacker_bottom(vec2d const *pos, jumpnrun_game_state const *state) { return fixed_point_add(hacker_top (pos, state), jumpnrun_player_extents().y); }
-
 int jumpnrun_level_assert_left_side(jumpnrun_game_state const *state) {
   static int const lmargin = 20;
   static int const rmargin = 50;
