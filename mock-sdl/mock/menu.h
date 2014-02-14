@@ -6,7 +6,7 @@ enum {
   MOCK_MENU_SELECTED
 };
 
-int         mock_menu_tick(void);
+int         mock_menu_tick     (void);
 char const *mock_menu_selection(void);
 
 #endif

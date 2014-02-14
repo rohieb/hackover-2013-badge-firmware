@@ -15,7 +15,7 @@
 #include <unistd.h>
 
 enum {
-  JNR_STATE_SCREEN_PLAYING,
+  JNR_STATE_PLAYING,
   JNR_STATE_SCREEN_LIVES,
   JNR_STATE_SCREEN_LOST,
   JNR_STATE_SCREEN_WON,
@@ -76,13 +76,14 @@ uint8_t ev_new_buttons(badge_event_t ev) {
 }
 
 int poll_wait(void) {
+  badge_event_t ev;
+
   if(mock_jnr_counter == COUNTER_MAX) {
     mock_jnr_counter = 0;
     return 0;
   }
 
   if(mock_jnr_counter > COUNTER_BARRIER) {
-    badge_event_t ev;
     if(mock_event_poll(&ev)) {
       if(ev_new_buttons(ev)) {
         mock_jnr_counter = 0;
@@ -91,6 +92,8 @@ int poll_wait(void) {
     }
   }
 
+  while(mock_event_poll(&ev))
+    ;
   ++mock_jnr_counter;
   return 1;
 }
@@ -125,8 +128,9 @@ static int mock_jumpnrun_start_level_fd(FILE *fd) {
   }
 
   err = jumpnrun_load_level_from_file(&mock_jnr_level, fd);
-  if(err != 0) {
+  if(err == 0) {
     jumpnrun_game_state_init   (&mock_jnr_state, &mock_jnr_level);
+    mock_jnr_counter = 0;
     mock_jnr_loop_state = JNR_STATE_SCREEN_LIVES;
   }
 
@@ -153,7 +157,7 @@ int mock_jumpnrun_start_level(char const *fname) {
 
 int mock_jumpnrun_tick(void) {
   switch(mock_jnr_loop_state) {
-  case JNR_STATE_SCREEN_PLAYING:
+  case JNR_STATE_PLAYING:
   {
     badge_event_t ev;
 
@@ -164,6 +168,19 @@ int mock_jumpnrun_tick(void) {
     }
 
     jumpnrun_level_tick(&mock_jnr_level, &mock_jnr_state);
+
+    if(mock_jnr_state.flags & JUMPNRUN_STATE_WON) {
+      mock_jnr_counter = 0;
+      mock_jnr_loop_state = JNR_STATE_SCREEN_WON;
+    } else if(mock_jnr_state.player.base.flags & JUMPNRUN_PLAYER_DEAD) {
+      if(mock_jnr_state.player.lives == 0) {
+        mock_jnr_counter = 0;
+        mock_jnr_loop_state = JNR_STATE_SCREEN_LOST;
+      } else {
+        --mock_jnr_state.player.lives;
+        mock_jnr_loop_state = JNR_STATE_SCREEN_LIVES;
+      }
+    }
     break;
   }
 
@@ -171,7 +188,7 @@ int mock_jumpnrun_tick(void) {
     if(mock_jnr_counter == 0) { mock_show_lives_screen(&mock_jnr_state); }
     if(!poll_wait()) {
       jumpnrun_game_state_respawn(&mock_jnr_state, &mock_jnr_level);
-      mock_jnr_loop_state = JNR_STATE_SCREEN_PLAYING;
+      mock_jnr_loop_state = JNR_STATE_PLAYING;
     }
     break;
 
