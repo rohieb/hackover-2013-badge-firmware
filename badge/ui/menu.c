@@ -26,11 +26,11 @@ enum {
   MENU_ENTRIES_VISIBLE = (BADGE_DISPLAY_HEIGHT - MENU_MARGIN_TOP - MENU_MARGIN_BOTTOM) / MENU_ENTRIES_HEIGHT
 };
 
-static void badge_menu_show(char const *const *menu,
-                            uint8_t n,
-                            uint8_t *first_visible,
-                            uint8_t selected,
-                            char   selector)
+void badge_menu_show(char const *const *menu,
+                     uint8_t n,
+                     uint8_t *first_visible,
+                     uint8_t selected,
+                     char   selector)
 {
   badge_framebuffer fb = { { { 0 } } };
   bool arrow_up   = true;

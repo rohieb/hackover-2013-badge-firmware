@@ -14,7 +14,8 @@ BADGE_CSRCS   = main.c \
                 mock/display.c \
                 mock/event.c \
                 mock/jumpnrun.c \
-                mock/main_loop.c
+                mock/main_loop.c \
+                mock/menu.c
 
 BADGE_FAROBJS = ui/font.o \
                 ui/menu.o \
@@ -52,7 +53,7 @@ $(BADGE_FAROBJS) : %.o : ../badge/%.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 $(BADGE): $(BADGE_OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $+ $(LDLIBS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $+ $(LDLIBS) --embed-file fs@/
 
 dep: $(DEPS)
 

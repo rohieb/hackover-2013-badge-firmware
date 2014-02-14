@@ -1,9 +1,11 @@
 #include "mock/display.h"
 #include "mock/event.h"
+#include "mock/menu.h"
 
 #include <jumpnrun/jumpnrun.h>
 #include <ui/display.h>
 #include <ui/event.h>
+#include <ui/menu.h>
 
 #include <SDL/SDL.h>
 #include <emscripten.h>
@@ -49,6 +51,8 @@ void main_loop(void) {
 
   switch(state) {
   case STATE_MENU:
+    mock_menu_tick();
+
   case STATE_LIVES_SCREEN:
   case STATE_JUMPNRUN:
   case STATE_GAMEOVER:
