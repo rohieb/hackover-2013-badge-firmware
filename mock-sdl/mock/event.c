@@ -1,13 +1,7 @@
 #include "event.h"
 
 #include <stdint.h>
-
-enum {
-  MOCK_KEY_UP    = 1,
-  MOCK_KEY_LEFT  = 2,
-  MOCK_KEY_DOWN  = 4,
-  MOCK_KEY_RIGHT = 8
-};
+#include <emscripten.h>
 
 static badge_event_t volatile event_buffer;
 static uint8_t                keystate_raw;
@@ -16,18 +10,22 @@ void mock_event_update_keystate(SDL_Event const *event) {
   switch(event->type) {
   case SDL_KEYDOWN:
     switch(event->key.keysym.sym) {
-    case SDLK_e: keystate_raw |= MOCK_KEY_UP   ; break;
-    case SDLK_s: keystate_raw |= MOCK_KEY_LEFT ; break;
-    case SDLK_d: keystate_raw |= MOCK_KEY_DOWN ; break;
-    case SDLK_f: keystate_raw |= MOCK_KEY_RIGHT; break;
+    case SDLK_e: keystate_raw |= BADGE_EVENT_KEY_UP   ; break;
+    case SDLK_s: keystate_raw |= BADGE_EVENT_KEY_LEFT ; break;
+    case SDLK_d: keystate_raw |= BADGE_EVENT_KEY_DOWN ; break;
+    case SDLK_f: keystate_raw |= BADGE_EVENT_KEY_RIGHT; break;
+    case SDLK_j: keystate_raw |= BADGE_EVENT_KEY_BTN_A; break;
+    case SDLK_k: keystate_raw |= BADGE_EVENT_KEY_BTN_B; break;
     }
     break;
   case SDL_KEYUP:
     switch(event->key.keysym.sym) {
-    case SDLK_e: keystate_raw &= ~MOCK_KEY_UP   ; break;
-    case SDLK_s: keystate_raw &= ~MOCK_KEY_LEFT ; break;
-    case SDLK_d: keystate_raw &= ~MOCK_KEY_DOWN ; break;
-    case SDLK_f: keystate_raw &= ~MOCK_KEY_RIGHT; break;
+    case SDLK_e: keystate_raw &= ~BADGE_EVENT_KEY_UP   ; break;
+    case SDLK_s: keystate_raw &= ~BADGE_EVENT_KEY_LEFT ; break;
+    case SDLK_d: keystate_raw &= ~BADGE_EVENT_KEY_DOWN ; break;
+    case SDLK_f: keystate_raw &= ~BADGE_EVENT_KEY_RIGHT; break;
+    case SDLK_j: keystate_raw &= ~BADGE_EVENT_KEY_BTN_A; break;
+    case SDLK_k: keystate_raw &= ~BADGE_EVENT_KEY_BTN_B; break;
     }
     break;
   }

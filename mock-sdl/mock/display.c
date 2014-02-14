@@ -8,7 +8,7 @@ enum {
   HEIGHT = BADGE_DISPLAY_HEIGHT * SCREEN_SCALE
 };
 
-SDL_Surface *screen;
+static SDL_Surface *screen;
 
 void mock_display_init(void) {
   SDL_Init(SDL_INIT_VIDEO);
