@@ -19,10 +19,10 @@ void mock_display_init(void) {
 }
 
 void badge_framebuffer_flush(badge_framebuffer const *fb) {
-  SDL_FillRect(screen, 0, 0xffffffff);
   Uint32 (*pixels)[BADGE_DISPLAY_WIDTH] = (Uint32 (*)[BADGE_DISPLAY_WIDTH]) screen->pixels;
 
   SDL_LockSurface(screen);
+  SDL_FillRect(screen, 0, 0xffffffff);
 
   for(int j = 0; j < BADGE_DISPLAY_HEIGHT; ++j) {
     for(int i = 0; i < BADGE_DISPLAY_WIDTH; ++i) {
