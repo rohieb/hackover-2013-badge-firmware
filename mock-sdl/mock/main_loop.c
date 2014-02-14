@@ -1,7 +1,9 @@
 #include "mock/display.h"
 #include "mock/event.h"
+#include "mock/jumpnrun.h"
 #include "mock/menu.h"
 
+#include <jumpnrun/game_state.h>
 #include <jumpnrun/jumpnrun.h>
 #include <ui/display.h>
 #include <ui/event.h>
@@ -18,29 +20,10 @@
 
 enum {
   STATE_MENU,
-  STATE_LIVES_SCREEN,
   STATE_JUMPNRUN,
-  STATE_GAMEOVER,
-  STATE_WON
-};
-
-enum {
-  COUNTER_MAX     = 75,
-  COUNTER_BARRIER = 25
 };
 
 static unsigned state   = STATE_MENU;
-static unsigned counter = 0;
-
-int poll_wait(void) {
-  if(counter == COUNTER_MAX) {
-    counter = 0;
-    return 0;
-  }
-
-  ++counter;
-  return 1;
-}
 
 void main_loop(void) {
   SDL_Event event;
@@ -51,12 +34,18 @@ void main_loop(void) {
 
   switch(state) {
   case STATE_MENU:
-    mock_menu_tick();
+    if(mock_menu_tick() == MOCK_MENU_SELECTED) {
+      if(mock_jumpnrun_start_level(mock_menu_selection()) != 0) {
+        return;
+      }
+      state = STATE_JUMPNRUN;
+    }
+    break;
 
-  case STATE_LIVES_SCREEN:
   case STATE_JUMPNRUN:
-  case STATE_GAMEOVER:
-  case STATE_WON:
+    if(mock_jumpnrun_tick() != MOCK_JUMPNRUN_CONTINUE) {
+      state = STATE_MENU;
+    }
     break;
   }
 }

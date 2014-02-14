@@ -231,6 +231,27 @@ void jumpnrun_level_tick(jumpnrun_level      *lv,
   }
 }
 
+void jumpnrun_handle_input_event(badge_event_t event,
+                                 jumpnrun_game_state *state) {
+  uint8_t old_state = badge_event_old_input_state(event);
+  uint8_t new_state = badge_event_new_input_state(event);
+  uint8_t new_buttons = new_state & (old_state ^ new_state);
+
+  if((new_buttons & BADGE_EVENT_KEY_BTN_A) && jumpnrun_moveable_touching_ground(&state->player.base)) {
+    state->player.base.jumpable_frames = 12;
+  }
+
+  if((new_buttons & BADGE_EVENT_KEY_BTN_B)) {
+    uint8_t i;
+    for(i = 0; i < JUMPNRUN_MAX_SHOTS && jumpnrun_shot_spawned(&state->shots[i]); ++i)
+      ;
+
+    if(i < JUMPNRUN_MAX_SHOTS && jumpnrun_player_alive(&state->player)) {
+      jumpnrun_shot_spawn(state->shots + i, state);
+    }
+  }
+}
+
 uint8_t jumpnrun_play_level(char const *lvname) {
   jumpnrun_level lv;
 
@@ -251,24 +272,7 @@ uint8_t jumpnrun_play_level(char const *lvname) {
       switch(badge_event_type(ev)) {
       case BADGE_EVENT_USER_INPUT:
       {
-        uint8_t old_state = badge_event_old_input_state(ev);
-        uint8_t new_state = badge_event_new_input_state(ev);
-        uint8_t new_buttons = new_state & (old_state ^ new_state);
-
-        if((new_buttons & BADGE_EVENT_KEY_BTN_A) && jumpnrun_moveable_touching_ground(&gs.player.base)) {
-          gs.player.base.jumpable_frames = 12;
-        }
-
-        if((new_buttons & BADGE_EVENT_KEY_BTN_B)) {
-          uint8_t i;
-          for(i = 0; i < JUMPNRUN_MAX_SHOTS && jumpnrun_shot_spawned(&gs.shots[i]); ++i)
-            ;
-
-          if(i < JUMPNRUN_MAX_SHOTS && jumpnrun_player_alive(&gs.player)) {
-            jumpnrun_shot_spawn(gs.shots + i, &gs);
-          }
-        }
-
+        jumpnrun_handle_input_event(ev, &gs);
         break;
       }
       case BADGE_EVENT_GAME_TICK:
