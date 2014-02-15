@@ -18,6 +18,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <unistd.h>
+
 enum {
   STATE_MENU,
   STATE_JUMPNRUN,
@@ -45,7 +47,9 @@ void main_loop(void) {
   case STATE_JUMPNRUN:
     if(mock_jumpnrun_tick() != MOCK_JUMPNRUN_CONTINUE) {
       state = STATE_MENU;
+      return;
     }
+
     break;
   }
 }

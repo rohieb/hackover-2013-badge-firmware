@@ -12,7 +12,7 @@ int main(void) {
        "   E\n"
        " S D F   J K");
 
-  emscripten_set_main_loop(main_loop, 75, 1);
+  emscripten_set_main_loop(main_loop, 90, 1);
 
   return 0;
 }
