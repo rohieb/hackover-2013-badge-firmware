@@ -54,6 +54,7 @@ $(BADGE_FAROBJS) : %.o : ../badge/%.c
 
 $(BADGE): $(BADGE_OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $+ $(LDLIBS) --preload-file fs@/
+	patch -p1 < mainloop_periodic.patch
 
 dep: $(DEPS)
 

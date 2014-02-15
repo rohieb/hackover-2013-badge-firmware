@@ -1,0 +1,31 @@
+--- a/badge.js	2014-02-15 05:07:57.527438480 +0100
++++ b/badge.js	2014-02-15 05:06:41.851435217 +0100
+@@ -4716,6 +4716,7 @@
+           // catch pauses from non-main loop sources
+           Browser.mainLoop.paused = true;
+           Browser.mainLoop.shouldPause = false;
++	  clearInterval(Browser.mainLoop.runner);
+           return;
+         }
+   
+@@ -4745,17 +4746,17 @@
+           // catch pauses from the main loop itself
+           Browser.mainLoop.paused = true;
+           Browser.mainLoop.shouldPause = false;
++	  clearInterval(Browser.mainLoop.runner);
+           return;
+         }
+-        Browser.mainLoop.scheduler();
+       }
+       if (fps && fps > 0) {
+         Browser.mainLoop.scheduler = function Browser_mainLoop_scheduler() {
+-          setTimeout(Browser.mainLoop.runner, 1000/fps); // doing this each time means that on exception, we stop
++          setInterval(Browser.mainLoop.runner, 1000/fps); // doing this each time means that on exception, we stop
+         }
+       } else {
+         Browser.mainLoop.scheduler = function Browser_mainLoop_scheduler() {
+-          Browser.requestAnimationFrame(Browser.mainLoop.runner);
++          setInterval(Browser.mainLoop.runner, 1); // doing this each time means that on exception, we stop
+         }
+       }
+       Browser.mainLoop.scheduler();
