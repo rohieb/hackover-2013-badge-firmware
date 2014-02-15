@@ -2,7 +2,7 @@
 
 CC            = emcc
 CPPFLAGS      = -I. -I ../badge
-CFLAGS        = -Wall -Wextra -pedantic -std=c99 -Werror -O3
+CFLAGS        = -Wall -Wextra -pedantic -std=c99 -Werror -O3 -flto
 LDLIBS        = -SDL -SDLmain
 
 BADGE         = badge.html
@@ -53,7 +53,7 @@ $(BADGE_FAROBJS) : %.o : ../badge/%.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 $(BADGE): $(BADGE_OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $+ $(LDLIBS) --embed-file fs@/
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $+ $(LDLIBS) --preload-file fs@/
 
 dep: $(DEPS)
 
