@@ -1,6 +1,7 @@
 #include "menu.h"
 
 #include "event.h"
+#include "scroll.h"
 
 #include <ui/event.h>
 #include <ui/menu.h>
@@ -96,6 +97,10 @@ int mock_menu_tick(void) {
   while(mock_event_poll(&ev)) {
     uint8_t new_buttons = mock_event_new_buttons(ev);
 
+    if(badge_event_type(ev) == BADGE_EVENT_USER_INPUT) {
+      scroll_reset();
+    }
+
     if(new_buttons & (BADGE_EVENT_KEY_BTN_A | BADGE_EVENT_KEY_BTN_B)) {
       mock_menu_already_shown = 0;
       return mock_menu_fnames[mock_selected] ? MOCK_MENU_SELECTED : MOCK_MENU_CREDITS;
@@ -106,6 +111,15 @@ int mock_menu_tick(void) {
       ++mock_selected;
       mock_menu_already_shown = 0;
     }
+  }
+
+  int scroll_direction = scroll_tick();
+  if(scroll_direction == -1 && mock_selected     > 0) {
+    --mock_selected;
+    mock_menu_already_shown = 0;
+  } else if(scroll_direction == 1 && mock_selected + 1 < mock_menu_length) {
+    ++mock_selected;
+    mock_menu_already_shown = 0;
   }
 
   if(!mock_menu_already_shown) {

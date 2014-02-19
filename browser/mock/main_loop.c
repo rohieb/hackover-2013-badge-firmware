@@ -3,6 +3,7 @@
 #include "event.h"
 #include "jumpnrun.h"
 #include "menu.h"
+#include "scroll.h"
 
 #include <jumpnrun/game_state.h>
 #include <jumpnrun/jumpnrun.h>
@@ -45,6 +46,7 @@ void main_loop(void) {
       if(mock_jumpnrun_start_level(mock_menu_selection()) != 0) {
         return;
       }
+      scroll_reset();
       state = STATE_JUMPNRUN;
     } else if(action == MOCK_MENU_CREDITS) {
       mock_browse_open_file("/hackio/credits.txt");

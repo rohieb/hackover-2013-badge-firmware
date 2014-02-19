@@ -17,7 +17,8 @@ BADGE_CSRCS   = main.c \
                 mock/jumpnrun.c \
                 mock/main_loop.c \
                 mock/menu.c \
-                mock/read_file.c
+                mock/read_file.c \
+                mock/scroll.c
 
 BADGE_FAROBJS = ui/font.o \
                 ui/menu.o \
