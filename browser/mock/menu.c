@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "read_file.h"
 
 #include "event.h"
 #include "scroll.h"
@@ -23,69 +24,43 @@ static uint8_t mock_first_visible      = 0;
 static uint8_t mock_selected           = 0;
 static uint8_t mock_menu_already_shown = 0;
 
-static char (*mock_menu_buffer)[MENU_BUFLEN];
+static struct string_array *mock_menu = NULL;
 static char const **mock_menu_index;
 static char const **mock_menu_fnames;
-static uint8_t      mock_menu_length;
 
-static void mock_menu_init_from_fd(FILE *fd) {
-  char buf[MENU_BUFLEN];
-  uint8_t counter = 0;
+static void mock_menu_init(void) {
+  mock_menu = read_file_hint(MENUFILE, MENU_BUFLEN);
 
-  while(counter < 255 && fgets(buf, sizeof(buf), fd)) {
-    ++counter;
-  }
+  mock_menu_index  = malloc(sizeof(*mock_menu_index ) * (mock_menu->size + 1));
+  mock_menu_fnames = malloc(sizeof(*mock_menu_fnames) * (mock_menu->size + 1));
 
-  if(fseek(fd, 0, SEEK_SET) == -1) {
-    return;
-  }
-
-  mock_menu_buffer = malloc(sizeof(*mock_menu_buffer) *  counter);
-  mock_menu_index  = malloc(sizeof(*mock_menu_index ) * (counter + 1));
-  mock_menu_fnames = malloc(sizeof(*mock_menu_fnames) * (counter + 1));
-
-  if(mock_menu_buffer == NULL ||
+  if(mock_menu        == NULL ||
      mock_menu_index  == NULL ||
      mock_menu_fnames == NULL) {
-    free(mock_menu_buffer); mock_menu_buffer = NULL;
+    free(mock_menu       ); mock_menu        = NULL;
     free(mock_menu_index ); mock_menu_index  = NULL;
     free(mock_menu_fnames); mock_menu_fnames = NULL;
     return;
   }
 
-  for(int i = 0; i < counter && fgets(mock_menu_buffer[i], sizeof(*mock_menu_buffer), fd); ++i) {
-    mock_menu_index[i] = mock_menu_buffer[i];
+  for(size_t i = 0; i < mock_menu->size; ++i) {
+    mock_menu_index[i] = mock_menu->data[i];
 
     char *p;
 
-    for(p = mock_menu_buffer[i]; *p && *p != '|'; ++p)
+    for(p = mock_menu->data[i]; *p && *p != '|'; ++p)
       ;
     if(*p) {
       *p++ = '\0';
     }
     mock_menu_fnames[i] = p;
-
-    while(*p && *p != '\n') {
-      ++p;
-    }
-    *p = '\0';
   }
 
-  mock_menu_index [counter] = "Credits";
-  mock_menu_fnames[counter] = NULL;
+  mock_menu_index [mock_menu->size] = "Credits";
+  mock_menu_fnames[mock_menu->size] = NULL;
 
-  mock_menu_length      = counter + 1;
   mock_menu_initialised = 1;
   return;
-}
-
-static void mock_menu_init(void) {
-  FILE *fd = fopen(MENUFILE, "rb");
-
-  if(fd != NULL) {
-    mock_menu_init_from_fd(fd);
-    fclose(fd);
-  }
 }
 
 int mock_menu_tick(void) {
@@ -107,7 +82,7 @@ int mock_menu_tick(void) {
     } else if((new_buttons & BADGE_EVENT_KEY_UP  ) && mock_selected     > 0) {
       --mock_selected;
       mock_menu_already_shown = 0;
-    } else if((new_buttons & BADGE_EVENT_KEY_DOWN) && mock_selected + 1 < mock_menu_length) {
+    } else if((new_buttons & BADGE_EVENT_KEY_DOWN) && mock_selected < mock_menu->size) {
       ++mock_selected;
       mock_menu_already_shown = 0;
     }
@@ -117,14 +92,14 @@ int mock_menu_tick(void) {
   if(scroll_direction == -1 && mock_selected     > 0) {
     --mock_selected;
     mock_menu_already_shown = 0;
-  } else if(scroll_direction == 1 && mock_selected + 1 < mock_menu_length) {
+  } else if(scroll_direction == 1 && mock_selected < mock_menu->size) {
     ++mock_selected;
     mock_menu_already_shown = 0;
   }
 
   if(!mock_menu_already_shown) {
     badge_menu_show(mock_menu_index,
-                    mock_menu_length,
+                    mock_menu->size + 1,
                     &mock_first_visible,
                     mock_selected,
                     '*');
