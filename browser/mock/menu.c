@@ -29,7 +29,7 @@ static char const **mock_menu_index;
 static char const **mock_menu_fnames;
 
 static void mock_menu_init(void) {
-  mock_menu = read_file_hint(MENUFILE, MENU_BUFLEN);
+  mock_menu = read_file_hint(MENUFILE, MENU_BUFLEN / 2);
 
   mock_menu_index  = malloc(sizeof(*mock_menu_index ) * (mock_menu->size + 1));
   mock_menu_fnames = malloc(sizeof(*mock_menu_fnames) * (mock_menu->size + 1));

@@ -18,7 +18,7 @@ static uint8_t mb_need_update   = 1;
 
 void mock_browse_open_file(char const *fname) {
   free(file_contents);
-  file_contents = read_file_hint(fname, LINE_LENGTH);
+  file_contents = read_file_hint(fname, LINE_LENGTH / 2);
   mb_first_visible = 0;
   scroll_reset();
 }

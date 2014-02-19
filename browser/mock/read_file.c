@@ -71,8 +71,6 @@ static struct string_array *read_file_expand_index(struct string_array *partial,
    * Konvention: partial->size == Anzahl der bereits verarbeiteten Zahlen. Das ließe sich auch
    * aus dem Index zurückrechnen (((char**) data[0] - data) / sizeof(char*)), aber in der Haupt-
    * funktion kennen wir die Zahl schon, also spart das ein paar Zyklen.
-   *
-   * TODO: Vielleicht besser mit realloc?
    */
   struct string_array *result;
   char *p;
@@ -88,31 +86,34 @@ static struct string_array *read_file_expand_index(struct string_array *partial,
   }
 
   /* Dann Speicher holen. */
-  result = malloc(sizeof(struct string_array) + sizeof(char*) * (line_count - 1) + file_size + 1);
+  result = realloc(partial, sizeof(struct string_array) + sizeof(char*) * (line_count - 1) + file_size + 1);
 
   if(result) {
     size_t i;
+    char   *old_base = result->data[0];
+    size_t  old_size = result->size;
 
     /* Initialisierung. */
     result->data[0] = (char*) (result->data + line_count);
     result->size    = line_count;
 
     /* Daten rüberschaufeln. */
-    memcpy(result->data[0], partial->data[0], file_size + 1);
+    memmove(result->data[0], result->data + old_size, file_size + 1);
 
     /* Alten Index übernehmen */
-    for(i = 1; i < partial->size; ++i) {
-      result->data[i] = result->data[0] + (partial->data[i] - partial->data[0]);
+    for(i = 1; i < old_size; ++i) {
+      result->data[i] = result->data[0] + (result->data[i] - old_base);
     }
 
     /* Und den restlichen Index ausrechnen und ranbappen. */
     for(; i < line_count; ++i) {
       result->data[i] = result->data[i - 1] + strlen(result->data[i - 1]) + 1;
     }
+  } else {
+    free(partial);
   }
 
   /* Der vorherige Speicherbereich wird nicht mehr gebraucht. */
-  free(partial);
   return result;
 }
 
