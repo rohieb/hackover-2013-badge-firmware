@@ -1,7 +1,8 @@
-#include "mock/display.h"
-#include "mock/event.h"
-#include "mock/jumpnrun.h"
-#include "mock/menu.h"
+#include "browser.h"
+#include "display.h"
+#include "event.h"
+#include "jumpnrun.h"
+#include "menu.h"
 
 #include <jumpnrun/game_state.h>
 #include <jumpnrun/jumpnrun.h>
@@ -23,6 +24,7 @@
 enum {
   STATE_MENU,
   STATE_JUMPNRUN,
+  STATE_CREDITS
 };
 
 static unsigned state   = STATE_MENU;
@@ -36,13 +38,28 @@ void main_loop(void) {
 
   switch(state) {
   case STATE_MENU:
-    if(mock_menu_tick() == MOCK_MENU_SELECTED) {
+  {
+    uint8_t action = mock_menu_tick();
+
+    if(action == MOCK_MENU_SELECTED) {
       if(mock_jumpnrun_start_level(mock_menu_selection()) != 0) {
         return;
       }
       state = STATE_JUMPNRUN;
+    } else if(action == MOCK_MENU_CREDITS) {
+      mock_browse_open_file("/hackio/credits.txt");
+      state = STATE_CREDITS;
     }
     break;
+  }
+
+  case STATE_CREDITS:
+  {
+    if(mock_browse_tick() == BROWSER_EXIT) {
+      state = STATE_MENU;
+    }
+    break;
+  }
 
   case STATE_JUMPNRUN:
     if(mock_jumpnrun_tick() != MOCK_JUMPNRUN_CONTINUE) {

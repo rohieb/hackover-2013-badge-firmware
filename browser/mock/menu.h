@@ -3,7 +3,8 @@
 
 enum {
   MOCK_MENU_CONTINUE,
-  MOCK_MENU_SELECTED
+  MOCK_MENU_SELECTED,
+  MOCK_MENU_CREDITS
 };
 
 int         mock_menu_tick     (void);

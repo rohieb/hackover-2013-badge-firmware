@@ -69,12 +69,6 @@ static void mock_show_message(char const *msg) {
   badge_framebuffer_flush(&fb);
 }
 
-uint8_t ev_new_buttons(badge_event_t ev) {
-  uint8_t old_state = badge_event_old_input_state(ev);
-  uint8_t new_state = badge_event_new_input_state(ev);
-  return new_state & (old_state ^ new_state);
-}
-
 int poll_wait(void) {
   badge_event_t ev;
 
@@ -85,7 +79,7 @@ int poll_wait(void) {
 
   if(mock_jnr_counter > COUNTER_BARRIER) {
     if(mock_event_poll(&ev)) {
-      if(ev_new_buttons(ev)) {
+      if(mock_event_new_buttons(ev)) {
         mock_jnr_counter = 0;
         return 0;
       }

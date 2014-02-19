@@ -5,7 +5,8 @@
 
 #include <ui/event.h>
 
-void mock_event_update_keystate(SDL_Event const *event);
-int mock_event_poll(badge_event_t *dest);
+uint8_t mock_event_new_buttons(badge_event_t ev);
+void    mock_event_update_keystate(SDL_Event const *event);
+int     mock_event_poll(badge_event_t *dest);
 
 #endif

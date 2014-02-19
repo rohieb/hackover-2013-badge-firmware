@@ -39,9 +39,9 @@ static void mock_menu_init_from_fd(FILE *fd) {
     return;
   }
 
-  mock_menu_buffer = malloc(sizeof(*mock_menu_buffer) * counter);
-  mock_menu_index  = malloc(sizeof(*mock_menu_index ) * counter);
-  mock_menu_fnames = malloc(sizeof(*mock_menu_fnames) * counter);
+  mock_menu_buffer = malloc(sizeof(*mock_menu_buffer) *  counter);
+  mock_menu_index  = malloc(sizeof(*mock_menu_index ) * (counter + 1));
+  mock_menu_fnames = malloc(sizeof(*mock_menu_fnames) * (counter + 1));
 
   if(mock_menu_buffer == NULL ||
      mock_menu_index  == NULL ||
@@ -70,7 +70,10 @@ static void mock_menu_init_from_fd(FILE *fd) {
     *p = '\0';
   }
 
-  mock_menu_length      = counter;
+  mock_menu_index [counter] = "Credits";
+  mock_menu_fnames[counter] = NULL;
+
+  mock_menu_length      = counter + 1;
   mock_menu_initialised = 1;
   return;
 }
@@ -91,13 +94,11 @@ int mock_menu_tick(void) {
 
   badge_event_t ev;
   while(mock_event_poll(&ev)) {
-    uint8_t old_state = badge_event_old_input_state(ev);
-    uint8_t new_state = badge_event_new_input_state(ev);
-    uint8_t new_buttons = new_state & (old_state ^ new_state);
+    uint8_t new_buttons = mock_event_new_buttons(ev);
 
     if(new_buttons & (BADGE_EVENT_KEY_BTN_A | BADGE_EVENT_KEY_BTN_B)) {
       mock_menu_already_shown = 0;
-      return MOCK_MENU_SELECTED;
+      return mock_menu_fnames[mock_selected] ? MOCK_MENU_SELECTED : MOCK_MENU_CREDITS;
     } else if((new_buttons & BADGE_EVENT_KEY_UP  ) && mock_selected     > 0) {
       --mock_selected;
       mock_menu_already_shown = 0;

@@ -11,11 +11,13 @@ LEVELLIST     = levels.txt
 GLADEFILES    = lcd-display.glade
 
 BADGE_CSRCS   = main.c \
+                mock/browser.c \
                 mock/display.c \
                 mock/event.c \
                 mock/jumpnrun.c \
                 mock/main_loop.c \
-                mock/menu.c
+                mock/menu.c \
+                mock/read_file.c
 
 BADGE_FAROBJS = ui/font.o \
                 ui/menu.o \

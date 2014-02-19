@@ -45,3 +45,9 @@ int mock_event_poll(badge_event_t *dest) {
 
   return 0;
 }
+
+uint8_t mock_event_new_buttons(badge_event_t ev) {
+  uint8_t old_state = badge_event_old_input_state(ev);
+  uint8_t new_state = badge_event_new_input_state(ev);
+  return new_state & (old_state ^ new_state);
+}
