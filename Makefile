@@ -402,4 +402,7 @@ mock:
 play:
 	$(MAKE) -C mock play
 
-.PHONY: all dep size clean distclean $(LEVEL_CONVERTER) $(MKTITLEIMG) mock play
+html:
+	$(MAKE) -C browser
+
+.PHONY: all dep size clean distclean $(LEVEL_CONVERTER) $(MKTITLEIMG) mock play html
