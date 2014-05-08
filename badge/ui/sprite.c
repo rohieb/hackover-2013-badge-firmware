@@ -66,7 +66,7 @@ void badge_framebuffer_blt(badge_framebuffer *fb,
     return;
   }
 
-  int8_t  y_major = y / BADGE_DISPLAY_STRIPE_HEIGHT - (y < 0);
+  int8_t  y_major = y / BADGE_DISPLAY_STRIPE_HEIGHT - (y % BADGE_DISPLAY_STRIPE_HEIGHT < 0);
   uint8_t y_minor = (uint8_t) (y - y_major * BADGE_DISPLAY_STRIPE_HEIGHT);
 
   int8_t xmove;
