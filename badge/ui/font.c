@@ -1,6 +1,8 @@
 #include "font.h"
 #include "sprite.h"
 
+#include "../util/util.h"
+
 static unsigned char const fontdata[][BADGE_FONT_GLYPH_WIDTH] = {
   { 0x00, 0x00, 0x4f, 0x00, 0x00 },
   { 0x00, 0x07, 0x00, 0x07, 0x00 },

@@ -46,7 +46,7 @@ void jumpnrun_loop(void) {
 }
 
 void gladio_loop(void) {
-  gladio_game_state state = { 0 };
+  gladio_game_state state = { 1234567890 };
   gladio_player p = { { { FIXED_INT(10), FIXED_INT(48) }, 0}, 3, 0 };
   badge_framebuffer fb = { { { 0 } } };
 
