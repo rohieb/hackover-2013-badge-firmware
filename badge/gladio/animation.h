@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 
-typedef struct {
+typedef struct gladio_animation {
   uint8_t             animation_ticks_per_frame;
   uint8_t             animation_length;
   badge_sprite const *animation_frames;

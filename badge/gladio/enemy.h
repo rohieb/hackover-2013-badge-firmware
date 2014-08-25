@@ -5,7 +5,7 @@
 #include "object.h"
 #include "../ui/sprite.h"
 
-typedef struct {
+typedef struct gladio_enemy {
   gladio_object base;
 
   uint8_t       hitpoints;
@@ -17,7 +17,7 @@ typedef struct {
 struct gladio_player;
 struct gladio_shot;
 
-typedef struct {
+typedef struct gladio_enemy_type {
   gladio_animation animation;
 
   rectangle hitbox;

@@ -1,5 +1,6 @@
 #include "badge_main_loop.h"
 
+#include "gladio/gladio.h"
 #include "jumpnrun/jumpnrun.h"
 #include "ui/display.h"
 #include "ui/event.h"
@@ -15,7 +16,7 @@
 
 #define PATH_PREFIX "../badge/jumpnrun/levels/"
 
-void badge_main_loop(void) {
+void jumpnrun_loop(void) {
   char menu_buf[MAX_LEVELS][32];
   FILE *fd = fopen("levels.txt", "r");
 
@@ -41,5 +42,42 @@ void badge_main_loop(void) {
     sprintf(lvname, PATH_PREFIX "%s.lvl", menu[choice]);
 
     jumpnrun_play_level(lvname);
+  }
+}
+
+void gladio_loop(void) {
+  gladio_game_state state = { 0 };
+  gladio_player p = { { { FIXED_INT(10), FIXED_INT(48) }, 0}, 3, 0 };
+  badge_framebuffer fb = { { { 0 } } };
+
+  gladio_render_status_bar(&fb, &p, &state);
+
+  badge_framebuffer_flush(&fb);
+
+  badge_event_t ev;
+
+  do {
+    ev = badge_event_wait();
+  } while(badge_event_type(ev) != BADGE_EVENT_USER_INPUT ||
+          (badge_event_new_buttons(ev) & (BADGE_EVENT_KEY_BTN_A | BADGE_EVENT_KEY_BTN_B)) == 0);
+}
+
+void badge_main_loop(void) {
+  char const *menu[] = {
+    "Gladio",
+    "Super Hackio"
+  };
+
+  uint8_t choice = 0;
+  uint8_t first_visible = 0;
+
+  for(;;) {
+    choice = badge_menu(menu, ARRAY_SIZE(menu), &first_visible, choice);
+
+    if(choice == 0) {
+      gladio_loop();
+    } else {
+      jumpnrun_loop();
+    }
   }
 }

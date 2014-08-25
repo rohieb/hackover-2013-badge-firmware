@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-typedef struct {
+typedef struct gladio_player {
   gladio_object base;
 
   uint8_t       lives;

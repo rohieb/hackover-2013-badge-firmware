@@ -28,6 +28,14 @@ extern "C" {
   static inline uint8_t badge_event_old_input_state(badge_event_t event) { return (uint8_t) (event >> 2 & 0x7f); }
   static inline uint8_t badge_event_new_input_state(badge_event_t event) { return (uint8_t) (event >> 9       ); }
 
+  static inline uint8_t badge_event_new_buttons(badge_event_t event) {
+    uint8_t old_state = badge_event_old_input_state(event);
+    uint8_t new_state = badge_event_new_input_state(event);
+    uint8_t new_buttons = new_state & (old_state ^ new_state);
+
+    return new_buttons;
+  }
+
   uint8_t badge_input_raw(void);
   uint8_t badge_event_current_input_state(void);
 

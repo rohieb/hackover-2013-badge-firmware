@@ -30,7 +30,8 @@ BADGE_FAROBJS = ui/font.o \
                 jumpnrun/render.o \
                 jumpnrun/shots.o \
                 jumpnrun/stats.o \
-                jumpnrun/tiles.o
+                jumpnrun/tiles.o \
+                gladio/status.o
 
 BADGE_CXXOBJS = $(BADGE_CXXSRCS:%.cc=%.o)
 BADGE_COBJS   = $(BADGE_CSRCS:%.c=%.o)
