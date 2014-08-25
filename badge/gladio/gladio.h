@@ -7,4 +7,6 @@
 #include "shot.h"
 #include "status.h"
 
+void gladio_play(void);
+
 #endif

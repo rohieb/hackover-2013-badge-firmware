@@ -46,20 +46,7 @@ void jumpnrun_loop(void) {
 }
 
 void gladio_loop(void) {
-  gladio_game_state state = { 1234567890 };
-  gladio_player p = { { { FIXED_INT(10), FIXED_INT(48) }, 0}, 3, 0 };
-  badge_framebuffer fb = { { { 0 } } };
-
-  gladio_render_status_bar(&fb, &p, &state);
-
-  badge_framebuffer_flush(&fb);
-
-  badge_event_t ev;
-
-  do {
-    ev = badge_event_wait();
-  } while(badge_event_type(ev) != BADGE_EVENT_USER_INPUT ||
-          (badge_event_new_buttons(ev) & (BADGE_EVENT_KEY_BTN_A | BADGE_EVENT_KEY_BTN_B)) == 0);
+  gladio_play();
 }
 
 void badge_main_loop(void) {

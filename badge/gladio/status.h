@@ -6,8 +6,12 @@
 #include "player.h"
 #include "game_state.h"
 
-void gladio_render_status_bar(badge_framebuffer       *fb,
-                              gladio_player     const *player,
-                              gladio_game_state const *state);
+enum {
+  GLADIO_STATUS_BAR_HEIGHT = 8
+};
+
+void gladio_status_render(badge_framebuffer       *fb,
+                          gladio_player     const *player,
+                          gladio_game_state const *state);
 
 #endif

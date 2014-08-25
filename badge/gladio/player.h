@@ -3,6 +3,7 @@
 
 #include "object.h"
 
+#include "../ui/display.h"
 #include "../util/rectangle.h"
 
 #include <stdint.h>
@@ -11,7 +12,19 @@ typedef struct gladio_player {
   gladio_object base;
 
   uint8_t       lives;
+  uint8_t       max_lives;
   uint8_t       weapon;
 } gladio_player;
+
+enum {
+  GLADIO_LIVES_LIMIT = 5,
+
+  GLADIO_PLAYER_HEIGHT = 5,
+  GLADIO_PLAYER_WIDTH  = 9
+};
+
+gladio_player gladio_player_new(void);
+
+void gladio_player_render(badge_framebuffer *fb, gladio_player const *p);
 
 #endif
