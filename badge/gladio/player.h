@@ -19,8 +19,8 @@ typedef struct gladio_player {
 enum {
   GLADIO_LIVES_LIMIT = 5,
 
-  GLADIO_PLAYER_HEIGHT = 5,
-  GLADIO_PLAYER_WIDTH  = 9
+  GLADIO_PLAYER_HEIGHT = 7,
+  GLADIO_PLAYER_WIDTH  = 13
 };
 
 gladio_player gladio_player_new(void);

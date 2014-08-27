@@ -7,8 +7,9 @@ void gladio_render(gladio_game_state const *state,
                    gladio_player     const *player) {
   badge_framebuffer fb = { { { 0 } } };
 
-  gladio_player_render(&fb, player);
-  gladio_status_render(&fb, player, state);
+  gladio_player_render    (&fb, player);
+  gladio_status_render    (&fb, player, state);
+  gladio_background_render(&fb, &state->background);
 
   badge_framebuffer_flush(&fb);
 }
@@ -16,10 +17,10 @@ void gladio_render(gladio_game_state const *state,
 void gladio_handle_input(gladio_player *player) {
   uint8_t input_state = badge_event_current_input_state();
 
-  if(input_state & BADGE_EVENT_KEY_UP   ) { player->base.position.y = fixed_point_max(FIXED_INT(GLADIO_STATUS_BAR_HEIGHT                    + 1), fixed_point_sub(player->base.position.y, FIXED_POINT(1, 200))); }
-  if(input_state & BADGE_EVENT_KEY_DOWN ) { player->base.position.y = fixed_point_min(FIXED_INT(BADGE_DISPLAY_HEIGHT - GLADIO_PLAYER_HEIGHT - 1), fixed_point_add(player->base.position.y, FIXED_POINT(1, 200))); }
-  if(input_state & BADGE_EVENT_KEY_LEFT ) { player->base.position.x = fixed_point_max(FIXED_INT(                                              1), fixed_point_sub(player->base.position.x, FIXED_POINT(1, 200))); }
-  if(input_state & BADGE_EVENT_KEY_RIGHT) { player->base.position.x = fixed_point_min(FIXED_INT(BADGE_DISPLAY_WIDTH  - GLADIO_PLAYER_WIDTH  - 1), fixed_point_add(player->base.position.x, FIXED_POINT(1, 200))); }
+  if(input_state & BADGE_EVENT_KEY_UP   ) { player->base.position.y = fixed_point_max(FIXED_INT(GLADIO_STATUS_BAR_HEIGHT                    + 1), fixed_point_sub(player->base.position.y, FIXED_POINT(2,   0))); }
+  if(input_state & BADGE_EVENT_KEY_DOWN ) { player->base.position.y = fixed_point_min(FIXED_INT(BADGE_DISPLAY_HEIGHT - GLADIO_PLAYER_HEIGHT - 1), fixed_point_add(player->base.position.y, FIXED_POINT(2,   0))); }
+  if(input_state & BADGE_EVENT_KEY_LEFT ) { player->base.position.x = fixed_point_max(FIXED_INT(                                              1), fixed_point_sub(player->base.position.x, FIXED_POINT(2,   0))); }
+  if(input_state & BADGE_EVENT_KEY_RIGHT) { player->base.position.x = fixed_point_min(FIXED_INT(BADGE_DISPLAY_WIDTH  - GLADIO_PLAYER_WIDTH  - 1), fixed_point_add(player->base.position.x, FIXED_POINT(2,   0))); }
 }
 
 void gladio_tick(gladio_game_state *state,
@@ -27,6 +28,7 @@ void gladio_tick(gladio_game_state *state,
   ++state->tick;
 
   gladio_handle_input(player);
+  gladio_background_tick(&state->background, &state->rng);
 
   if(state->tick == 3) {
     state->tick = 0;

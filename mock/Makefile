@@ -20,6 +20,7 @@ BADGE_CSRCS   = badge_main_loop.c
 BADGE_FAROBJS = ui/font.o \
                 ui/menu.o \
                 ui/sprite.o \
+                util/random.o \
                 jumpnrun/collision.o \
                 jumpnrun/enemies.o \
                 jumpnrun/game_state.o \
@@ -31,6 +32,7 @@ BADGE_FAROBJS = ui/font.o \
                 jumpnrun/shots.o \
                 jumpnrun/stats.o \
                 jumpnrun/tiles.o \
+                gladio/background.o \
                 gladio/game_state.o \
                 gladio/gladio.o \
                 gladio/player.o \

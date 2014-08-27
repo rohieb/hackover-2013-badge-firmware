@@ -4,7 +4,7 @@
 #include "../ui/display.h"
 #include "../ui/sprite.h"
 
-badge_sprite const gladio_player_sprite = { GLADIO_PLAYER_WIDTH, GLADIO_PLAYER_HEIGHT, (uint8_t const *) "\xff\xff\xff\xff\xff\xff" };
+badge_sprite const gladio_player_sprite = { GLADIO_PLAYER_WIDTH, GLADIO_PLAYER_HEIGHT, (uint8_t const *) "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff" };
 
 gladio_player gladio_player_new(void) {
   return (gladio_player) { { { FIXED_INT(10), FIXED_INT(BADGE_DISPLAY_HEIGHT - GLADIO_STATUS_BAR_HEIGHT) }, 0 }, 3, 3, 0 };
