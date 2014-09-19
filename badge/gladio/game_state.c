@@ -11,6 +11,7 @@ gladio_game_state gladio_game_state_new(void) {
 
   memset(&state, 0, sizeof(state));
 
+  state.score      = 1u << 31;
   state.player     = gladio_player_new();
   state.flags      = GLADIO_PLAYING;
   state.rng        = rng;

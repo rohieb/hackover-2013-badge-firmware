@@ -38,6 +38,7 @@ void gladio_status_render(badge_framebuffer       *fb,
 
   memset(fb->data[0], 0x80, BADGE_DISPLAY_WIDTH);
 
+/*
   uint8_t hearts;
 
   for(hearts = 0; hearts < state->player.lives; ++hearts) {
@@ -46,6 +47,15 @@ void gladio_status_render(badge_framebuffer       *fb,
 
   for(; hearts < state->player.max_lives; ++hearts) {
     badge_framebuffer_blt(fb, 1 + (heart_empty.width + 1) * hearts, 1, &heart_empty, 0);
+  }
+*/
+
+  for(uint8_t i = 0; i < state->player.health; ++i) {
+    fb->data[0][2 + 2 * i] |= 0x06;
+  }
+
+  for(uint8_t i = 0; i < (state->player.charge >> GLADIO_PLAYER_CHARGE_SHIFT); ++i) {
+    fb->data[0][2 + 2 * i] |= 0x30;
   }
 
   gladio_render_score(fb, state->score);

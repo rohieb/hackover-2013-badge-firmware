@@ -11,8 +11,8 @@
 typedef struct gladio_player {
   gladio_object base;
 
-  uint8_t       lives;
-  uint8_t       max_lives;
+  uint8_t       health;
+  uint8_t       charge;
   uint8_t       weapon;
   uint8_t       cooldown;
 } gladio_player;
@@ -23,7 +23,11 @@ enum {
   GLADIO_PLAYER_HEIGHT =  7,
   GLADIO_PLAYER_WIDTH  = 13,
 
-  GLADIO_PLAYER_COOLDOWN_PERIOD = 15
+  GLADIO_PLAYER_COOLDOWN_PERIOD = 15,
+
+  GLADIO_PLAYER_MAX_HEALTH = 24,
+  GLADIO_PLAYER_MAX_CHARGE = 192,
+  GLADIO_PLAYER_CHARGE_SHIFT = 3
 };
 
 gladio_player gladio_player_new(void);
