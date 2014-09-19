@@ -2,11 +2,17 @@
 #define INCLUDED_RECTANGLE_H
 
 #include "fixed_point.h"
+#include "../ui/display.h"
 
 typedef struct {
   fixed_point x;
   fixed_point y;
 } vec2d;
+
+static inline vec2d vec2d_new(fixed_point x, fixed_point y) {
+  vec2d r = { x, y };
+  return r;
+}
 
 static inline vec2d vec2d_add(vec2d v1, vec2d v2) {
   vec2d r = {
@@ -65,6 +71,16 @@ static inline bool rectangle_intersect(rectangle const *r1,
           fixed_point_gt(rectangle_bottom(r1), rectangle_top   (r2)) &&
           fixed_point_lt(rectangle_left  (r1), rectangle_right (r2)) &&
           fixed_point_gt(rectangle_right (r1), rectangle_left  (r2)));
+}
+
+static inline uint8_t rectangle_onscreen(rectangle const *r) {
+  return
+    1
+    && fixed_point_ge(rectangle_right (r), FIXED_INT(0))
+    && fixed_point_ge(rectangle_bottom(r), FIXED_INT(0))
+    && fixed_point_le(rectangle_left  (r), FIXED_INT(BADGE_DISPLAY_WIDTH + 1))
+    && fixed_point_le(rectangle_top   (r), FIXED_INT(BADGE_DISPLAY_WIDTH + 1))
+    ;
 }
 
 #endif

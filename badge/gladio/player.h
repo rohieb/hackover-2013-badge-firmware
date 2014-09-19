@@ -30,4 +30,9 @@ gladio_player gladio_player_new(void);
 
 void gladio_player_render(badge_framebuffer *fb, gladio_player const *p);
 
+static inline rectangle gladio_player_rectangle(gladio_player const *p) {
+  return gladio_object_rectangle(p->base, vec2d_new(FIXED_INT(GLADIO_PLAYER_WIDTH),
+                                                    FIXED_INT(GLADIO_PLAYER_HEIGHT)));
+}
+
 #endif

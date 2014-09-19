@@ -3,6 +3,7 @@
 
 #include "background.h"
 #include "shot.h"
+#include "player.h"
 
 #include "../util/random.h"
 
@@ -21,15 +22,17 @@ enum {
 };
 
 typedef struct gladio_game_state {
-  uint32_t score;
-  uint8_t  tick;
-  uint8_t  flags;
+  uint32_t          score;
+  uint8_t           tick;
+  uint8_t           flags;
 
   badge_rng         rng;
   gladio_background background;
 
-  gladio_shot shots_friendly[GLADIO_MAX_SHOTS_FRIENDLY];
-  gladio_shot shots_hostile [GLADIO_MAX_SHOTS_HOSTILE ];
+  gladio_player     player;
+
+  gladio_shot       shots_friendly[GLADIO_MAX_SHOTS_FRIENDLY];
+  gladio_shot       shots_hostile [GLADIO_MAX_SHOTS_HOSTILE ];
 } gladio_game_state;
 
 gladio_game_state gladio_game_state_new(void);

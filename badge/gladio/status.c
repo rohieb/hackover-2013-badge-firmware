@@ -33,7 +33,6 @@ void gladio_render_score(badge_framebuffer *fb, uint32_t score) {
 
 
 void gladio_status_render(badge_framebuffer       *fb,
-                          gladio_player     const *player,
                           gladio_game_state const *state) {
   (void) state;
 
@@ -41,11 +40,11 @@ void gladio_status_render(badge_framebuffer       *fb,
 
   uint8_t hearts;
 
-  for(hearts = 0; hearts < player->lives; ++hearts) {
+  for(hearts = 0; hearts < state->player.lives; ++hearts) {
     badge_framebuffer_blt(fb, 1 + (heart_full .width + 1) * hearts, 1, &heart_full, 0);
   }
 
-  for(; hearts < player->max_lives; ++hearts) {
+  for(; hearts < state->player.max_lives; ++hearts) {
     badge_framebuffer_blt(fb, 1 + (heart_empty.width + 1) * hearts, 1, &heart_empty, 0);
   }
 

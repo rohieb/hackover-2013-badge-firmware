@@ -11,7 +11,6 @@ enum {
 };
 
 void gladio_status_render(badge_framebuffer       *fb,
-                          gladio_player     const *player,
                           gladio_game_state const *state);
 
 #endif

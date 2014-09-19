@@ -11,7 +11,7 @@ struct gladio_game_state;
 
 enum {
   GLADIO_SHOT_FRIENDLY,
-  GLADIO_SHOT_HOSTILE
+  GLADIO_SHOT_HOSTILE,
 };
 
 typedef struct gladio_shot {
@@ -37,7 +37,11 @@ void gladio_shot_spawn(struct gladio_game_state *state,
                        uint8_t                   shot_type,
                        vec2d                     position,
                        vec2d                     movement);
-
 void gladio_shot_despawn(gladio_shot *shot);
+
+void gladio_shot_tick(gladio_shot *shot);
+void gladio_shot_render(badge_framebuffer *fb, gladio_shot const *shot);
+
+rectangle gladio_shot_rectangle(gladio_shot const *shot);
 
 #endif
