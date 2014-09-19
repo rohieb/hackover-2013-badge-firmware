@@ -36,6 +36,7 @@ BADGE_FAROBJS = ui/font.o \
                 gladio/game_state.o \
                 gladio/gladio.o \
                 gladio/player.o \
+                gladio/shot.o \
                 gladio/status.o
 
 BADGE_CXXOBJS = $(BADGE_CXXSRCS:%.cc=%.o)
