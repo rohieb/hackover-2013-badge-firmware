@@ -16,6 +16,7 @@ typedef struct gladio_enemy {
 
 struct gladio_player;
 struct gladio_shot;
+struct gladio_game_state;
 
 typedef struct gladio_enemy_type {
   gladio_animation animation;
@@ -32,5 +33,7 @@ gladio_enemy_type const *gladio_get_enemy_type_by_id(uint8_t id);
 static inline gladio_enemy_type const *gladio_get_enemy_type(gladio_enemy const *enemy) {
   return gladio_get_enemy_type_by_id(enemy->type);
 }
+
+void gladio_spawn_enemy(struct gladio_game_state *state, uint8_t type, int8_t pos_y);
 
 #endif

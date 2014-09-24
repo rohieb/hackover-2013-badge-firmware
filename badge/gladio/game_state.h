@@ -2,6 +2,7 @@
 #define INCLUDED_BADGE_GLADIO_GAME_STATE_H
 
 #include "background.h"
+#include "enemy.h"
 #include "shot.h"
 #include "player.h"
 
@@ -17,14 +18,22 @@ enum {
 };
 
 enum {
-  GLADIO_MAX_SHOTS_FRIENDLY = 15,
-  GLADIO_MAX_SHOTS_HOSTILE  = 30
+  GLADIO_MAX_SHOTS_FRIENDLY = 18,
+  GLADIO_MAX_SHOTS_HOSTILE  = 30,
+  GLADIO_MAX_ENEMIES        = 20
 };
+
+struct gladio_level;
 
 typedef struct gladio_game_state {
   uint32_t          score;
   uint8_t           tick;
   uint8_t           flags;
+
+  uint16_t          level_pos;
+/*
+  gladio_level     *level;
+*/
 
   badge_rng         rng;
   gladio_background background;
@@ -33,6 +42,8 @@ typedef struct gladio_game_state {
 
   gladio_shot       shots_friendly[GLADIO_MAX_SHOTS_FRIENDLY];
   gladio_shot       shots_hostile [GLADIO_MAX_SHOTS_HOSTILE ];
+
+  gladio_enemy      active_enemies[GLADIO_MAX_ENEMIES];
 } gladio_game_state;
 
 gladio_game_state gladio_game_state_new(void);

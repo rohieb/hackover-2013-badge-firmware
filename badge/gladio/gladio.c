@@ -30,21 +30,37 @@ void gladio_handle_input(gladio_game_state *state) {
   if(input_state & BADGE_EVENT_KEY_LEFT ) { state->player.base.position.x = fixed_point_max(FIXED_INT(                                              1), fixed_point_sub(state->player.base.position.x, speed_player)); }
   if(input_state & BADGE_EVENT_KEY_RIGHT) { state->player.base.position.x = fixed_point_min(FIXED_INT(BADGE_DISPLAY_WIDTH  - GLADIO_PLAYER_WIDTH  - 1), fixed_point_add(state->player.base.position.x, speed_player)); }
 
-  if(input_state & BADGE_EVENT_KEY_BTN_A) {
-    if(state->player.cooldown == 0) {
-      rectangle rp = gladio_player_rectangle(&state->player);
+  if(state->tick == 3
+     && state->player.charge < GLADIO_PLAYER_MAX_CHARGE
+     && (input_state & (BADGE_EVENT_KEY_BTN_A | BADGE_EVENT_KEY_BTN_B)) == 0)
+  {
+    ++state->player.charge;
+  }
+
+  if(state->player.cooldown == 0) {
+    rectangle rp = gladio_player_rectangle(&state->player);
+
+    if(input_state & BADGE_EVENT_KEY_BTN_A) {
       gladio_shot_spawn(state,
                         GLADIO_SHOT_FRIENDLY,
                         vec2d_new(rectangle_right(&rp), rectangle_mid_y(&rp)),
                         vec2d_new(speed_player_shot, FIXED_INT(0)));
       state->player.cooldown = GLADIO_PLAYER_COOLDOWN_PERIOD;
     }
-  } else if(state->tick == 3 && state->player.charge < GLADIO_PLAYER_MAX_CHARGE) {
-    ++state->player.charge;
-  }
 
-  if(input_state & BADGE_EVENT_KEY_BTN_B && state->player.charge == GLADIO_PLAYER_MAX_CHARGE) {
-    state->player.charge = 0;
+    if((input_state & BADGE_EVENT_KEY_BTN_B) && state->player.charge >= GLADIO_PLAYER_CHARGE_UNIT) {
+      gladio_shot_spawn(state,
+                        GLADIO_SHOT_FRIENDLY,
+                        vec2d_new(rectangle_right(&rp), rectangle_mid_y(&rp)),
+                        vec2d_new(speed_player_shot, FIXED_POINT(0, 250)));
+      gladio_shot_spawn(state,
+                        GLADIO_SHOT_FRIENDLY,
+                        vec2d_new(rectangle_right(&rp), rectangle_mid_y(&rp)),
+                        vec2d_new(speed_player_shot, FIXED_POINT(0, -250)));
+
+      state->player.cooldown = GLADIO_PLAYER_COOLDOWN_PERIOD;
+      state->player.charge -= GLADIO_PLAYER_CHARGE_UNIT;
+    }
   }
 }
 
