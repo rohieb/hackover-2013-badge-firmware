@@ -33,6 +33,7 @@ BADGE_FAROBJS = ui/font.o \
                 jumpnrun/stats.o \
                 jumpnrun/tiles.o \
                 gladio/background.o \
+                gladio/enemy.o \
                 gladio/game_state.o \
                 gladio/gladio.o \
                 gladio/player.o \
