@@ -9,7 +9,8 @@ static void tick_straight_ahead(gladio_enemy *self, gladio_game_state *state) {
 
   self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_INT(1));
 
-  if(fixed_point_lt(rectangle_right(&gladio_get_enemy_type(self)->hitbox), FIXED_INT(0))) {
+  rectangle r = gladio_enemy_hitbox(self);
+  if(fixed_point_lt(rectangle_right(&r), FIXED_INT(0))) {
     self->flags = 0;
   }
 }
