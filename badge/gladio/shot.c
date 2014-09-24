@@ -27,6 +27,9 @@ void gladio_shot_spawn(struct gladio_game_state *state, uint8_t shot_type, vec2d
   gladio_shot *shots     = shot_type == GLADIO_SHOT_FRIENDLY ? state->shots_friendly     : state->shots_hostile;
   uint8_t      shots_max = shot_type == GLADIO_SHOT_FRIENDLY ? GLADIO_MAX_SHOTS_FRIENDLY : GLADIO_MAX_SHOTS_HOSTILE;
 
+  position.y = fixed_point_sub(position.y, fixed_point_div(FIXED_INT(gladio_shot_sprite.height), FIXED_INT(2)));
+  position.x = fixed_point_sub(position.x, fixed_point_div(FIXED_INT(gladio_shot_sprite.width ), FIXED_INT(2)));
+
   for(uint8_t i = 0; i < shots_max; ++i) {
     if(!gladio_shot_active(shots + i)) {
       shots[i].base.position = position;
