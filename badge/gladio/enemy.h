@@ -45,6 +45,7 @@ static inline gladio_enemy_type const *gladio_get_enemy_type(gladio_enemy const 
 
 rectangle gladio_enemy_hitbox(gladio_enemy const *enemy);
 
-void gladio_spawn_enemy(struct gladio_game_state *state, uint8_t type, int8_t pos_y);
+void gladio_enemy_spawn(struct gladio_game_state *state, uint8_t type, int8_t pos_y);
+void gladio_enemy_render(badge_framebuffer *fb, gladio_enemy const *enemy);
 
 #endif

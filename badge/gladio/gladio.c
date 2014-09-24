@@ -12,6 +12,13 @@ void gladio_render(gladio_game_state const *state) {
 
   gladio_background_render(&fb, &state->background);
 
+  for(uint8_t i = 0; i < GLADIO_MAX_ENEMIES; ++i) {
+    gladio_enemy const *e = &state->active_enemies[i];
+    if(gladio_enemy_active(e)) {
+      gladio_enemy_render(&fb, e);
+    }
+  }
+
   gladio_player_render    (&fb, &state->player);
 
   for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_FRIENDLY; ++i) { gladio_shot_render(&fb, state->shots_friendly + i); }
@@ -76,6 +83,17 @@ void gladio_tick(gladio_game_state *state) {
 
   for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_FRIENDLY; ++i) { gladio_shot_tick(state->shots_friendly + i); }
   for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_HOSTILE ; ++i) { gladio_shot_tick(state->shots_hostile  + i); }
+
+  for(uint8_t i = 0; i < GLADIO_MAX_ENEMIES; ++i) {
+    gladio_enemy *e = &state->active_enemies[i];
+    if(gladio_enemy_active(e)) {
+      gladio_get_enemy_type(e)->tick(e, state);
+    }
+  }
+
+  if(!gladio_enemy_active(&state->active_enemies[0])) {
+    gladio_enemy_spawn(state, 0, 10);
+  }
 
   if(state->tick == 3) {
     state->tick = 0;

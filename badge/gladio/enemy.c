@@ -50,7 +50,7 @@ uint8_t gladio_enemy_active(gladio_enemy const *enemy) {
   return enemy->flags & GLADIO_ENEMY_ACTIVE;
 }
 
-void gladio_spawn_enemy(struct gladio_game_state *state, uint8_t type_id, int8_t pos_y) {
+void gladio_enemy_spawn(struct gladio_game_state *state, uint8_t type_id, int8_t pos_y) {
   for(uint8_t i = 0; i < GLADIO_MAX_ENEMIES; ++i) {
     gladio_enemy *dest = &state->active_enemies[i];
 
@@ -65,4 +65,12 @@ void gladio_spawn_enemy(struct gladio_game_state *state, uint8_t type_id, int8_t
       break;
     }
   }
+}
+
+void gladio_enemy_render(badge_framebuffer *fb, gladio_enemy const *enemy) {
+  badge_framebuffer_blt(fb,
+                        fixed_point_cast_int(enemy->base.position.x),
+                        fixed_point_cast_int(enemy->base.position.y),
+                        &gladio_get_enemy_type(enemy)->animation.animation_frames[enemy->base.anim_pos],
+                        0);
 }
