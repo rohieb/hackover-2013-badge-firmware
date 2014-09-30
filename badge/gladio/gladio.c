@@ -47,18 +47,19 @@ void gladio_handle_input(gladio_game_state *state) {
     rectangle rp = gladio_player_rectangle(&state->player);
     uint8_t spawnmode = 0;
 
-    if(input_state & BADGE_EVENT_KEY_BTN_A) {
+    if((input_state & BADGE_EVENT_KEY_BTN_A) || (state->flags & GLADIO_SCHEDULE_SHOT_FRONT)) {
       spawnmode |= GLADIO_SHOT_FRIENDLY_FRONT;
       state->player.cooldown = GLADIO_PLAYER_COOLDOWN_PERIOD;
     }
 
-    if((input_state & BADGE_EVENT_KEY_BTN_B) && state->player.charge >= GLADIO_PLAYER_CHARGE_UNIT) {
+    if(((input_state & BADGE_EVENT_KEY_BTN_B) || (state->flags & GLADIO_SCHEDULE_SHOT_SIDEGUN)) && state->player.charge >= GLADIO_PLAYER_CHARGE_UNIT) {
       spawnmode |= GLADIO_SHOT_FRIENDLY_SIDEGUN;
       state->player.cooldown = GLADIO_PLAYER_COOLDOWN_PERIOD;
       state->player.charge -= GLADIO_PLAYER_CHARGE_UNIT;
     }
 
     gladio_shot_friendly_spawn(state, spawnmode, vec2d_new(rectangle_right(&rp), rectangle_mid_y(&rp)));
+    state->flags &= ~GLADIO_SCHEDULE_SHOT_MASK;
   }
 }
 
@@ -99,8 +100,16 @@ void gladio_play(void) {
     badge_event_t ev = badge_event_wait();
 
     switch(badge_event_type(ev)) {
+    case BADGE_EVENT_USER_INPUT:
+    {
+      uint8_t new_buttons = badge_event_new_buttons(ev);
+
+      if(new_buttons & BADGE_EVENT_KEY_BTN_A) { state.flags |= GLADIO_SCHEDULE_SHOT_FRONT  ; }
+      if(new_buttons & BADGE_EVENT_KEY_BTN_B) { state.flags |= GLADIO_SCHEDULE_SHOT_SIDEGUN; }
+      break;
+    }
     case BADGE_EVENT_GAME_TICK:
       gladio_tick(&state);
     }
-  } while(state.flags == GLADIO_PLAYING);
+  } while((state.flags & GLADIO_CONTINUATION_MASK) == GLADIO_PLAYING);
 }
