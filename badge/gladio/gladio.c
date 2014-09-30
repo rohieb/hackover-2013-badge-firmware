@@ -38,9 +38,9 @@ void gladio_handle_input(gladio_game_state *state) {
 
   if(state->tick == 3
      && state->player.charge < GLADIO_PLAYER_MAX_CHARGE
-     && (input_state & (BADGE_EVENT_KEY_BTN_A | BADGE_EVENT_KEY_BTN_B)) == 0)
+     && (input_state & BADGE_EVENT_KEY_BTN_B) == 0)
   {
-    ++state->player.charge;
+    state->player.charge += (input_state & BADGE_EVENT_KEY_BTN_A) ? 1 : 2;
   }
 
   if(state->player.cooldown == 0) {
