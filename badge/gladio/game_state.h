@@ -40,8 +40,8 @@ typedef struct gladio_game_state {
 
   gladio_player     player;
 
-  gladio_shot       shots_friendly[GLADIO_MAX_SHOTS_FRIENDLY];
   gladio_shot       shots_hostile [GLADIO_MAX_SHOTS_HOSTILE ];
+  gladio_shot       shots_friendly[GLADIO_MAX_SHOTS_FRIENDLY];
 
   gladio_enemy      active_enemies[GLADIO_MAX_ENEMIES];
 } gladio_game_state;

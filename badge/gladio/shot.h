@@ -14,6 +14,11 @@ enum {
   GLADIO_SHOT_HOSTILE,
 };
 
+enum {
+  GLADIO_SHOT_FRIENDLY_FRONT   = 1,
+  GLADIO_SHOT_FRIENDLY_SIDEGUN = 2
+};
+
 typedef struct gladio_shot {
   gladio_object base;
   uint8_t       type;
@@ -32,6 +37,12 @@ static inline gladio_shot_type const *gladio_get_shot_type(gladio_shot const *sh
 }
 
 uint8_t gladio_shot_active(gladio_shot const *shot);
+
+uint8_t gladio_shot_friendly_despawn_and_compress(struct gladio_game_state *state);
+
+void gladio_shot_friendly_spawn(struct gladio_game_state *state,
+                                uint8_t                   where,
+                                vec2d                     position);
 
 void gladio_shot_spawn(struct gladio_game_state *state,
                        uint8_t                   shot_type,

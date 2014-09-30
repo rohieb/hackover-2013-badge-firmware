@@ -5,7 +5,6 @@
 #include "../ui/event.h"
 
 static fixed_point const speed_player      = FIXED_INT_I(2);
-static fixed_point const speed_player_shot = FIXED_INT_I(1);
 
 void gladio_render(gladio_game_state const *state) {
   badge_framebuffer fb = { { { 0 } } };
@@ -46,28 +45,20 @@ void gladio_handle_input(gladio_game_state *state) {
 
   if(state->player.cooldown == 0) {
     rectangle rp = gladio_player_rectangle(&state->player);
+    uint8_t spawnmode = 0;
 
     if(input_state & BADGE_EVENT_KEY_BTN_A) {
-      gladio_shot_spawn(state,
-                        GLADIO_SHOT_FRIENDLY,
-                        vec2d_new(rectangle_right(&rp), rectangle_mid_y(&rp)),
-                        vec2d_new(speed_player_shot, FIXED_INT(0)));
+      spawnmode |= GLADIO_SHOT_FRIENDLY_FRONT;
       state->player.cooldown = GLADIO_PLAYER_COOLDOWN_PERIOD;
     }
 
     if((input_state & BADGE_EVENT_KEY_BTN_B) && state->player.charge >= GLADIO_PLAYER_CHARGE_UNIT) {
-      gladio_shot_spawn(state,
-                        GLADIO_SHOT_FRIENDLY,
-                        vec2d_new(rectangle_right(&rp), rectangle_mid_y(&rp)),
-                        vec2d_new(speed_player_shot, FIXED_POINT(0, 250)));
-      gladio_shot_spawn(state,
-                        GLADIO_SHOT_FRIENDLY,
-                        vec2d_new(rectangle_right(&rp), rectangle_mid_y(&rp)),
-                        vec2d_new(speed_player_shot, FIXED_POINT(0, -250)));
-
+      spawnmode |= GLADIO_SHOT_FRIENDLY_SIDEGUN;
       state->player.cooldown = GLADIO_PLAYER_COOLDOWN_PERIOD;
       state->player.charge -= GLADIO_PLAYER_CHARGE_UNIT;
     }
+
+    gladio_shot_friendly_spawn(state, spawnmode, vec2d_new(rectangle_right(&rp), rectangle_mid_y(&rp)));
   }
 }
 
@@ -81,8 +72,8 @@ void gladio_tick(gladio_game_state *state) {
   gladio_handle_input(state);
   gladio_background_tick(&state->background, &state->rng);
 
-  for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_FRIENDLY; ++i) { gladio_shot_tick(state->shots_friendly + i); }
-  for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_HOSTILE ; ++i) { gladio_shot_tick(state->shots_hostile  + i); }
+  for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_FRIENDLY && gladio_shot_active(&state->shots_friendly[i]); ++i) { gladio_shot_tick(state->shots_friendly + i); }
+  for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_HOSTILE  && gladio_shot_active(&state->shots_hostile [i]); ++i) { gladio_shot_tick(state->shots_hostile  + i); }
 
   for(uint8_t i = 0; i < GLADIO_MAX_ENEMIES; ++i) {
     gladio_enemy *e = &state->active_enemies[i];
