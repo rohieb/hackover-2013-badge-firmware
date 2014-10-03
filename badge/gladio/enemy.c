@@ -95,12 +95,14 @@ void gladio_enemy_tick(gladio_game_state *state) {
     if(gladio_enemy_active(e)) {
       rectangle hitbox = gladio_enemy_hitbox(e);
       uint8_t shot_ix = gladio_shot_lower_bound(hitbox.pos, state->shots_friendly, player_shot_count);
+      rectangle shotbox = gladio_shot_rectangle(&state->shots_friendly[shot_ix]);
 
       while(shot_ix < player_shot_count &&
-            rectangle_contains(&hitbox, state->shots_friendly[shot_ix].base.position))
+            rectangle_intersect(&hitbox, &shotbox))
       {
         gladio_get_enemy_type(e)->collision_shots(e, &state->shots_friendly[shot_ix]);
         ++shot_ix;
+        shotbox = gladio_shot_rectangle(&state->shots_friendly[shot_ix]);
       }
 
       gladio_get_enemy_type(e)->tick(e, state);

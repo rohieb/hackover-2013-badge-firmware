@@ -8,10 +8,13 @@
 
 badge_sprite const gladio_shot_sprite = { 3, 3, (uint8_t const *) "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff" };
 
-static fixed_point gladio_shot_size = FIXED_INT_I(3);
-
 rectangle gladio_shot_rectangle(gladio_shot const *shot) {
-  return gladio_object_rectangle(shot->base, vec2d_new(gladio_shot_size, gladio_shot_size));
+  vec2d upper_left = vec2d_new(fixed_point_sub(shot->base.position.x, fixed_point_div(FIXED_INT(gladio_shot_sprite.width), FIXED_INT(2))),
+                               fixed_point_sub(shot->base.position.y, fixed_point_div(FIXED_INT(gladio_shot_sprite.width), FIXED_INT(2))));
+  vec2d extent     = vec2d_new(FIXED_INT(gladio_shot_sprite.width),
+                               FIXED_INT(gladio_shot_sprite.height));
+
+  return rectangle_new(upper_left, extent);
 }
 
 uint8_t gladio_shot_active(gladio_shot const *shot) {
