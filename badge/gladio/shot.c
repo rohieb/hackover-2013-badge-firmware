@@ -20,22 +20,32 @@ uint8_t gladio_shot_active(gladio_shot const *shot) {
     fixed_point_ne(FIXED_INT(0), shot->inertia.y);
 }
 
+static uint8_t gladio_shot_onscreen(gladio_shot const *shot) {
+  rectangle r = gladio_shot_rectangle(shot);
+  return rectangle_onscreen(&r);
+}
+
+static uint8_t gladio_shot_still_needed(gladio_shot const *shot) {
+  return
+    gladio_shot_active(shot)
+    && gladio_shot_onscreen(shot)
+    && (shot->flags & GLADIO_SHOT_DESPAWNING) == 0;
+}
+
 void gladio_shot_despawn(gladio_shot *shot) {
   memset(shot, 0, sizeof(gladio_shot));
 }
 
-static uint8_t gladio_shot_onscreen(gladio_shot const *shot) {
-  rectangle r = gladio_shot_rectangle(shot);
-  return rectangle_onscreen(&r);
+void gladio_shot_despawn_later(gladio_shot *shot) {
+  shot->flags |= GLADIO_SHOT_DESPAWNING;
 }
 
 uint8_t gladio_shot_friendly_despawn_and_compress(struct gladio_game_state *state) {
   uint8_t pos_r = 0;
 
   // Skip initial active shots
-  while(pos_r < GLADIO_MAX_SHOTS_FRIENDLY                   &&
-        gladio_shot_active  (&state->shots_friendly[pos_r]) &&
-        gladio_shot_onscreen(&state->shots_friendly[pos_r])) {
+  while(pos_r < GLADIO_MAX_SHOTS_FRIENDLY &&
+        gladio_shot_still_needed(&state->shots_friendly[pos_r])) {
     ++pos_r;
   }
 
@@ -46,7 +56,7 @@ uint8_t gladio_shot_friendly_despawn_and_compress(struct gladio_game_state *stat
     gladio_shot *shot_r = &state->shots_friendly[pos_r];
     gladio_shot *shot_w = &state->shots_friendly[pos_w];
 
-    if(gladio_shot_onscreen(shot_r)) {
+    if(gladio_shot_still_needed(shot_r)) {
       *shot_w = *shot_r;
       ++pos_w;
     }
@@ -94,8 +104,8 @@ void gladio_shot_friendly_spawn(gladio_game_state *state,
   }
 
   // If spawning multiple shots, spawn the one that will move upwards first so ordering is preserved.
-  fixed_point speed_y  = (where & GLADIO_SHOT_FRIENDLY_SIDEGUN) ? FIXED_POINT(0, 250) : FIXED_INT  (0);
-  fixed_point dspeed_y = (where & GLADIO_SHOT_FRIENDLY_FRONT  ) ? FIXED_POINT(0, 250) : FIXED_POINT(0, 500);
+  fixed_point speed_y  = (where & GLADIO_SHOT_FRIENDLY_SIDEGUN) ? fixed_point_neg(FIXED_POINT(0, 250)) : FIXED_INT  (0);
+  fixed_point dspeed_y = (where & GLADIO_SHOT_FRIENDLY_FRONT  ) ?                 FIXED_POINT(0, 250)  : FIXED_POINT(0, 500);
 
   uint8_t pos_insert = gladio_shot_lower_bound(position, state->shots_friendly, shotcount);
   uint8_t pos_shift  = pos_insert + spawncount;
@@ -120,8 +130,17 @@ void gladio_shot_friendly_spawn(gladio_game_state *state,
     shot_w->type          = 0;
     shot_w->inertia       = vec2d_new(FIXED_INT(1), speed_y);
 
-    speed_y = fixed_point_sub(speed_y, dspeed_y);
+    speed_y = fixed_point_add(speed_y, dspeed_y);
   }
+
+/*
+  for(uint8_t i = 1; i < pos_shift + shiftcount; ++i) {
+    assert(vec2d_xy_less(state->shots_friendly[i - 1].base.position,
+                         state->shots_friendly[i    ].base.position)
+           || (fixed_point_eq(state->shots_friendly[i - 1].base.position.x, state->shots_friendly[i].base.position.x)
+             && fixed_point_eq(state->shots_friendly[i - 1].base.position.y, state->shots_friendly[i].base.position.y)));
+  }
+*/
 }
 
 void gladio_shot_spawn(struct gladio_game_state *state, uint8_t shot_type, vec2d position, vec2d movement) {

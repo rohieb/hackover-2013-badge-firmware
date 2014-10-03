@@ -19,9 +19,14 @@ enum {
   GLADIO_SHOT_FRIENDLY_SIDEGUN = 2
 };
 
+enum {
+  GLADIO_SHOT_DESPAWNING = 1
+};
+
 typedef struct gladio_shot {
   gladio_object base;
   uint8_t       type;
+  uint8_t       flags;
   vec2d         inertia;
 } gladio_shot;
 
@@ -48,7 +53,8 @@ void gladio_shot_spawn(struct gladio_game_state *state,
                        uint8_t                   shot_type,
                        vec2d                     position,
                        vec2d                     movement);
-void gladio_shot_despawn(gladio_shot *shot);
+void gladio_shot_despawn      (gladio_shot *shot);
+void gladio_shot_despawn_later(gladio_shot *shot);
 
 void gladio_shot_tick(gladio_shot *shot);
 void gladio_shot_render(badge_framebuffer *fb, gladio_shot const *shot);

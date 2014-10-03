@@ -22,6 +22,9 @@ static void collision_player_dummy(gladio_enemy *self, gladio_player *player) {
 }
 
 static void collision_shots_dummy(gladio_enemy *self, gladio_shot *shot) {
+  self->flags = 0;
+  gladio_shot_despawn_later(shot);
+
   (void) self;
   (void) shot;
 }
@@ -75,4 +78,32 @@ void gladio_enemy_render(badge_framebuffer *fb, gladio_enemy const *enemy) {
                         fixed_point_cast_int(enemy->base.position.y),
                         &gladio_get_enemy_type(enemy)->animation.animation_frames[enemy->base.anim_pos],
                         0);
+}
+
+void gladio_enemy_tick(gladio_game_state *state) {
+  uint8_t player_shot_count;
+
+  for(player_shot_count = 0;
+      player_shot_count < GLADIO_MAX_SHOTS_FRIENDLY
+        && gladio_shot_active(&state->shots_friendly[player_shot_count]);
+      ++player_shot_count)
+    ;
+
+  for(uint8_t i = 0; i < GLADIO_MAX_ENEMIES; ++i) {
+    gladio_enemy *e = &state->active_enemies[i];
+
+    if(gladio_enemy_active(e)) {
+      rectangle hitbox = gladio_enemy_hitbox(e);
+      uint8_t shot_ix = gladio_shot_lower_bound(hitbox.pos, state->shots_friendly, player_shot_count);
+
+      while(shot_ix < player_shot_count &&
+            rectangle_contains(&hitbox, state->shots_friendly[shot_ix].base.position))
+      {
+        gladio_get_enemy_type(e)->collision_shots(e, &state->shots_friendly[shot_ix]);
+        ++shot_ix;
+      }
+
+      gladio_get_enemy_type(e)->tick(e, state);
+    }
+  }
 }

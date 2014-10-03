@@ -76,12 +76,7 @@ void gladio_tick(gladio_game_state *state) {
   for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_FRIENDLY && gladio_shot_active(&state->shots_friendly[i]); ++i) { gladio_shot_tick(state->shots_friendly + i); }
   for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_HOSTILE  && gladio_shot_active(&state->shots_hostile [i]); ++i) { gladio_shot_tick(state->shots_hostile  + i); }
 
-  for(uint8_t i = 0; i < GLADIO_MAX_ENEMIES; ++i) {
-    gladio_enemy *e = &state->active_enemies[i];
-    if(gladio_enemy_active(e)) {
-      gladio_get_enemy_type(e)->tick(e, state);
-    }
-  }
+  gladio_enemy_tick(state);
 
   if(!gladio_enemy_active(&state->active_enemies[0])) {
     gladio_enemy_spawn(state, 0, 10);

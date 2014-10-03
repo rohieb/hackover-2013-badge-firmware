@@ -38,7 +38,7 @@ static inline vec2d vec2d_neg(vec2d v) {
 }
 
 static inline uint8_t vec2d_xy_less(vec2d lhs, vec2d rhs) {
-  return fixed_point_lt(lhs.x, rhs.x) || (fixed_point_eq(lhs.x, lhs.y) && fixed_point_lt(lhs.y, rhs.y));
+  return fixed_point_lt(lhs.x, rhs.x) || (fixed_point_eq(lhs.x, rhs.x) && fixed_point_lt(lhs.y, rhs.y));
 }
 
 #endif

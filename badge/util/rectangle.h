@@ -50,4 +50,14 @@ static inline uint8_t rectangle_onscreen(rectangle const *r) {
     ;
 }
 
+static inline uint8_t rectangle_contains(rectangle const *r, vec2d p) {
+  return
+    1
+    && fixed_point_ge(p.x, rectangle_left  (r))
+    && fixed_point_le(p.x, rectangle_right (r))
+    && fixed_point_ge(p.y, rectangle_top   (r))
+    && fixed_point_le(p.y, rectangle_bottom(r))
+    ;
+}
+
 #endif
