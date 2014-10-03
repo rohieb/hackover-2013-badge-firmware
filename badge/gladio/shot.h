@@ -45,6 +45,7 @@ uint8_t gladio_shot_active(gladio_shot const *shot);
 
 uint8_t gladio_shot_friendly_despawn_and_compress(struct gladio_game_state *state);
 
+void gladio_shot_friendly_move(struct gladio_game_state *state);
 void gladio_shot_friendly_spawn(struct gladio_game_state *state,
                                 uint8_t                   where,
                                 vec2d                     position);
@@ -56,7 +57,6 @@ void gladio_shot_spawn(struct gladio_game_state *state,
 void gladio_shot_despawn      (gladio_shot *shot);
 void gladio_shot_despawn_later(gladio_shot *shot);
 
-void gladio_shot_tick(gladio_shot *shot);
 void gladio_shot_render(badge_framebuffer *fb, gladio_shot const *shot);
 
 rectangle gladio_shot_rectangle(gladio_shot const *shot);

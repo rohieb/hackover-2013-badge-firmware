@@ -161,9 +161,22 @@ void gladio_shot_spawn(struct gladio_game_state *state, uint8_t shot_type, vec2d
   }
 }
 
-void gladio_shot_tick(gladio_shot *shot) {
-  if(gladio_shot_active(shot)) {
-    shot->base.position = vec2d_add(shot->base.position, shot->inertia);
+void gladio_shot_friendly_move(gladio_game_state *state) {
+  gladio_shot *shots = state->shots_friendly;
+
+  shots[0].base.position = vec2d_add(shots[0].base.position, shots[0].inertia);
+
+  for(int8_t i = 1; i < GLADIO_MAX_SHOTS_FRIENDLY && gladio_shot_active(&state->shots_friendly[i]); ++i) {
+    shots[i].base.position = vec2d_add(shots[i].base.position, shots[i].inertia);
+
+    // Das hier wird selten passieren, und wenn es passiert meistens mit nur einem Schleifendurchlauf.
+    // Performanceoptimierung sinnlos.
+    int8_t j;
+    for(j = i; j > 0 && vec2d_xy_less(shots[j].base.position, shots[j - 1].base.position); --j) {
+      gladio_shot tmp = shots[j];
+      shots[j    ] = shots[j - 1];
+      shots[j - 1] = tmp;
+    }
   }
 }
 
