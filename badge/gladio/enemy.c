@@ -1,6 +1,7 @@
 #include "enemy.h"
 #include "game_state.h"
 #include "player.h"
+#include "shot.h"
 
 static badge_sprite const anim_dummy = { 7, 5, (uint8_t const *) "\xff\xff\xff\xff\xff" };
 

@@ -20,10 +20,6 @@ uint8_t gladio_shot_active(gladio_shot const *shot) {
     fixed_point_ne(FIXED_INT(0), shot->inertia.y);
 }
 
-static inline uint8_t posless(vec2d lhs, vec2d rhs) {
-  return fixed_point_lt(lhs.x, rhs.x) || (fixed_point_eq(lhs.x, lhs.y) && fixed_point_lt(lhs.y, rhs.y));
-}
-
 void gladio_shot_despawn(gladio_shot *shot) {
   memset(shot, 0, sizeof(gladio_shot));
 }
@@ -68,14 +64,14 @@ uint8_t gladio_shot_friendly_despawn_and_compress(struct gladio_game_state *stat
   return r;
 }
 
-static uint8_t gladio_shot_lower_bound(vec2d needle,
-                                       gladio_shot const *haystack,
-                                       uint8_t len) {
+uint8_t gladio_shot_lower_bound(vec2d needle,
+                                gladio_shot const *haystack,
+                                uint8_t len) {
   uint8_t first = 0;
 
   while(len > 0) {
     uint8_t half = len / 2;
-    if(posless(haystack[first + half].base.position, needle)) {
+    if(vec2d_xy_less(haystack[first + half].base.position, needle)) {
       first += half + 1;
       len   -= half + 1;
     } else {
@@ -132,9 +128,6 @@ void gladio_shot_spawn(struct gladio_game_state *state, uint8_t shot_type, vec2d
   gladio_shot *shots     = shot_type == GLADIO_SHOT_FRIENDLY ? state->shots_friendly     : state->shots_hostile;
   uint8_t      shots_max = shot_type == GLADIO_SHOT_FRIENDLY ? GLADIO_MAX_SHOTS_FRIENDLY : GLADIO_MAX_SHOTS_HOSTILE;
 
-  position.y = fixed_point_sub(position.y, fixed_point_div(FIXED_INT(gladio_shot_sprite.height), FIXED_INT(2)));
-  position.x = fixed_point_sub(position.x, fixed_point_div(FIXED_INT(gladio_shot_sprite.width ), FIXED_INT(2)));
-
   for(uint8_t i = 0; i < shots_max; ++i) {
     if(!gladio_shot_active(shots + i)) {
       shots[i].base.position = position;
@@ -153,10 +146,13 @@ void gladio_shot_tick(gladio_shot *shot) {
 }
 
 void gladio_shot_render(badge_framebuffer *fb, gladio_shot const *shot) {
+  fixed_point x = fixed_point_sub(shot->base.position.x, fixed_point_div(FIXED_INT(gladio_shot_sprite.height), FIXED_INT(2)));
+  fixed_point y = fixed_point_sub(shot->base.position.y, fixed_point_div(FIXED_INT(gladio_shot_sprite.width ), FIXED_INT(2)));
+
   if(gladio_shot_active(shot)) {
     badge_framebuffer_blt(fb,
-                          fixed_point_cast_int(shot->base.position.x),
-                          fixed_point_cast_int(shot->base.position.y),
+                          fixed_point_cast_int(x),
+                          fixed_point_cast_int(y),
                           &gladio_shot_sprite,
                           0);
   }

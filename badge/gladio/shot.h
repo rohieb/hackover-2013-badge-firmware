@@ -55,4 +55,8 @@ void gladio_shot_render(badge_framebuffer *fb, gladio_shot const *shot);
 
 rectangle gladio_shot_rectangle(gladio_shot const *shot);
 
+uint8_t gladio_shot_lower_bound(vec2d needle,
+                                gladio_shot const *haystack,
+                                uint8_t len);
+
 #endif

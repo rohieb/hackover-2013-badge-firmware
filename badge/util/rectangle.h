@@ -2,41 +2,8 @@
 #define INCLUDED_RECTANGLE_H
 
 #include "fixed_point.h"
+#include "vec2d.h"
 #include "../ui/display.h"
-
-typedef struct {
-  fixed_point x;
-  fixed_point y;
-} vec2d;
-
-static inline vec2d vec2d_new(fixed_point x, fixed_point y) {
-  vec2d r = { x, y };
-  return r;
-}
-
-static inline vec2d vec2d_add(vec2d v1, vec2d v2) {
-  vec2d r = {
-    fixed_point_add(v1.x, v2.x),
-    fixed_point_add(v1.y, v2.y)
-  };
-  return r;
-}
-
-static inline vec2d vec2d_sub(vec2d v1, vec2d v2) {
-  vec2d r = {
-    fixed_point_sub(v1.x, v2.x),
-    fixed_point_sub(v1.y, v2.y)
-  };
-  return r;
-}
-
-static inline vec2d vec2d_neg(vec2d v) {
-  vec2d r = {
-    fixed_point_neg(v.x),
-    fixed_point_neg(v.y)
-  };
-  return r;
-}
 
 typedef struct {
   vec2d pos;
