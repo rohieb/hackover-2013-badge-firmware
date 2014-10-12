@@ -17,8 +17,12 @@ static void tick_straight_ahead(gladio_enemy *self, gladio_game_state *state) {
 }
 
 static void collision_player_dummy(gladio_enemy *self, gladio_game_state *state) {
-  (void) self;
+  --self->hitpoints;
   gladio_player_damage(&state->player, 1);
+
+  if(self->hitpoints == 0) {
+    self->flags = 0;
+  }
 }
 
 static void collision_shots_dummy(gladio_enemy *self, gladio_shot *shot) {
@@ -30,7 +34,7 @@ static gladio_enemy_type const enemy_types[] = {
   {
     { 100, 1, &anim_dummy },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(5), FIXED_INT_I(3) } },
-    100,
+    10,
     BADGE_DISPLAY_WIDTH,
     tick_straight_ahead,
     collision_player_dummy,
