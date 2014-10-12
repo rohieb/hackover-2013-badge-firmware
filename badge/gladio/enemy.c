@@ -24,9 +24,6 @@ static void collision_player_dummy(gladio_enemy *self, gladio_player *player) {
 static void collision_shots_dummy(gladio_enemy *self, gladio_shot *shot) {
   self->flags = 0;
   gladio_shot_despawn_later(shot);
-
-  (void) self;
-  (void) shot;
 }
 
 static gladio_enemy_type const enemy_types[] = {

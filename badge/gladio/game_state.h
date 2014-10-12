@@ -11,10 +11,10 @@
 #include <stdint.h>
 
 enum {
-  GLADIO_PLAYING = 0,
-  GLADIO_WON     = 1,
-  GLADIO_LOST    = 2,
-  GLADIO_ERROR   = 3,
+  GLADIO_PLAYING     = 0,
+  GLADIO_WON         = 1,
+  GLADIO_LOST        = 2,
+  GLADIO_STATE_ERROR = 3,
   GLADIO_CONTINUATION_MASK = 0x3,
 
   GLADIO_SCHEDULE_SHOT_FRONT   = 4,
