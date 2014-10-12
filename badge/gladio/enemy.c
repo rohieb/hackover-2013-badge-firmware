@@ -16,9 +16,9 @@ static void tick_straight_ahead(gladio_enemy *self, gladio_game_state *state) {
   }
 }
 
-static void collision_player_dummy(gladio_enemy *self, gladio_player *player) {
+static void collision_player_dummy(gladio_enemy *self, gladio_game_state *state) {
   (void) self;
-  (void) player;
+  gladio_player_damage(&state->player, 1);
 }
 
 static void collision_shots_dummy(gladio_enemy *self, gladio_shot *shot) {
@@ -79,6 +79,7 @@ void gladio_enemy_render(badge_framebuffer *fb, gladio_enemy const *enemy) {
 
 void gladio_enemy_tick(gladio_game_state *state) {
   uint8_t player_shot_count;
+  rectangle box_player = gladio_player_hitbox(&state->player);
 
   for(player_shot_count = 0;
       player_shot_count < GLADIO_MAX_SHOTS_FRIENDLY
@@ -103,6 +104,12 @@ void gladio_enemy_tick(gladio_game_state *state) {
         }
         ++shot_ix;
         shotbox = gladio_shot_rectangle(&state->shots_friendly[shot_ix]);
+      }
+
+      if(gladio_enemy_active(e) &&
+         rectangle_intersect(&hitbox, &box_player))
+      {
+        gladio_get_enemy_type(e)->collision_player(e, state);
       }
 
       gladio_get_enemy_type(e)->tick(e, state);

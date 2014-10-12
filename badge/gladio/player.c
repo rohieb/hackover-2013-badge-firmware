@@ -17,3 +17,11 @@ void gladio_player_render(badge_framebuffer *fb, gladio_player const *p) {
                         &gladio_player_sprite,
                         0);
 }
+
+void gladio_player_damage(gladio_player *p, uint8_t damage) {
+  if(p->health > damage) {
+    p->health -= damage;
+  } else {
+    p->health = 0;
+  }
+}

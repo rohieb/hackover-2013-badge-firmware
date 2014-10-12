@@ -31,8 +31,8 @@ typedef struct gladio_enemy_type {
   int8_t    spawnpos_x;
 
   void (*tick)(struct gladio_enemy *self, struct gladio_game_state *);
-  void (*collision_player)(struct gladio_enemy *self, struct gladio_player *);
-  void (*collision_shots )(struct gladio_enemy *self, struct gladio_shot   *);
+  void (*collision_player)(struct gladio_enemy *self, struct gladio_game_state *);
+  void (*collision_shots )(struct gladio_enemy *self, struct gladio_shot  *);
 } gladio_enemy_type;
 
 uint8_t gladio_enemy_active(gladio_enemy const *enemy);
