@@ -172,12 +172,20 @@ void gladio_shot_hostile_spawn(struct gladio_game_state *state, vec2d position, 
 
 void gladio_shot_hostile_tick(struct gladio_game_state *state) {
   gladio_shot *shots = state->shots_hostile;
+  rectangle hitbox_player = gladio_player_hitbox(&state->player);
 
   for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_HOSTILE; ++i) {
     gladio_shot *shot = &shots[i];
 
     if(gladio_shot_still_needed(shot)) {
-      shot->base.position = vec2d_add(shot->base.position, shot->inertia);
+      rectangle shotbox = gladio_shot_rectangle(shot);
+
+      if(rectangle_intersect(&shotbox, &hitbox_player)) {
+        gladio_shot_despawn(shot);
+        gladio_player_damage(&state->player, 1);
+      } else {
+        shot->base.position = vec2d_add(shot->base.position, shot->inertia);
+      }
     } else if(gladio_shot_active(shot)) {
       gladio_shot_despawn(shot);
     }
