@@ -29,6 +29,11 @@ static inline vec2d vec2d_sub(vec2d v1, vec2d v2) {
   return r;
 }
 
+static inline vec2d vec2d_div(vec2d v, fixed_point x) {
+  return vec2d_new(fixed_point_div(v.x, x),
+                   fixed_point_div(v.y, x));
+}
+
 static inline vec2d vec2d_neg(vec2d v) {
   vec2d r = {
     fixed_point_neg(v.x),

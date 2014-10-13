@@ -5,10 +5,25 @@
 
 static badge_sprite const anim_dummy = { 7, 5, (uint8_t const *) "\xff\xff\xff\xff\xff" };
 
+static inline vec2d gladio_enemy_snout_position(gladio_enemy *self) {
+  rectangle hitbox = gladio_enemy_hitbox(self);
+  return vec2d_new(self->base.position.x, rectangle_mid_y(&hitbox));
+}
+
 static void tick_straight_ahead(gladio_enemy *self, gladio_game_state *state) {
   (void) state;
 
   self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_INT(1));
+
+  ++self->move_counter;
+  if(self->move_counter == 32) {
+    vec2d diff = vec2d_sub(state->player.base.position, self->base.position);
+    diff = vec2d_div(diff, fixed_point_mul(fixed_point_max(fixed_point_abs(diff.x), fixed_point_abs(diff.y)), FIXED_POINT(1, 500)));
+
+    vec2d snout_pos  = gladio_enemy_snout_position(self);
+
+    gladio_shot_hostile_spawn(state, snout_pos, diff);
+  }
 
   rectangle r = gladio_enemy_hitbox(self);
   if(fixed_point_lt(rectangle_right(&r), FIXED_INT(0))) {

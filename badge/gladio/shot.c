@@ -135,30 +135,6 @@ void gladio_shot_friendly_spawn(gladio_game_state *state,
 
     speed_y = fixed_point_add(speed_y, dspeed_y);
   }
-
-/*
-  for(uint8_t i = 1; i < pos_shift + shiftcount; ++i) {
-    assert(vec2d_xy_less(state->shots_friendly[i - 1].base.position,
-                         state->shots_friendly[i    ].base.position)
-           || (fixed_point_eq(state->shots_friendly[i - 1].base.position.x, state->shots_friendly[i].base.position.x)
-             && fixed_point_eq(state->shots_friendly[i - 1].base.position.y, state->shots_friendly[i].base.position.y)));
-  }
-*/
-}
-
-void gladio_shot_spawn(struct gladio_game_state *state, uint8_t shot_type, vec2d position, vec2d movement) {
-  gladio_shot *shots     = shot_type == GLADIO_SHOT_FRIENDLY ? state->shots_friendly     : state->shots_hostile;
-  uint8_t      shots_max = shot_type == GLADIO_SHOT_FRIENDLY ? GLADIO_MAX_SHOTS_FRIENDLY : GLADIO_MAX_SHOTS_HOSTILE;
-
-  for(uint8_t i = 0; i < shots_max; ++i) {
-    if(!gladio_shot_active(shots + i)) {
-      shots[i].base.position = position;
-      shots[i].base.anim_pos = 0;
-      shots[i].type          = 0;
-      shots[i].inertia       = movement;
-      break;
-    }
-  }
 }
 
 void gladio_shot_friendly_move(gladio_game_state *state) {
@@ -176,6 +152,34 @@ void gladio_shot_friendly_move(gladio_game_state *state) {
       gladio_shot tmp = shots[j];
       shots[j    ] = shots[j - 1];
       shots[j - 1] = tmp;
+    }
+  }
+}
+
+void gladio_shot_hostile_spawn(struct gladio_game_state *state, vec2d position, vec2d movement) {
+  gladio_shot *shots = state->shots_hostile;
+
+  for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_HOSTILE; ++i) {
+    if(!gladio_shot_active(shots + i)) {
+      shots[i].base.position = position;
+      shots[i].base.anim_pos = 0;
+      shots[i].type          = 0;
+      shots[i].inertia       = movement;
+      break;
+    }
+  }
+}
+
+void gladio_shot_hostile_tick(struct gladio_game_state *state) {
+  gladio_shot *shots = state->shots_hostile;
+
+  for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_HOSTILE; ++i) {
+    gladio_shot *shot = &shots[i];
+
+    if(gladio_shot_still_needed(shot)) {
+      shot->base.position = vec2d_add(shot->base.position, shot->inertia);
+    } else if(gladio_shot_active(shot)) {
+      gladio_shot_despawn(shot);
     }
   }
 }

@@ -74,8 +74,7 @@ void gladio_tick(gladio_game_state *state) {
   gladio_background_tick(&state->background, &state->rng);
 
   gladio_shot_friendly_move(state);
-
-//  for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_HOSTILE  && gladio_shot_active(&state->shots_hostile [i]); ++i) { gladio_shot_tick(state->shots_hostile  + i); }
+  gladio_shot_hostile_tick(state);
 
   gladio_enemy_tick(state);
 

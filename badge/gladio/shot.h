@@ -50,10 +50,10 @@ void gladio_shot_friendly_spawn(struct gladio_game_state *state,
                                 uint8_t                   where,
                                 vec2d                     position);
 
-void gladio_shot_spawn(struct gladio_game_state *state,
-                       uint8_t                   shot_type,
-                       vec2d                     position,
-                       vec2d                     movement);
+void gladio_shot_hostile_tick(struct gladio_game_state *state);
+void gladio_shot_hostile_spawn(struct gladio_game_state *state,
+                               vec2d                     position,
+                               vec2d                     movement);
 void gladio_shot_despawn      (gladio_shot *shot);
 void gladio_shot_despawn_later(gladio_shot *shot);
 
