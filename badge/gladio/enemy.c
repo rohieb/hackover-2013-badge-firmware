@@ -3,7 +3,7 @@
 #include "player.h"
 #include "shot.h"
 
-static badge_sprite const anim_dummy = { 7, 5, (uint8_t const *) "\xff\xff\xff\xff\xff" };
+static badge_sprite const anim_dummy = { 11, 9, (uint8_t const *) "\x10\x20\x40\xc0\x81\x83\x4d\xdb\xff\xff\xd9\xa0\x00" };
 
 static inline vec2d gladio_enemy_snout_position(gladio_enemy *self) {
   rectangle hitbox = gladio_enemy_hitbox(self);
@@ -16,13 +16,15 @@ static void tick_straight_ahead(gladio_enemy *self, gladio_game_state *state) {
   self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_INT(1));
 
   ++self->move_counter;
-  if(self->move_counter == 32) {
+  if(self->move_counter == 16) {
     vec2d diff = vec2d_sub(state->player.base.position, self->base.position);
     diff = vec2d_div(diff, fixed_point_mul(vec2d_length_approx(diff), FIXED_POINT(1, 500)));
 
     vec2d snout_pos  = gladio_enemy_snout_position(self);
 
     gladio_shot_hostile_spawn(state, snout_pos, diff);
+  } else if(self->move_counter == 48) {
+    self->move_counter = 0;
   }
 
   rectangle r = gladio_enemy_hitbox(self);
@@ -48,7 +50,7 @@ static void collision_shots_dummy(gladio_enemy *self, gladio_shot *shot) {
 static gladio_enemy_type const enemy_types[] = {
   {
     { 100, 1, &anim_dummy },
-    { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(5), FIXED_INT_I(3) } },
+    { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(9), FIXED_INT_I(7) } },
     10,
     BADGE_DISPLAY_WIDTH,
     tick_straight_ahead,
