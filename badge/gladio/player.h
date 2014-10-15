@@ -20,8 +20,8 @@ typedef struct gladio_player {
 enum {
   GLADIO_LIVES_LIMIT   =  5,
 
-  GLADIO_PLAYER_HEIGHT =  7,
-  GLADIO_PLAYER_WIDTH  = 13,
+  GLADIO_PLAYER_HEIGHT =  9,
+  GLADIO_PLAYER_WIDTH  = 15,
 
   GLADIO_PLAYER_COOLDOWN_PERIOD = 15,
 
@@ -43,9 +43,9 @@ static inline rectangle gladio_player_rectangle(gladio_player const *p) {
 
 static inline rectangle gladio_player_hitbox(gladio_player const *p) {
   return rectangle_new(vec2d_new(fixed_point_add(p->base.position.x, FIXED_INT(1)),
-                                 fixed_point_add(p->base.position.y, FIXED_INT(1))),
+                                 fixed_point_add(p->base.position.y, FIXED_INT(2))),
                        vec2d_new(FIXED_INT(GLADIO_PLAYER_WIDTH  - 1),
-                                 FIXED_INT(GLADIO_PLAYER_HEIGHT - 1)));
+                                 FIXED_INT(GLADIO_PLAYER_HEIGHT - 2)));
 }
 
 #endif
