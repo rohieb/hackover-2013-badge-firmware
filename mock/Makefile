@@ -21,6 +21,7 @@ BADGE_FAROBJS = ui/font.o \
                 ui/menu.o \
                 ui/sprite.o \
                 util/random.o \
+                common/explosion.o \
                 jumpnrun/collision.o \
                 jumpnrun/enemies.o \
                 jumpnrun/game_state.o \
@@ -37,6 +38,7 @@ BADGE_FAROBJS = ui/font.o \
                 gladio/game_state.o \
                 gladio/gladio.o \
                 gladio/level.o \
+                gladio/object.o \
                 gladio/player.o \
                 gladio/shot.o \
                 gladio/status.o

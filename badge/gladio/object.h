@@ -5,7 +5,6 @@
 
 typedef struct gladio_object {
   vec2d   position;
-  uint8_t anim_pos;
 } __attribute__((packed)) gladio_object;
 
 static inline rectangle gladio_object_rectangle(gladio_object obj, vec2d extents) {
@@ -15,8 +14,9 @@ static inline rectangle gladio_object_rectangle(gladio_object obj, vec2d extents
 static inline gladio_object gladio_object_new(vec2d position) {
   gladio_object obj;
   obj.position = position;
-  obj.anim_pos = 0;
   return obj;
 }
+
+vec2d gladio_object_explosion_position(rectangle r);
 
 #endif

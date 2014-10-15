@@ -5,7 +5,7 @@
 #include "../ui/display.h"
 #include "../ui/event.h"
 
-static fixed_point const speed_player      = FIXED_INT_I(2);
+static fixed_point const speed_player = FIXED_INT_I(2);
 
 void gladio_render(gladio_game_state const *state) {
   badge_framebuffer fb = { { { 0 } } };

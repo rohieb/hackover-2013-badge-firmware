@@ -129,7 +129,6 @@ void gladio_shot_friendly_spawn(gladio_game_state *state,
     gladio_shot *shot_w = &state->shots_friendly[pos_insert + i];
 
     shot_w->base.position = position;
-    shot_w->base.anim_pos = 0;
     shot_w->type          = 0;
     shot_w->inertia       = vec2d_new(FIXED_INT(1), speed_y);
 
@@ -162,7 +161,6 @@ void gladio_shot_hostile_spawn(struct gladio_game_state *state, vec2d position, 
   for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_HOSTILE; ++i) {
     if(!gladio_shot_active(shots + i)) {
       shots[i].base.position = position;
-      shots[i].base.anim_pos = 0;
       shots[i].type          = 0;
       shots[i].inertia       = movement;
       break;

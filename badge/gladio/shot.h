@@ -1,7 +1,6 @@
 #ifndef INCLUDED_BADGE_GLADIO_SHOT_H
 #define INCLUDED_BADGE_GLADIO_SHOT_H
 
-#include "animation.h"
 #include "object.h"
 #include "../util/rectangle.h"
 
@@ -31,7 +30,6 @@ typedef struct gladio_shot {
 } gladio_shot;
 
 typedef struct gladio_shot_type {
-  gladio_animation animation;
   uint8_t          damage;
 } gladio_shot_type;
 
