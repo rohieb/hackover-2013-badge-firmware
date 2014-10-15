@@ -32,13 +32,11 @@ struct gladio_level;
 
 typedef struct gladio_game_state {
   uint32_t          score;
-  uint8_t           tick;
+  uint8_t           tick_minor;
   uint8_t           flags;
 
-  uint16_t          level_pos;
-/*
-  gladio_level     *level;
-*/
+  uint16_t             tick_major;
+  struct gladio_level *level;
 
   badge_rng         rng;
   gladio_background background;

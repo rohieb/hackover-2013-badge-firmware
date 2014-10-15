@@ -16,6 +16,7 @@ typedef struct gladio_level_spawn_spec {
 
 typedef struct gladio_level {
   uint16_t len;
+  uint16_t pos;
   gladio_level_spawn_spec *specs;
 } gladio_level;
 

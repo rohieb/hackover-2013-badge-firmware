@@ -1,4 +1,5 @@
 #include "gladio.h"
+#include "level.h"
 #include "shot.h"
 
 #include "../ui/display.h"
@@ -23,7 +24,7 @@ void gladio_render(gladio_game_state const *state) {
   for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_FRIENDLY; ++i) { gladio_shot_render(&fb, state->shots_friendly + i); }
   for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_HOSTILE ; ++i) { gladio_shot_render(&fb, state->shots_hostile  + i); }
 
-  gladio_status_render    (&fb, state);
+  gladio_status_render   (&fb, state);
 
   badge_framebuffer_flush(&fb);
 }
@@ -36,7 +37,7 @@ void gladio_handle_input(gladio_game_state *state) {
   if(input_state & BADGE_EVENT_KEY_LEFT ) { state->player.base.position.x = fixed_point_max(FIXED_INT(                                              1), fixed_point_sub(state->player.base.position.x, speed_player)); }
   if(input_state & BADGE_EVENT_KEY_RIGHT) { state->player.base.position.x = fixed_point_min(FIXED_INT(BADGE_DISPLAY_WIDTH  - GLADIO_PLAYER_WIDTH  - 1), fixed_point_add(state->player.base.position.x, speed_player)); }
 
-  if(state->tick == 3
+  if(state->tick_minor == 3
      && state->player.charge < GLADIO_PLAYER_MAX_CHARGE
      && (input_state & BADGE_EVENT_KEY_BTN_B) == 0)
   {
@@ -64,7 +65,7 @@ void gladio_handle_input(gladio_game_state *state) {
 }
 
 void gladio_tick(gladio_game_state *state) {
-  ++state->tick;
+  ++state->tick_minor;
 
   if(state->player.cooldown > 0) {
     --state->player.cooldown;
@@ -78,18 +79,40 @@ void gladio_tick(gladio_game_state *state) {
 
   gladio_enemy_tick(state);
 
-  if(!gladio_enemy_active(&state->active_enemies[0])) {
-    gladio_enemy_spawn(state, 0, 10);
-  }
+  if(state->tick_minor == 3) {
+    state->tick_minor = 0;
 
-  if(state->tick == 3) {
-    state->tick = 0;
+    while(state->level->pos < state->level->len &&
+          state->level->specs[state->level->pos].time <= state->tick_major) {
+      gladio_enemy_spawn(state,
+                         state->level->specs[state->level->pos].type,
+                         state->level->specs[state->level->pos].pos_y);
+      ++state->level->pos;
+    }
+    ++state->tick_major;
+
     gladio_render(state);
   }
 }
 
 void gladio_play(void) {
+  // Nur zum Testen. Dateifoo kommt später.
+  gladio_level lv;
+  gladio_level_spawn_spec spawnspecs[200];
+
+  lv.specs = spawnspecs;
+  lv.len = 200;
+  lv.pos = 0;
+
+  for(uint16_t i = 0; i < 200; ++i) {
+    spawnspecs[i].time = i * 24;
+    spawnspecs[i].type = 0;
+    spawnspecs[i].pos_y = GLADIO_STATUS_BAR_HEIGHT + 4 + i * 8 % (BADGE_DISPLAY_HEIGHT - GLADIO_STATUS_BAR_HEIGHT - 8);
+  }
+
   gladio_game_state state = gladio_game_state_new();
+  state.level = &lv;
+  state.tick_major = 0;
 
   do {
     badge_event_t ev = badge_event_wait();
