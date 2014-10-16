@@ -14,6 +14,7 @@ struct gladio_hot;
 typedef struct gladio_enemy_type {
   badge_sprite sprite;
   rectangle    hitbox;
+  rectangle    collisionbox;
   uint8_t      hitpoints;
   int8_t       spawnpos_x;
 

@@ -56,8 +56,8 @@ static void collision_shots_instant_death(gladio_enemy *self, gladio_shot *shot)
 static gladio_enemy_type const enemy_types[] = {
   {
     { 12, 7, (uint8_t const *) "\x08\x04\xc7\x26\x12\xf9\x38\xbe\x75\x32\x09" },
-    { { FIXED_INT_I( 1), FIXED_INT_I(1) },
-      { FIXED_INT_I(10), FIXED_INT_I(5) } },
+    { { FIXED_INT_I( 0), FIXED_INT_I(0) }, { FIXED_INT_I(12), FIXED_INT_I(7) } },
+    { { FIXED_INT_I( 1), FIXED_INT_I(1) }, { FIXED_INT_I(10), FIXED_INT_I(5) } },
     10,
     BADGE_DISPLAY_WIDTH,
     tick_move_straight_ahead,
@@ -66,8 +66,8 @@ static gladio_enemy_type const enemy_types[] = {
     collision_shots_instant_death
   }, {
     { 11, 9, (uint8_t const *) "\x10\x20\x40\xc0\x81\x83\x4d\xdb\xff\xff\xd9\xa0\x00" },
-    { { FIXED_INT_I(1), FIXED_INT_I(1) },
-      { FIXED_INT_I(9), FIXED_INT_I(7) } },
+    { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(11), FIXED_INT_I(9) } },
+    { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I( 9), FIXED_INT_I(7) } },
     10,
     BADGE_DISPLAY_WIDTH,
     tick_move_straight_ahead,

@@ -14,6 +14,12 @@ rectangle gladio_enemy_hitbox(gladio_enemy const *enemy) {
   return r;
 }
 
+rectangle gladio_enemy_collisionbox(gladio_enemy const *enemy) {
+  rectangle r = gladio_enemy_type_get(enemy)->collisionbox;
+  rectangle_move_rel(&r, enemy->base.position);
+  return r;
+}
+
 uint8_t gladio_enemy_active(gladio_enemy const *enemy) {
   return enemy->flags & GLADIO_ENEMY_ACTIVE;
 }
@@ -101,7 +107,9 @@ void gladio_enemy_tick(gladio_game_state *state) {
           shotbox = gladio_shot_rectangle(&state->shots_friendly[shot_ix]);
         }
 
-        if(gladio_enemy_active(e) && rectangle_intersect(&hitbox, &box_player)) {
+        rectangle collisionbox = gladio_enemy_collisionbox(e);
+
+        if(gladio_enemy_active(e) && rectangle_intersect(&collisionbox, &box_player)) {
           gladio_enemy_type_get(e)->collision_player(e, state);
         }
 
