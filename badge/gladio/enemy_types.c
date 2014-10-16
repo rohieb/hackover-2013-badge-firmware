@@ -4,10 +4,26 @@
 #include "../ui/sprite.h"
 #include "../util/vec2d.h"
 
-static inline vec2d gladio_enemy_snout_position(gladio_enemy *self) {
+static vec2d gladio_enemy_snout_left(gladio_enemy *self) {
   rectangle hitbox = gladio_enemy_hitbox(self);
-  return vec2d_new(self->base.position.x, rectangle_mid_y(&hitbox));
+  return vec2d_new(rectangle_left(&hitbox), rectangle_mid_y(&hitbox));
 }
+/*
+static vec2d gladio_enemy_snout_right(gladio_enemy *self) {
+  rectangle hitbox = gladio_enemy_hitbox(self);
+  return vec2d_new(rectangle_right(&hitbox), rectangle_mid_y(&hitbox));
+}
+
+static vec2d gladio_enemy_snout_top(gladio_enemy *self) {
+  rectangle hitbox = gladio_enemy_hitbox(self);
+  return vec2d_new(rectangle_mid_x(&hitbox), rectangle_top(&hitbox));
+}
+
+static vec2d gladio_enemy_snout_bottom(gladio_enemy *self) {
+  rectangle hitbox = gladio_enemy_hitbox(self);
+  return vec2d_new(rectangle_mid_x(&hitbox), rectangle_bottom(&hitbox));
+}
+*/
 
 static void tick_move_straight_ahead(gladio_enemy *self, gladio_game_state *state) {
   (void) state;
@@ -25,12 +41,21 @@ static void tick_shoot_not(gladio_enemy *self, gladio_game_state *state) {
   (void) state;
 }
 
+static void tick_shoot_up(gladio_enemy *self, gladio_game_state *state) {
+  if(self->move_counter == 12) {
+    vec2d snout_pos = self->base.position;
+    gladio_shot_hostile_spawn(state, snout_pos, vec2d_new(FIXED_INT(0), FIXED_INT(-1)));
+  } else if(self->move_counter == 36) {
+    self->move_counter = 0;
+  }
+}
+
 static void tick_shoot_targeted(gladio_enemy *self, gladio_game_state *state) {
   if(self->move_counter == 16) {
     vec2d diff = vec2d_sub(state->player.base.position, self->base.position);
     diff = vec2d_div(diff, fixed_point_mul(vec2d_length_approx(diff), FIXED_POINT(1, 500)));
 
-    vec2d snout_pos  = gladio_enemy_snout_position(self);
+    vec2d snout_pos  = gladio_enemy_snout_left(self);
 
     gladio_shot_hostile_spawn(state, snout_pos, diff);
   } else if(self->move_counter == 48) {
@@ -52,6 +77,13 @@ static void collision_shots_instant_death(gladio_enemy *self, gladio_shot *shot)
   gladio_shot_despawn_later(shot);
 }
 
+static void collision_shots_simple(gladio_enemy *self, gladio_shot *shot) {
+  if(self->hitpoints < 2) {
+    collision_shots_instant_death(self, shot);
+  } else {
+    --self->hitpoints;
+  }
+}
 
 static gladio_enemy_type const enemy_types[] = {
   {
@@ -74,6 +106,16 @@ static gladio_enemy_type const enemy_types[] = {
     tick_shoot_targeted,
     collision_player_simple,
     collision_shots_instant_death
+  }, {
+    { 9, 5, (uint8_t const *) "\xc3\x30\xcc\x31\x33\x03" },
+    { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(9), FIXED_INT_I(5) } },
+    { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(7), FIXED_INT_I(3) } },
+    16,
+    BADGE_DISPLAY_WIDTH,
+    tick_move_straight_ahead,
+    tick_shoot_up,
+    collision_player_simple,
+    collision_shots_simple
   }
 };
 

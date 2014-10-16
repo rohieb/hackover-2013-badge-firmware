@@ -5,7 +5,8 @@
 
 enum {
   GLADIO_ENEMY_ROCKET,
-  GLADIO_ENEMY_FIGHTER
+  GLADIO_ENEMY_FIGHTER,
+  GLADIO_ENEMY_CANNON_UP
 };
 
 struct gladio_game_state;
@@ -15,6 +16,7 @@ typedef struct gladio_enemy_type {
   badge_sprite sprite;
   rectangle    hitbox;
   rectangle    collisionbox;
+
   uint8_t      hitpoints;
   int8_t       spawnpos_x;
 

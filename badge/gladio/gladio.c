@@ -105,9 +105,10 @@ void gladio_play(void) {
   lv.pos = 0;
 
   for(uint16_t i = 0; i < 200; ++i) {
-    spawnspecs[i].time = i * 24;
-    spawnspecs[i].type = 0;
-    spawnspecs[i].pos_y = GLADIO_STATUS_BAR_HEIGHT + 4 + i * 8 % (BADGE_DISPLAY_HEIGHT - GLADIO_STATUS_BAR_HEIGHT - 8);
+    spawnspecs[i].time = i * 12;
+    spawnspecs[i].type = 2;
+//    spawnspecs[i].pos_y = GLADIO_STATUS_BAR_HEIGHT + 4 + i * 8 % (BADGE_DISPLAY_HEIGHT - GLADIO_STATUS_BAR_HEIGHT - 8);
+    spawnspecs[i].pos_y = 60;
   }
 
   gladio_game_state state = gladio_game_state_new();
