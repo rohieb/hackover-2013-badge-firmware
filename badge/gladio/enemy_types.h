@@ -6,7 +6,8 @@
 enum {
   GLADIO_ENEMY_ROCKET,
   GLADIO_ENEMY_FIGHTER,
-  GLADIO_ENEMY_CANNON_UP
+  GLADIO_ENEMY_CANNON_UP,
+  GLADIO_ENEMY_TUMBLER
 };
 
 struct gladio_game_state;
@@ -18,6 +19,8 @@ typedef struct gladio_enemy_type {
   rectangle    collisionbox;
 
   uint8_t      hitpoints;
+  uint8_t      cooldown_initial;
+  uint8_t      cooldown_max;
   int8_t       spawnpos_x;
 
   void (*tick_move )(struct gladio_enemy *self, struct gladio_game_state *);

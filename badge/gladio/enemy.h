@@ -14,8 +14,9 @@ typedef struct gladio_enemy {
 
   uint8_t       type;
   uint8_t       hitpoints;
-  uint8_t       flags;
   uint16_t      move_counter;
+  uint8_t       cooldown;
+  uint8_t       flags;
 } gladio_enemy;
 
 struct gladio_player;

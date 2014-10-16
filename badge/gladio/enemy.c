@@ -48,8 +48,9 @@ void gladio_enemy_spawn(struct gladio_game_state *state, uint8_t type_id, int8_t
       dest->base         = gladio_object_new(vec2d_new(FIXED_INT(type->spawnpos_x), FIXED_INT(pos_y)));
       dest->type         = type_id;
       dest->hitpoints    = type->hitpoints;
-      dest->flags        = GLADIO_ENEMY_ACTIVE;
       dest->move_counter = 0;
+      dest->cooldown     = type->cooldown_initial;
+      dest->flags        = GLADIO_ENEMY_ACTIVE;
       break;
     }
   }
@@ -113,7 +114,11 @@ void gladio_enemy_tick(gladio_game_state *state) {
           gladio_enemy_type_get(e)->collision_player(e, state);
         }
 
-        gladio_enemy_type_get(e)->tick_shoot(e, state);
+        if(e->cooldown == 0) {
+          gladio_enemy_type_get(e)->tick_shoot(e, state);
+          e->cooldown = gladio_enemy_type_get(e)->cooldown_max;
+        }
+        --e->cooldown;
       }
 
       gladio_enemy_type_get(e)->tick_move(e, state);
