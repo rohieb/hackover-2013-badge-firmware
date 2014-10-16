@@ -22,26 +22,8 @@ struct gladio_player;
 struct gladio_shot;
 struct gladio_game_state;
 
-typedef struct gladio_enemy_type {
-  badge_sprite sprite;
-  rectangle    hitbox;
-  uint8_t      hitpoints;
-  int8_t       spawnpos_x;
-
-  void (*tick_move )(struct gladio_enemy *self, struct gladio_game_state *);
-  void (*tick_shoot)(struct gladio_enemy *self, struct gladio_game_state *);
-  void (*collision_player)(struct gladio_enemy *self, struct gladio_game_state *);
-  void (*collision_shots )(struct gladio_enemy *self, struct gladio_shot  *);
-} gladio_enemy_type;
-
 uint8_t gladio_enemy_active(gladio_enemy const *enemy);
 uint8_t gladio_enemy_dying (gladio_enemy const *enemy);
-
-gladio_enemy_type const *gladio_get_enemy_type_by_id(uint8_t id);
-
-static inline gladio_enemy_type const *gladio_get_enemy_type(gladio_enemy const *enemy) {
-  return gladio_get_enemy_type_by_id(enemy->type);
-}
 
 rectangle gladio_enemy_hitbox(gladio_enemy const *enemy);
 
