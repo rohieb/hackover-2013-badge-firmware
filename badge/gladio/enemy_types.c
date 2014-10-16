@@ -53,6 +53,24 @@ static void tick_move_tumble(gladio_enemy *self, gladio_game_state *state) {
   }
 }
 
+static void tick_move_zigzag(gladio_enemy *self, gladio_game_state *state) {
+  (void) state;
+
+  if(self->move_counter < 32) {
+    self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_INT(1));
+  } else if(self->move_counter < 64) {
+    self->base.position.x = fixed_point_add(self->base.position.x, FIXED_POINT(0, 500));
+    self->base.position.y = fixed_point_add(self->base.position.y, FIXED_POINT(0, 750));
+  } else {
+    self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_INT(2));
+  }
+
+  rectangle r = gladio_enemy_hitbox(self);
+  if(fixed_point_lt(rectangle_right(&r), FIXED_INT(0))) {
+    gladio_enemy_despawn(self);
+  }
+}
+
 static void tick_shoot_not(gladio_enemy *self, gladio_game_state *state) {
   (void) self;
   (void) state;
@@ -61,6 +79,13 @@ static void tick_shoot_not(gladio_enemy *self, gladio_game_state *state) {
 static void tick_shoot_forward(gladio_enemy *self, gladio_game_state *state) {
   vec2d snout_pos = gladio_enemy_snout_left(self);
   gladio_shot_hostile_spawn(state, snout_pos, vec2d_new(FIXED_POINT(0, -500), FIXED_INT(0)));
+}
+
+static void tick_shoot_zigzag(gladio_enemy *self, gladio_game_state *state) {
+  if(self->move_counter < 64) {
+    vec2d snout_pos = gladio_enemy_snout_left(self);
+    gladio_shot_hostile_spawn(state, snout_pos, vec2d_new(FIXED_POINT(-1, -500), FIXED_INT(0)));
+  }
 }
 
 static void tick_shoot_up(gladio_enemy *self, gladio_game_state *state) {
@@ -143,6 +168,17 @@ static gladio_enemy_type const enemy_types[] = {
     BADGE_DISPLAY_WIDTH,
     tick_move_tumble,
     tick_shoot_forward,
+    collision_player_simple,
+    collision_shots_simple
+  }, {
+    { 6, 7, (uint8_t const *) "\xc1\xf1\xfa\x6f\xa3" },
+    { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(6), FIXED_INT_I(7) } },
+    { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(4), FIXED_INT_I(5) } },
+    10,
+    32, 6,
+    BADGE_DISPLAY_WIDTH,
+    tick_move_zigzag,
+    tick_shoot_zigzag,
     collision_player_simple,
     collision_shots_simple
   }
