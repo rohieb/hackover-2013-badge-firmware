@@ -107,9 +107,9 @@ void gladio_play(void) {
 
   for(uint16_t i = 0; i < 200; ++i) {
     spawnspecs[i].time = i * 12;
-    spawnspecs[i].type = GLADIO_ENEMY_WFIGHTER_UP;
+    spawnspecs[i].type = GLADIO_ENEMY_CANNON_UP;
     spawnspecs[i].pos_y = GLADIO_STATUS_BAR_HEIGHT + 4 + i * 8 % (BADGE_DISPLAY_HEIGHT - GLADIO_STATUS_BAR_HEIGHT - 8);
-    spawnspecs[i].pos_y = 9;
+//    spawnspecs[i].pos_y = 9;
     spawnspecs[i].pos_y = 60;
   }
 

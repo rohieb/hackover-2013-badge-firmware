@@ -22,8 +22,11 @@ typedef struct gladio_enemy_type {
   rectangle    collisionbox;
 
   uint8_t      hitpoints;
+
   uint8_t      cooldown_initial;
   uint8_t      cooldown_max;
+  fixed_point  shot_speed;
+
   int8_t       spawnpos_x;
 
   void (*tick_move )(struct gladio_enemy *self, struct gladio_game_state *);
