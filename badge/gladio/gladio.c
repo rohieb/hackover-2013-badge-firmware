@@ -105,6 +105,7 @@ void gladio_play(void) {
   lv.len = 200;
   lv.pos = 0;
 
+/*
   for(uint16_t i = 0; i < 200; ++i) {
     spawnspecs[i].time = i * 12;
     spawnspecs[i].type = GLADIO_ENEMY_CANNON_UP;
@@ -112,6 +113,20 @@ void gladio_play(void) {
 //    spawnspecs[i].pos_y = 9;
     spawnspecs[i].pos_y = 60;
   }
+*/
+  lv.len = 3;
+
+  spawnspecs[0].time = 0;
+  spawnspecs[0].type = GLADIO_ENEMY_FINAL_BOSS_TOP_GUN;
+  spawnspecs[0].pos_y = 12;
+
+  spawnspecs[1].time = 0;
+  spawnspecs[1].type = GLADIO_ENEMY_FINAL_BOSS_BODY;
+  spawnspecs[1].pos_y = 26;
+
+  spawnspecs[2].time = 0;
+  spawnspecs[2].type = GLADIO_ENEMY_FINAL_BOSS_BOTTOM_GUN;
+  spawnspecs[2].pos_y = 37;
 
   gladio_game_state state = gladio_game_state_new();
   state.level = &lv;
