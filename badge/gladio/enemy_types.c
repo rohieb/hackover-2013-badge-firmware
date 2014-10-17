@@ -151,6 +151,8 @@ static void collision_shots_simple(gladio_enemy *self, gladio_shot *shot) {
   } else {
     --self->hitpoints;
   }
+
+  gladio_shot_despawn_later(shot);
 }
 
 static gladio_enemy_type const enemy_types[] = {
