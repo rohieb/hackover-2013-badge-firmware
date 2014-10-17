@@ -102,6 +102,20 @@ static void tick_shoot_forward(gladio_enemy *self, gladio_game_state *state) {
   gladio_shot_hostile_spawn(state, snout_pos, vec2d_new(fixed_point_neg(gladio_enemy_type_get(self)->shot_speed), FIXED_INT(0)));
 }
 
+static void tick_shoot_rockets(gladio_enemy *self, gladio_game_state *state) {
+  vec2d snout_pos = gladio_enemy_snout_left(self);
+  vec2d offset = gladio_enemy_type_by_id(GLADIO_ENEMY_ROCKET)->hitbox.extent;
+
+  offset.y = fixed_point_div(offset.y, FIXED_INT(2));
+
+  vec2d spawnpos = vec2d_sub(snout_pos, offset);
+
+  gladio_enemy_spawn_at(state,
+                        GLADIO_ENEMY_ROCKET,
+                        fixed_point_cast_int(spawnpos.x),
+                        fixed_point_cast_int(spawnpos.y));
+}
+
 static void tick_shoot_zigzag(gladio_enemy *self, gladio_game_state *state) {
   if(self->move_counter < 64) {
     vec2d snout_pos = gladio_enemy_snout_left(self);
@@ -249,10 +263,10 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(25), FIXED_INT_I(21) } },
     { { FIXED_INT_I(3), FIXED_INT_I(3) }, { FIXED_INT_I(19), FIXED_INT_I(15) } },
     32,
-    32, 6, FIXED_POINT_I(0, 750),
+    32, 32, FIXED_POINT_I(0, 750),
     BADGE_DISPLAY_WIDTH,
     tick_move_finalboss,
-    tick_shoot_not,
+    tick_shoot_rockets,
     collision_player_simple,
     collision_shots_simple
   }, {

@@ -38,14 +38,14 @@ void gladio_enemy_despawn(gladio_enemy *enemy) {
   enemy->flags = 0;
 }
 
-void gladio_enemy_spawn(struct gladio_game_state *state, uint8_t type_id, int8_t pos_y) {
+void gladio_enemy_spawn_at(struct gladio_game_state *state, uint8_t type_id, int8_t pos_x, int8_t pos_y) {
   for(uint8_t i = 0; i < GLADIO_MAX_ENEMIES; ++i) {
     gladio_enemy *dest = &state->active_enemies[i];
 
     if(!gladio_enemy_active(dest)) {
       gladio_enemy_type const *type = gladio_enemy_type_by_id(type_id);
 
-      dest->base         = gladio_object_new(vec2d_new(FIXED_INT(type->spawnpos_x), FIXED_INT(pos_y)));
+      dest->base         = gladio_object_new(vec2d_new(FIXED_INT(pos_x), FIXED_INT(pos_y)));
       dest->type         = type_id;
       dest->hitpoints    = type->hitpoints;
       dest->move_counter = 0;
@@ -54,6 +54,10 @@ void gladio_enemy_spawn(struct gladio_game_state *state, uint8_t type_id, int8_t
       break;
     }
   }
+}
+
+void gladio_enemy_spawn(struct gladio_game_state *state, uint8_t type_id, int8_t pos_y) {
+  gladio_enemy_spawn_at(state, type_id, gladio_enemy_type_by_id(type_id)->spawnpos_x, pos_y);
 }
 
 void gladio_enemy_render(badge_framebuffer *fb, gladio_enemy const *enemy) {

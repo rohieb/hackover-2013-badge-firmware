@@ -28,6 +28,7 @@ uint8_t gladio_enemy_dying (gladio_enemy const *enemy);
 
 rectangle gladio_enemy_hitbox(gladio_enemy const *enemy);
 
+void gladio_enemy_spawn_at(struct gladio_game_state *state, uint8_t type, int8_t pos_x, int8_t pos_y);
 void gladio_enemy_spawn(struct gladio_game_state *state, uint8_t type, int8_t pos_y);
 void gladio_enemy_render(badge_framebuffer *fb, gladio_enemy const *enemy);
 
