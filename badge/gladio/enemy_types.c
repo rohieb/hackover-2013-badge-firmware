@@ -53,14 +53,12 @@ static void tick_move_tumble(gladio_enemy *self, gladio_game_state *state) {
   }
 }
 
-static void tick_move_zigzag(gladio_enemy *self, gladio_game_state *state) {
-  (void) state;
-
+static void tick_move_zigzag(gladio_enemy *self, int8_t direction) {
   if(self->move_counter < 32) {
     self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_INT(1));
   } else if(self->move_counter < 64) {
     self->base.position.x = fixed_point_add(self->base.position.x, FIXED_POINT(0, 500));
-    self->base.position.y = fixed_point_add(self->base.position.y, FIXED_POINT(0, 750));
+    self->base.position.y = fixed_point_add(self->base.position.y, FIXED_POINT(0, direction * 750));
   } else {
     self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_INT(2));
   }
@@ -69,6 +67,16 @@ static void tick_move_zigzag(gladio_enemy *self, gladio_game_state *state) {
   if(fixed_point_lt(rectangle_right(&r), FIXED_INT(0))) {
     gladio_enemy_despawn(self);
   }
+}
+
+static void tick_move_zigzag_down(gladio_enemy *self, gladio_game_state *state) {
+  (void) state;
+  tick_move_zigzag(self, 1);
+}
+
+static void tick_move_zigzag_up(gladio_enemy *self, gladio_game_state *state) {
+  (void) state;
+  tick_move_zigzag(self, -1);
 }
 
 static void tick_shoot_not(gladio_enemy *self, gladio_game_state *state) {
@@ -195,7 +203,18 @@ static gladio_enemy_type const enemy_types[] = {
     10,
     32, 6,
     BADGE_DISPLAY_WIDTH,
-    tick_move_zigzag,
+    tick_move_zigzag_down,
+    tick_shoot_zigzag,
+    collision_player_simple,
+    collision_shots_simple
+  }, {
+    { 6, 7, (uint8_t const *) "\xc1\xf1\xfa\x6f\xa3" },
+    { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(6), FIXED_INT_I(7) } },
+    { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(4), FIXED_INT_I(5) } },
+    10,
+    32, 6,
+    BADGE_DISPLAY_WIDTH,
+    tick_move_zigzag_up,
     tick_shoot_zigzag,
     collision_player_simple,
     collision_shots_simple
