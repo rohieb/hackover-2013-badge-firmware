@@ -40,6 +40,7 @@ static inline gladio_shot_type const *gladio_get_shot_type(gladio_shot const *sh
 }
 
 uint8_t gladio_shot_active(gladio_shot const *shot);
+uint8_t gladio_shot_deadly(gladio_shot const *shot);
 
 uint8_t gladio_shot_friendly_despawn_and_compress(struct gladio_game_state *state);
 

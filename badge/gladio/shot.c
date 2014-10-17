@@ -28,7 +28,7 @@ static uint8_t gladio_shot_onscreen(gladio_shot const *shot) {
   return rectangle_onscreen(&r);
 }
 
-static uint8_t gladio_shot_still_needed(gladio_shot const *shot) {
+uint8_t gladio_shot_deadly(gladio_shot const *shot) {
   return
     gladio_shot_active(shot)
     && gladio_shot_onscreen(shot)
@@ -48,7 +48,7 @@ uint8_t gladio_shot_friendly_despawn_and_compress(struct gladio_game_state *stat
 
   // Skip initial active shots
   while(pos_r < GLADIO_MAX_SHOTS_FRIENDLY &&
-        gladio_shot_still_needed(&state->shots_friendly[pos_r])) {
+        gladio_shot_deadly(&state->shots_friendly[pos_r])) {
     ++pos_r;
   }
 
@@ -59,7 +59,7 @@ uint8_t gladio_shot_friendly_despawn_and_compress(struct gladio_game_state *stat
     gladio_shot *shot_r = &state->shots_friendly[pos_r];
     gladio_shot *shot_w = &state->shots_friendly[pos_w];
 
-    if(gladio_shot_still_needed(shot_r)) {
+    if(gladio_shot_deadly(shot_r)) {
       *shot_w = *shot_r;
       ++pos_w;
     }
@@ -175,7 +175,7 @@ void gladio_shot_hostile_tick(struct gladio_game_state *state) {
   for(uint8_t i = 0; i < GLADIO_MAX_SHOTS_HOSTILE; ++i) {
     gladio_shot *shot = &shots[i];
 
-    if(gladio_shot_still_needed(shot)) {
+    if(gladio_shot_deadly(shot)) {
       rectangle shotbox = gladio_shot_rectangle(shot);
 
       if(rectangle_intersect(&shotbox, &hitbox_player)) {

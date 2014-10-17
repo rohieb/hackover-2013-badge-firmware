@@ -100,12 +100,13 @@ void gladio_enemy_tick(gladio_game_state *state) {
         uint8_t shot_ix = gladio_shot_lower_bound(hitbox.pos, state->shots_friendly, player_shot_count);
 
         while(shot_ix < player_shot_count && vec2d_xy_less(state->shots_friendly[shot_ix].base.position, hitbox_lr)) {
-          rectangle shotbox = gladio_shot_rectangle(&state->shots_friendly[shot_ix]);
-          if(rectangle_intersect(&hitbox, &shotbox)) {
-            gladio_enemy_type_get(e)->collision_shots(e, &state->shots_friendly[shot_ix]);
+          if((state->shots_friendly[shot_ix].flags & GLADIO_SHOT_DESPAWNING) == 0) {
+            rectangle shotbox = gladio_shot_rectangle(&state->shots_friendly[shot_ix]);
+            if(rectangle_intersect(&hitbox, &shotbox)) {
+              gladio_enemy_type_get(e)->collision_shots(e, &state->shots_friendly[shot_ix]);
+            }
           }
           ++shot_ix;
-          shotbox = gladio_shot_rectangle(&state->shots_friendly[shot_ix]);
         }
 
         rectangle collisionbox = gladio_enemy_collisionbox(e);
