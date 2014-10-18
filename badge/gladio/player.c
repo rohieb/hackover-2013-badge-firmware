@@ -25,3 +25,11 @@ void gladio_player_damage(gladio_player *p, uint8_t damage) {
     p->health = 0;
   }
 }
+
+void gladio_player_heal(gladio_player *p, uint8_t damage) {
+  if(p->health + damage < GLADIO_PLAYER_MAX_HEALTH) {
+    p->health += damage;
+  } else {
+    p->health = GLADIO_PLAYER_MAX_HEALTH;
+  }
+}

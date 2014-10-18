@@ -15,6 +15,8 @@ extern "C" {
 struct enemy_type_parser {
   enemy_type_parser() {
     enemy_types.add
+      ("heart_full"         , GLADIO_ENEMY_ITEM_HEART_FULL      )
+      ("heart_half"         , GLADIO_ENEMY_ITEM_HEART_HALF      )
       ("rocket"             , GLADIO_ENEMY_ROCKET               )
       ("fighter"            , GLADIO_ENEMY_FIGHTER              )
       ("cannon_up"          , GLADIO_ENEMY_CANNON_UP            )

@@ -182,6 +182,16 @@ static void collision_player_simple(gladio_enemy *self, gladio_game_state *state
   }
 }
 
+static void collision_player_heart(gladio_enemy *self, gladio_game_state *state) {
+  gladio_player_heal(&state->player, self->hitpoints);
+  gladio_enemy_schedule_death(self);
+}
+
+static void collision_shots_ignore(gladio_enemy *self, gladio_shot *shot) {
+  (void) self;
+  (void) shot;
+}
+
 static void collision_shots_instant_death(gladio_enemy *self, gladio_shot *shot) {
   gladio_enemy_schedule_death(self);
   gladio_shot_despawn_later(shot);
@@ -199,6 +209,32 @@ static void collision_shots_simple(gladio_enemy *self, gladio_shot *shot) {
 
 static gladio_enemy_type const enemy_types[] = {
   {
+    { 5, 5, (uint8_t const *) "\xe6\xf9\x67" },
+    { { FIXED_INT_I( 0), FIXED_INT_I(0) }, { FIXED_INT_I(5), FIXED_INT_I(5) } },
+    { { FIXED_INT_I( 0), FIXED_INT_I(0) }, { FIXED_INT_I(5), FIXED_INT_I(5) } },
+    6,
+    255, 255,
+    FIXED_POINT_I(0, 250),
+    FIXED_INT_I(0),
+    BADGE_DISPLAY_WIDTH,
+    tick_move_straight_ahead,
+    tick_shoot_not,
+    collision_player_heart,
+    collision_shots_ignore
+  }, {
+    { 5, 5, (uint8_t const *) "\x26\xc9\x64" },
+    { { FIXED_INT_I( 0), FIXED_INT_I(0) }, { FIXED_INT_I(5), FIXED_INT_I(5) } },
+    { { FIXED_INT_I( 0), FIXED_INT_I(0) }, { FIXED_INT_I(5), FIXED_INT_I(5) } },
+    3,
+    255, 255,
+    FIXED_POINT_I(0, 250),
+    FIXED_INT_I(0),
+    BADGE_DISPLAY_WIDTH,
+    tick_move_straight_ahead,
+    tick_shoot_not,
+    collision_player_heart,
+    collision_shots_ignore
+  }, {
     { 12, 7, (uint8_t const *) "\x08\x04\xc7\x26\x12\xf9\x38\xbe\x75\x32\x09" },
     { { FIXED_INT_I( 0), FIXED_INT_I(0) }, { FIXED_INT_I(12), FIXED_INT_I(7) } },
     { { FIXED_INT_I( 1), FIXED_INT_I(1) }, { FIXED_INT_I(10), FIXED_INT_I(5) } },
@@ -299,7 +335,7 @@ static gladio_enemy_type const enemy_types[] = {
     FIXED_POINT_I(0, 750),
     -12,
     tick_move_backstabber,
-    tick_shoot_forward,
+    tick_shoot_not,
     collision_player_simple,
     collision_shots_simple
   }, {
@@ -320,7 +356,7 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(25), FIXED_INT_I(21) } },
     { { FIXED_INT_I(3), FIXED_INT_I(3) }, { FIXED_INT_I(19), FIXED_INT_I(15) } },
     32,
-    32, 64,
+    32, 96,
     FIXED_POINT_I(0, 200),
     FIXED_POINT_I(0, 750),
     BADGE_DISPLAY_WIDTH,

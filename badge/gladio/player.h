@@ -35,6 +35,7 @@ gladio_player gladio_player_new(void);
 
 void gladio_player_render(badge_framebuffer *fb, gladio_player const *p);
 void gladio_player_damage(gladio_player *p, uint8_t damage);
+void gladio_player_heal(gladio_player *p, uint8_t damage);
 
 static inline rectangle gladio_player_rectangle(gladio_player const *p) {
   return gladio_object_rectangle(p->base, vec2d_new(FIXED_INT(GLADIO_PLAYER_WIDTH),
