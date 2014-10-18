@@ -22,6 +22,7 @@ struct enemy_type_parser {
       ("tumbler"            , GLADIO_ENEMY_TUMBLER              )
       ("wfighter_down"      , GLADIO_ENEMY_WFIGHTER_DOWN        )
       ("wfighter_up"        , GLADIO_ENEMY_WFIGHTER_UP          )
+      ("backstabber"        , GLADIO_ENEMY_BACKSTABBER          )
       ("finalboss_topgun"   , GLADIO_ENEMY_FINAL_BOSS_TOP_GUN   )
       ("finalboss_body"     , GLADIO_ENEMY_FINAL_BOSS_BODY      )
       ("finalboss_bottomgun", GLADIO_ENEMY_FINAL_BOSS_BOTTOM_GUN)
