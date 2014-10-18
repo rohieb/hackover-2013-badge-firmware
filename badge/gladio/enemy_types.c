@@ -28,7 +28,7 @@ static vec2d gladio_enemy_snout_bottom(gladio_enemy *self) {
 static void tick_move_straight_ahead(gladio_enemy *self, gladio_game_state *state) {
   (void) state;
 
-  self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_INT(1));
+  self->base.position.x = fixed_point_sub(self->base.position.x, gladio_enemy_type_get(self)->move_speed);
 
   rectangle r = gladio_enemy_hitbox(self);
   if(fixed_point_lt(rectangle_right(&r), FIXED_INT(0))) {
@@ -44,7 +44,7 @@ static void tick_move_tumble(gladio_enemy *self, gladio_game_state *state) {
 
   fixed_point diff_y = fixed_point_div(FIXED_INT(factor), FIXED_INT(2));
 
-  self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_INT(1));
+  self->base.position.x = fixed_point_sub(self->base.position.x, gladio_enemy_type_get(self)->move_speed);
   self->base.position.y = fixed_point_add(self->base.position.y, diff_y);
 
   rectangle r = gladio_enemy_hitbox(self);
@@ -55,12 +55,12 @@ static void tick_move_tumble(gladio_enemy *self, gladio_game_state *state) {
 
 static void tick_move_zigzag(gladio_enemy *self, int8_t direction) {
   if(self->move_counter < 32) {
-    self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_INT(1));
+    self->base.position.x = fixed_point_sub(self->base.position.x, gladio_enemy_type_get(self)->move_speed);
   } else if(self->move_counter < 64) {
     self->base.position.x = fixed_point_add(self->base.position.x, FIXED_POINT(0, 500));
     self->base.position.y = fixed_point_add(self->base.position.y, FIXED_POINT(0, direction * 750));
   } else {
-    self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_INT(2));
+    self->base.position.x = fixed_point_sub(self->base.position.x, fixed_point_mul(gladio_enemy_type_get(self)->move_speed, FIXED_INT(2)));
   }
 
   rectangle r = gladio_enemy_hitbox(self);
@@ -193,7 +193,9 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I( 0), FIXED_INT_I(0) }, { FIXED_INT_I(12), FIXED_INT_I(7) } },
     { { FIXED_INT_I( 1), FIXED_INT_I(1) }, { FIXED_INT_I(10), FIXED_INT_I(5) } },
     10,
-    16, 48, FIXED_INT_I(0),
+    16, 48,
+    FIXED_INT_I(1),
+    FIXED_INT_I(0),
     BADGE_DISPLAY_WIDTH,
     tick_move_straight_ahead,
     tick_shoot_not,
@@ -204,7 +206,9 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(11), FIXED_INT_I(9) } },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I( 9), FIXED_INT_I(7) } },
     10,
-    16, 48, FIXED_POINT_I(0, 666),
+    16, 48,
+    FIXED_INT_I(1),
+    FIXED_POINT_I(0, 666),
     BADGE_DISPLAY_WIDTH,
     tick_move_straight_ahead,
     tick_shoot_targeted,
@@ -215,7 +219,9 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(9), FIXED_INT_I(5) } },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(7), FIXED_INT_I(3) } },
     16,
-    12, 36, FIXED_INT_I(1),
+    12, 36,
+    FIXED_INT_I(1),
+    FIXED_INT_I(1),
     BADGE_DISPLAY_WIDTH,
     tick_move_straight_ahead,
     tick_shoot_up,
@@ -226,7 +232,9 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(9), FIXED_INT_I(5) } },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(7), FIXED_INT_I(3) } },
     16,
-    12, 36, FIXED_INT_I(1),
+    12, 36,
+    FIXED_INT_I(1),
+    FIXED_INT_I(1),
     BADGE_DISPLAY_WIDTH,
     tick_move_straight_ahead,
     tick_shoot_down,
@@ -237,7 +245,9 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(8), FIXED_INT_I(9) } },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(6), FIXED_INT_I(7) } },
     10,
-    16, 48, FIXED_POINT_I(0, 500),
+    16, 48,
+    FIXED_INT_I(1),
+    FIXED_POINT_I(0, 500),
     BADGE_DISPLAY_WIDTH,
     tick_move_tumble,
     tick_shoot_forward,
@@ -248,7 +258,9 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(6), FIXED_INT_I(7) } },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(4), FIXED_INT_I(5) } },
     10,
-    32, 6, FIXED_POINT_I(0, 750),
+    32, 6,
+    FIXED_INT_I(1),
+    FIXED_POINT_I(0, 750),
     BADGE_DISPLAY_WIDTH,
     tick_move_zigzag_down,
     tick_shoot_zigzag,
@@ -259,7 +271,9 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(6), FIXED_INT_I(7) } },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(4), FIXED_INT_I(5) } },
     10,
-    32, 6, FIXED_POINT_I(0, 750),
+    32, 6,
+    FIXED_INT_I(1),
+    FIXED_POINT_I(0, 750),
     BADGE_DISPLAY_WIDTH,
     tick_move_zigzag_up,
     tick_shoot_zigzag,
@@ -270,7 +284,9 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(22), FIXED_INT_I(25) } },
     { { FIXED_INT_I(7), FIXED_INT_I(1) }, { FIXED_INT_I(12), FIXED_INT_I(18) } },
     32,
-    32, 32, FIXED_POINT_I(0, 750),
+    32, 32,
+    FIXED_POINT_I(0, 200),
+    FIXED_POINT_I(0, 750),
     BADGE_DISPLAY_WIDTH + 8,
     tick_move_finalboss,
     tick_shoot_finalboss_topgun,
@@ -281,7 +297,9 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(25), FIXED_INT_I(21) } },
     { { FIXED_INT_I(3), FIXED_INT_I(3) }, { FIXED_INT_I(19), FIXED_INT_I(15) } },
     32,
-    32, 32, FIXED_POINT_I(0, 750),
+    32, 32,
+    FIXED_POINT_I(0, 200),
+    FIXED_POINT_I(0, 750),
     BADGE_DISPLAY_WIDTH,
     tick_move_finalboss,
     tick_shoot_rockets,
@@ -292,7 +310,9 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(22), FIXED_INT_I(24) } },
     { { FIXED_INT_I(8), FIXED_INT_I(4) }, { FIXED_INT_I(12), FIXED_INT_I(17) } },
     32,
-    16, 32, FIXED_POINT_I(0, 750),
+    16, 32,
+    FIXED_POINT_I(0, 200),
+    FIXED_POINT_I(0, 750),
     BADGE_DISPLAY_WIDTH + 8,
     tick_move_finalboss,
     tick_shoot_finalboss_bottomgun,

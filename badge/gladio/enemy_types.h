@@ -29,6 +29,8 @@ typedef struct gladio_enemy_type {
 
   uint8_t      cooldown_initial;
   uint8_t      cooldown_max;
+
+  fixed_point  move_speed;
   fixed_point  shot_speed;
 
   int8_t       spawnpos_x;
