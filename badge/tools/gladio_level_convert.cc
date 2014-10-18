@@ -52,6 +52,11 @@ void level_dump(std::string const &filename) {
   while(std::getline(in, spec_line)) {
     ++linenum;
 
+    boost::trim(spec_line);
+    if(spec_line == "") {
+      continue;
+    }
+
     std::istringstream parser(spec_line);
 
     unsigned pause;

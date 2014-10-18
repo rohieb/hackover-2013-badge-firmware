@@ -7,6 +7,7 @@ LDLIBS        = $$(pkg-config --libs gtkmm-3.0)
 
 BADGE         = badge
 LEVELLIST     = levels.txt
+GLD_LEVELLIST = gladio_levels.txt
 
 GLADEFILES    = lcd-display.glade
 
@@ -91,12 +92,18 @@ clean:
 distclean: clean
 	$(RM) $(DEPS) $(wildcard *~)
 
-CONVERTER = ../badge/tools/level-converter
-LEVELS    = ../badge/jumpnrun/levels/*.lv
+CONVERTER  = ../badge/tools/level-converter
+LEVELS     = ../badge/jumpnrun/levels/*.lv
+
+GLD_CONVERT = ../badge/tools/gladio_level_convert
+GLD_LEVELS  = ../badge/gladio/levels/*.lv
 
 play: all
 	$(MAKE) -C ../badge/tools
 	echo > $(LEVELLIST)
 	ls $(LEVELS) | xargs -n1 basename | cut -d . -f 1 > $(LEVELLIST)
 	$(CONVERTER) $(LEVELS)
+	echo > $(GLD_LEVELLIST)
+	ls $(GLD_LEVELS) | xargs -n1 basename | cut -d . -f 1 > $(GLD_LEVELLIST)
+	$(GLD_CONVERT) $(GLD_LEVELS)
 	./$(BADGE)
