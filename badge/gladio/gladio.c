@@ -96,37 +96,11 @@ void gladio_tick(gladio_game_state *state) {
   }
 }
 
-void gladio_play(void) {
+uint8_t gladio_play_level(char const *fname) {
   // Nur zum Testen. Dateifoo kommt später.
   gladio_level lv;
-  gladio_level_spawn_spec spawnspecs[200];
 
-  lv.specs = spawnspecs;
-  lv.len = 200;
-  lv.pos = 0;
-
-/*
-  for(uint16_t i = 0; i < 200; ++i) {
-    spawnspecs[i].time = i * 12;
-    spawnspecs[i].type = GLADIO_ENEMY_CANNON_UP;
-    spawnspecs[i].pos_y = GLADIO_STATUS_BAR_HEIGHT + 4 + i * 8 % (BADGE_DISPLAY_HEIGHT - GLADIO_STATUS_BAR_HEIGHT - 8);
-//    spawnspecs[i].pos_y = 9;
-    spawnspecs[i].pos_y = 60;
-  }
-*/
-  lv.len = 3;
-
-  spawnspecs[0].time = 0;
-  spawnspecs[0].type = GLADIO_ENEMY_FINAL_BOSS_TOP_GUN;
-  spawnspecs[0].pos_y = 7;
-
-  spawnspecs[1].time = 0;
-  spawnspecs[1].type = GLADIO_ENEMY_FINAL_BOSS_BODY;
-  spawnspecs[1].pos_y = 21;
-
-  spawnspecs[2].time = 0;
-  spawnspecs[2].type = GLADIO_ENEMY_FINAL_BOSS_BOTTOM_GUN;
-  spawnspecs[2].pos_y = 32;
+  GLADIO_LEVEL_LOAD(lv, fname);
 
   gladio_game_state state = gladio_game_state_new();
   state.level = &lv;
@@ -148,4 +122,10 @@ void gladio_play(void) {
       gladio_tick(&state);
     }
   } while((state.flags & GLADIO_CONTINUATION_MASK) == GLADIO_PLAYING);
+
+  return 0;
+}
+
+void gladio_play(void) {
+  gladio_play_level("../badge/gladio/levels/test.lvl");
 }

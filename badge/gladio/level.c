@@ -22,6 +22,7 @@ int gladio_load_level_header_from_file(gladio_level *dest, FIL *fd) {
   if(FR_OK != f_read(fd, &dest->len, sizeof(dest->len), &count) || count != sizeof(dest->len)) {
     return GLADIO_ERROR;
   }
+  dest->pos = 0;
 
   return GLADIO_SUCCESS;
 }
