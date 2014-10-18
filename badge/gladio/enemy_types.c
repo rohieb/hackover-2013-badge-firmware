@@ -36,6 +36,19 @@ static void tick_move_straight_ahead(gladio_enemy *self, gladio_game_state *stat
   }
 }
 
+static void tick_move_straight_sw(gladio_enemy *self, gladio_game_state *state) {
+  (void) state;
+
+  self->base.position = vec2d_add(self->base.position,
+                                  vec2d_mul(vec2d_new(FIXED_INT(-1), FIXED_POINT(0, 600)),
+                                            gladio_enemy_type_get(self)->move_speed));
+
+  rectangle r = gladio_enemy_hitbox(self);
+  if(fixed_point_lt(rectangle_right(&r), FIXED_INT(0))) {
+    gladio_enemy_despawn(self);
+  }
+}
+
 static void tick_move_tumble(gladio_enemy *self, gladio_game_state *state) {
   (void) state;
 
@@ -239,7 +252,7 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I( 0), FIXED_INT_I(0) }, { FIXED_INT_I(12), FIXED_INT_I(7) } },
     { { FIXED_INT_I( 1), FIXED_INT_I(1) }, { FIXED_INT_I(10), FIXED_INT_I(5) } },
     2,
-    16, 48,
+    255, 255,
     FIXED_POINT_I(0, 500),
     FIXED_INT_I(0),
     BADGE_DISPLAY_WIDTH,
@@ -247,6 +260,19 @@ static gladio_enemy_type const enemy_types[] = {
     tick_shoot_not,
     collision_player_simple,
     collision_shots_instant_death
+  }, {
+    { 11, 9, (uint8_t const *) "\x10\x20\xe0\xc0\xc1\xa6\xed\xff\xbe\x38\xa8\x18\x03" },
+    { { FIXED_INT_I( 0), FIXED_INT_I(0) }, { FIXED_INT_I(11), FIXED_INT_I(9) } },
+    { { FIXED_INT_I( 1), FIXED_INT_I(1) }, { FIXED_INT_I( 9), FIXED_INT_I(7) } },
+    3,
+    255, 255,
+    FIXED_POINT_I(0, 500),
+    FIXED_INT_I(1),
+    BADGE_DISPLAY_WIDTH,
+    tick_move_straight_sw,
+    tick_shoot_not,
+    collision_player_simple,
+    collision_shots_simple
   }, {
     { 11, 9, (uint8_t const *) "\x10\x20\x40\xc0\x81\x83\x4d\xdb\xff\xff\xd9\xa0\x00" },
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(11), FIXED_INT_I(9) } },
