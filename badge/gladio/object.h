@@ -18,5 +18,6 @@ static inline gladio_object gladio_object_new(vec2d position) {
 }
 
 vec2d gladio_object_explosion_position(rectangle r);
+uint8_t gladio_object_off_playfield(rectangle r);
 
 #endif

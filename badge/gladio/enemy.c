@@ -89,6 +89,13 @@ void gladio_enemy_tick(gladio_game_state *state) {
     gladio_enemy *e = &state->active_enemies[i];
 
     if(gladio_enemy_active(e)) {
+      rectangle hitbox = gladio_enemy_hitbox(e);
+
+      if(gladio_object_off_playfield(hitbox)) {
+        gladio_enemy_despawn(e);
+        continue;
+      }
+
       ++e->move_counter;
 
       if(gladio_enemy_dying(e)) {
@@ -97,7 +104,6 @@ void gladio_enemy_tick(gladio_game_state *state) {
           continue;
         }
       } else {
-        rectangle hitbox = gladio_enemy_hitbox(e);
         vec2d hitbox_lr = vec2d_new(rectangle_right (&hitbox),
                                     rectangle_bottom(&hitbox));
 

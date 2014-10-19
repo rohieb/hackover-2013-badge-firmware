@@ -29,11 +29,6 @@ static void tick_move_straight_ahead(gladio_enemy *self, gladio_game_state *stat
   (void) state;
 
   self->base.position.x = fixed_point_sub(self->base.position.x, gladio_enemy_type_get(self)->move_speed);
-
-  rectangle r = gladio_enemy_hitbox(self);
-  if(fixed_point_lt(rectangle_right(&r), FIXED_INT(0))) {
-    gladio_enemy_despawn(self);
-  }
 }
 
 static void tick_move_straight_sw(gladio_enemy *self, gladio_game_state *state) {
@@ -42,11 +37,14 @@ static void tick_move_straight_sw(gladio_enemy *self, gladio_game_state *state) 
   self->base.position = vec2d_add(self->base.position,
                                   vec2d_mul(vec2d_new(FIXED_INT(-1), FIXED_POINT(0, 600)),
                                             gladio_enemy_type_get(self)->move_speed));
+}
 
-  rectangle r = gladio_enemy_hitbox(self);
-  if(fixed_point_lt(rectangle_right(&r), FIXED_INT(0))) {
-    gladio_enemy_despawn(self);
-  }
+static void tick_move_straight_nw(gladio_enemy *self, gladio_game_state *state) {
+  (void) state;
+
+  self->base.position = vec2d_add(self->base.position,
+                                  vec2d_mul(vec2d_new(FIXED_INT(-1), FIXED_POINT(0, -600)),
+                                            gladio_enemy_type_get(self)->move_speed));
 }
 
 static void tick_move_tumble(gladio_enemy *self, gladio_game_state *state) {
@@ -59,11 +57,6 @@ static void tick_move_tumble(gladio_enemy *self, gladio_game_state *state) {
 
   self->base.position.x = fixed_point_sub(self->base.position.x, gladio_enemy_type_get(self)->move_speed);
   self->base.position.y = fixed_point_add(self->base.position.y, diff_y);
-
-  rectangle r = gladio_enemy_hitbox(self);
-  if(fixed_point_lt(rectangle_right(&r), FIXED_INT(0))) {
-    gladio_enemy_despawn(self);
-  }
 }
 
 static void tick_move_zigzag(gladio_enemy *self, int8_t direction) {
@@ -74,11 +67,6 @@ static void tick_move_zigzag(gladio_enemy *self, int8_t direction) {
     self->base.position.y = fixed_point_add(self->base.position.y, FIXED_POINT(0, direction * 750));
   } else {
     self->base.position.x = fixed_point_sub(self->base.position.x, fixed_point_mul(gladio_enemy_type_get(self)->move_speed, FIXED_INT(2)));
-  }
-
-  rectangle r = gladio_enemy_hitbox(self);
-  if(fixed_point_lt(rectangle_right(&r), FIXED_INT(0))) {
-    gladio_enemy_despawn(self);
   }
 }
 
@@ -94,12 +82,7 @@ static void tick_move_zigzag_up(gladio_enemy *self, gladio_game_state *state) {
 
 static void tick_move_backstabber(gladio_enemy *self, gladio_game_state *state) {
   (void) state;
-
   self->base.position.x = fixed_point_add(self->base.position.x, gladio_enemy_type_get(self)->move_speed);
-
-  if(fixed_point_gt(self->base.position.x, FIXED_INT(BADGE_DISPLAY_WIDTH))) {
-    gladio_enemy_despawn(self);
-  }
 }
 
 static void tick_move_finalboss(gladio_enemy *self, gladio_game_state *state) {
@@ -274,10 +257,23 @@ static gladio_enemy_type const enemy_types[] = {
     collision_player_simple,
     collision_shots_simple
   }, {
+    { 11, 9, (uint8_t const *) "\x10\x20\xe0\xc0\xc1\xa6\xed\xff\xbe\x38\xa8\x18\x03" },
+    { { FIXED_INT_I( 0), FIXED_INT_I(0) }, { FIXED_INT_I(11), FIXED_INT_I(9) } },
+    { { FIXED_INT_I( 1), FIXED_INT_I(1) }, { FIXED_INT_I( 9), FIXED_INT_I(7) } },
+    3,
+    255, 255,
+    FIXED_POINT_I(0, 500),
+    FIXED_INT_I(1),
+    BADGE_DISPLAY_WIDTH,
+    tick_move_straight_nw,
+    tick_shoot_not,
+    collision_player_simple,
+    collision_shots_simple
+  }, {
     { 11, 9, (uint8_t const *) "\x10\x20\x40\xc0\x81\x83\x4d\xdb\xff\xff\xd9\xa0\x00" },
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(11), FIXED_INT_I(9) } },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I( 9), FIXED_INT_I(7) } },
-    10,
+    3,
     16, 48,
     FIXED_POINT_I(0, 500),
     FIXED_POINT_I(0, 666),
@@ -285,13 +281,13 @@ static gladio_enemy_type const enemy_types[] = {
     tick_move_straight_ahead,
     tick_shoot_targeted,
     collision_player_simple,
-    collision_shots_instant_death
+    collision_shots_simple
   }, {
     { 9, 5, (uint8_t const *) "\xc3\x30\xcc\x31\x33\x03" },
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(9), FIXED_INT_I(5) } },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(7), FIXED_INT_I(3) } },
     16,
-    12, 36,
+    16, 36,
     FIXED_POINT_I(0, 500),
     FIXED_INT_I(1),
     BADGE_DISPLAY_WIDTH,
@@ -304,7 +300,7 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(9), FIXED_INT_I(5) } },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(7), FIXED_INT_I(3) } },
     16,
-    12, 36,
+    16, 36,
     FIXED_POINT_I(0, 500),
     FIXED_INT_I(1),
     BADGE_DISPLAY_WIDTH,
@@ -316,7 +312,7 @@ static gladio_enemy_type const enemy_types[] = {
     { 8, 9, (uint8_t const *) "\x82\x06\xaf\xce\xd9\xb7\xef\xff\x9c" },
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(8), FIXED_INT_I(9) } },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(6), FIXED_INT_I(7) } },
-    10,
+    3,
     16, 48,
     FIXED_POINT_I(0, 500),
     FIXED_POINT_I(0, 750),
@@ -329,7 +325,7 @@ static gladio_enemy_type const enemy_types[] = {
     { 6, 7, (uint8_t const *) "\xc1\xf1\xfa\x6f\xa3" },
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(6), FIXED_INT_I(7) } },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(4), FIXED_INT_I(5) } },
-    10,
+    2,
     32, 6,
     FIXED_POINT_I(0, 500),
     FIXED_POINT_I(0, 750),
@@ -342,7 +338,7 @@ static gladio_enemy_type const enemy_types[] = {
     { 6, 7, (uint8_t const *) "\xc1\xf1\xfa\x6f\xa3" },
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(6), FIXED_INT_I(7) } },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(4), FIXED_INT_I(5) } },
-    10,
+    2,
     32, 6,
     FIXED_POINT_I(0, 500),
     FIXED_POINT_I(0, 750),
@@ -355,7 +351,7 @@ static gladio_enemy_type const enemy_types[] = {
     { 12, 10, (uint8_t const *) "\x01\x26\x99\x67\xb3\xcf\x37\xdb\x2f\x2d\x30\xc0\x00\x03\x0c" },
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(12), FIXED_INT_I(10) } },
     { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(10), FIXED_INT_I( 8) } },
-    3,
+    2,
     32, 32,
     FIXED_POINT_I(0, 500),
     FIXED_POINT_I(0, 750),

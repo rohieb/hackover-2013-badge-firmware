@@ -23,15 +23,15 @@ uint8_t gladio_shot_active(gladio_shot const *shot) {
     fixed_point_ne(FIXED_INT(0), shot->inertia.y);
 }
 
-static uint8_t gladio_shot_onscreen(gladio_shot const *shot) {
+static uint8_t gladio_shot_on_playfield(gladio_shot const *shot) {
   rectangle r = gladio_shot_rectangle(shot);
-  return rectangle_onscreen(&r);
+  return !gladio_object_off_playfield(r);
 }
 
 uint8_t gladio_shot_deadly(gladio_shot const *shot) {
   return
     gladio_shot_active(shot)
-    && gladio_shot_onscreen(shot)
+    && gladio_shot_on_playfield(shot)
     && (shot->flags & GLADIO_SHOT_DESPAWNING) == 0;
 }
 
