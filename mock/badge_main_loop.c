@@ -50,6 +50,8 @@ void gladio_loop(void) {
   char menu_buf[MAX_LEVELS][32];
   FILE *fd = fopen("gladio_levels.txt", "r");
 
+  gladio_game_state_persistent persistent_state = gladio_game_state_persistent_new();
+
   int i;
 
   for(i = 0; i < MAX_LEVELS && fgets(menu_buf[i], sizeof(menu_buf[i]), fd); ++i) {
@@ -71,7 +73,7 @@ void gladio_loop(void) {
     char lvname[256];
     sprintf(lvname, GLD_PATH_PREFIX "%s.lvl", menu[choice]);
 
-    gladio_play_level(lvname);
+    gladio_play_level(lvname, &persistent_state);
   }
 }
 

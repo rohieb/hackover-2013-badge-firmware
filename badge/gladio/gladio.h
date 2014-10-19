@@ -8,6 +8,6 @@
 #include "status.h"
 
 void gladio_play(void);
-uint8_t gladio_play_level(char const *fname);
+uint8_t gladio_play_level(char const *fname, gladio_game_state_persistent *persistent_state);
 
 #endif

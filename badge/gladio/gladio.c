@@ -96,13 +96,13 @@ void gladio_tick(gladio_game_state *state) {
   }
 }
 
-uint8_t gladio_play_level(char const *fname) {
+uint8_t gladio_play_level(char const *fname, gladio_game_state_persistent *persistent_state) {
   // Nur zum Testen. Dateifoo kommt später.
   gladio_level lv;
 
   GLADIO_LEVEL_LOAD(lv, fname);
 
-  gladio_game_state state = gladio_game_state_new();
+  gladio_game_state state = gladio_game_state_new(persistent_state);
   state.level = &lv;
   state.tick_major = 0;
 
@@ -127,5 +127,6 @@ uint8_t gladio_play_level(char const *fname) {
 }
 
 void gladio_play(void) {
-  gladio_play_level("../badge/gladio/levels/test.lvl");
+  gladio_game_state_persistent persistent_state = gladio_game_state_persistent_new();
+  gladio_play_level("../badge/gladio/levels/test.lvl", &persistent_state);
 }

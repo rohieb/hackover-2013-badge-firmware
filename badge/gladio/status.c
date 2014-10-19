@@ -58,5 +58,5 @@ void gladio_status_render(badge_framebuffer       *fb,
     fb->data[0][2 + 2 * i] |= 0x30;
   }
 
-  gladio_render_score(fb, state->score);
+  gladio_render_score(fb, state->persistent->score);
 }

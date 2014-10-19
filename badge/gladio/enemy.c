@@ -114,6 +114,10 @@ void gladio_enemy_tick(gladio_game_state *state) {
             rectangle shotbox = gladio_shot_rectangle(&state->shots_friendly[shot_ix]);
             if(rectangle_intersect(&hitbox, &shotbox)) {
               gladio_enemy_type_get(e)->collision_shots(e, &state->shots_friendly[shot_ix]);
+
+              if(gladio_enemy_dying(e)) {
+                gladio_score_add(state, gladio_enemy_type_get(e)->score);
+              }
             }
           }
           ++shot_ix;

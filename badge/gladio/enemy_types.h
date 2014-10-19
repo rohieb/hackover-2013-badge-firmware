@@ -35,6 +35,7 @@ typedef struct gladio_enemy_type {
   rectangle    hitbox;
   rectangle    collisionbox;
 
+  uint32_t     score;
   uint8_t      hitpoints;
 
   uint8_t      cooldown_initial;
