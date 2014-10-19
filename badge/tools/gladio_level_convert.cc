@@ -15,21 +15,24 @@ extern "C" {
 struct enemy_type_parser {
   enemy_type_parser() {
     enemy_types.add
-      ("heart_full"         , GLADIO_ENEMY_ITEM_HEART_FULL      )
-      ("heart_half"         , GLADIO_ENEMY_ITEM_HEART_HALF      )
-      ("rocket"             , GLADIO_ENEMY_ROCKET               )
-      ("kamikaze_sw"        , GLADIO_ENEMY_KAMIKAZE_SW          )
-      ("kamikaze_nw"        , GLADIO_ENEMY_KAMIKAZE_NW          )
-      ("fighter"            , GLADIO_ENEMY_FIGHTER              )
-      ("cannon_up"          , GLADIO_ENEMY_CANNON_UP            )
-      ("cannon_down"        , GLADIO_ENEMY_CANNON_DOWN          )
-      ("tumbler"            , GLADIO_ENEMY_TUMBLER              )
-      ("wfighter_down"      , GLADIO_ENEMY_WFIGHTER_DOWN        )
-      ("wfighter_up"        , GLADIO_ENEMY_WFIGHTER_UP          )
-      ("backstabber"        , GLADIO_ENEMY_BACKSTABBER          )
-      ("finalboss_topgun"   , GLADIO_ENEMY_FINAL_BOSS_TOP_GUN   )
-      ("finalboss_body"     , GLADIO_ENEMY_FINAL_BOSS_BODY      )
-      ("finalboss_bottomgun", GLADIO_ENEMY_FINAL_BOSS_BOTTOM_GUN)
+      ("heart_full"          , GLADIO_ENEMY_ITEM_HEART_FULL       )
+      ("heart_half"          , GLADIO_ENEMY_ITEM_HEART_HALF       )
+      ("rocket"              , GLADIO_ENEMY_ROCKET                )
+      ("kamikaze_sw"         , GLADIO_ENEMY_KAMIKAZE_SW           )
+      ("kamikaze_nw"         , GLADIO_ENEMY_KAMIKAZE_NW           )
+      ("fighter"             , GLADIO_ENEMY_FIGHTER               )
+      ("cannon_up"           , GLADIO_ENEMY_CANNON_UP             )
+      ("cannon_down"         , GLADIO_ENEMY_CANNON_DOWN           )
+      ("tumbler"             , GLADIO_ENEMY_TUMBLER               )
+      ("wfighter_down"       , GLADIO_ENEMY_WFIGHTER_DOWN         )
+      ("wfighter_up"         , GLADIO_ENEMY_WFIGHTER_UP           )
+      ("backstabber"         , GLADIO_ENEMY_BACKSTABBER           )
+      ("finalboss_topgun"    , GLADIO_ENEMY_FINAL_BOSS_TOP_GUN    )
+      ("finalboss_body"      , GLADIO_ENEMY_FINAL_BOSS_BODY       )
+      ("finalboss_bottomgun" , GLADIO_ENEMY_FINAL_BOSS_BOTTOM_GUN )
+      ("middleboss_topgun"   , GLADIO_ENEMY_MIDDLE_BOSS_TOP_GUN   )
+      ("middleboss_body"     , GLADIO_ENEMY_MIDDLE_BOSS_BODY      )
+      ("middleboss_bottomgun", GLADIO_ENEMY_MIDDLE_BOSS_BOTTOM_GUN)
       ;
   }
 
@@ -58,7 +61,7 @@ void level_dump(std::string const &filename) {
     ++linenum;
 
     boost::trim(spec_line);
-    if(spec_line == "") {
+    if(spec_line == "" || spec_line[0] == '#') {
       continue;
     }
 

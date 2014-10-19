@@ -61,6 +61,10 @@
 30 30 wfighter_down
 30 30 wfighter_up
 
-60 7 finalboss_topgun
-0 21 finalboss_body
-0 32 finalboss_bottomgun
+60 10 middleboss_topgun
+0 26 middleboss_body
+0 42 middleboss_bottomgun
+
+#60 7 finalboss_topgun
+#0 21 finalboss_body
+#0 32 finalboss_bottomgun
