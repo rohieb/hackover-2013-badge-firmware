@@ -25,7 +25,7 @@ gladio_game_state gladio_game_state_new(gladio_game_state_persistent *persistent
 gladio_game_state_persistent gladio_game_state_persistent_new(void) {
   gladio_game_state_persistent persistent_state;
 
-  persistent_state.score = 0; //GLADIO_SCORE_MAX;
+  persistent_state.score = GLADIO_SCORE_MAX;
   persistent_state.lives = 3;
 
   return persistent_state;

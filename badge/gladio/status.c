@@ -4,10 +4,6 @@
 
 #include <string.h>
 
-
-static badge_sprite const heart_full  = { 5, 5, (uint8_t const *) "\xe6\xf9\x67" };
-static badge_sprite const heart_empty = { 5, 5, (uint8_t const *) "\x26\xc9\x64" };
-
 static badge_sprite const scorefont[] = {
   { 3, 5, (uint8_t const *) "\x2e\x3a" },
   { 3, 5, (uint8_t const *) "\xf2\x43" },
@@ -21,16 +17,27 @@ static badge_sprite const scorefont[] = {
   { 3, 5, (uint8_t const *) "\xb7\x3e" }
 };
 
-void gladio_render_score(badge_framebuffer *fb, uint32_t score) {
-  uint8_t pos_x = BADGE_DISPLAY_WIDTH;
+void gladio_render_number(badge_framebuffer *fb, uint8_t pos_x_right, uint32_t num) {
+  uint8_t pos_x = pos_x_right;
 
   do {
     pos_x -= scorefont[0].width + 1;
-    badge_framebuffer_blt(fb, pos_x, 1, &scorefont[score % 10], 0);
-    score /= 10;
-  } while(score != 0);
+    badge_framebuffer_blt(fb, pos_x, 1, &scorefont[num % 10], 0);
+    num /= 10;
+  } while(num != 0);
 }
 
+void gladio_render_score(badge_framebuffer *fb, uint32_t score) {
+  gladio_render_number(fb, BADGE_DISPLAY_WIDTH, score);
+}
+
+void gladio_render_lives(badge_framebuffer *fb, uint8_t lives) {
+  if(lives > 99) {
+    lives = 99;
+  }
+
+  gladio_render_number(fb, 9, lives);
+}
 
 void gladio_status_render(badge_framebuffer       *fb,
                           gladio_game_state const *state) {
@@ -38,24 +45,14 @@ void gladio_status_render(badge_framebuffer       *fb,
 
   memset(fb->data[0], 0x80, BADGE_DISPLAY_WIDTH);
 
-/*
-  uint8_t hearts;
-
-  for(hearts = 0; hearts < state->player.lives; ++hearts) {
-    badge_framebuffer_blt(fb, 1 + (heart_full .width + 1) * hearts, 1, &heart_full, 0);
-  }
-
-  for(; hearts < state->player.max_lives; ++hearts) {
-    badge_framebuffer_blt(fb, 1 + (heart_empty.width + 1) * hearts, 1, &heart_empty, 0);
-  }
-*/
+  gladio_render_lives(fb, state->persistent->lives);
 
   for(uint8_t i = 0; i < state->player.health; ++i) {
-    fb->data[0][2 + 2 * i] |= 0x06;
+    fb->data[0][10 + 2 * i] |= 0x06;
   }
 
   for(uint8_t i = 0; i < (state->player.charge >> GLADIO_PLAYER_CHARGE_SHIFT); ++i) {
-    fb->data[0][2 + 2 * i] |= 0x30;
+    fb->data[0][10 + 2 * i] |= 0x30;
   }
 
   gladio_render_score(fb, state->persistent->score);

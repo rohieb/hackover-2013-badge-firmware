@@ -6,7 +6,8 @@
 #include "../ui/display.h"
 #include "../ui/event.h"
 
-static fixed_point const speed_player = FIXED_INT_I(2);
+static fixed_point const speed_player_y = FIXED_POINT_I(1, 500);
+static fixed_point const speed_player_x = FIXED_POINT_I(1, 500);
 
 void gladio_render(gladio_game_state const *state) {
   badge_framebuffer fb = { { { 0 } } };
@@ -33,10 +34,10 @@ void gladio_render(gladio_game_state const *state) {
 void gladio_handle_input(gladio_game_state *state) {
   uint8_t input_state = badge_event_current_input_state();
 
-  if(input_state & BADGE_EVENT_KEY_UP   ) { state->player.base.position.y = fixed_point_max(FIXED_INT(GLADIO_STATUS_BAR_HEIGHT                    + 1), fixed_point_sub(state->player.base.position.y, speed_player)); }
-  if(input_state & BADGE_EVENT_KEY_DOWN ) { state->player.base.position.y = fixed_point_min(FIXED_INT(BADGE_DISPLAY_HEIGHT - GLADIO_PLAYER_HEIGHT - 1), fixed_point_add(state->player.base.position.y, speed_player)); }
-  if(input_state & BADGE_EVENT_KEY_LEFT ) { state->player.base.position.x = fixed_point_max(FIXED_INT(                                              1), fixed_point_sub(state->player.base.position.x, speed_player)); }
-  if(input_state & BADGE_EVENT_KEY_RIGHT) { state->player.base.position.x = fixed_point_min(FIXED_INT(BADGE_DISPLAY_WIDTH  - GLADIO_PLAYER_WIDTH  - 1), fixed_point_add(state->player.base.position.x, speed_player)); }
+  if(input_state & BADGE_EVENT_KEY_UP   ) { state->player.base.position.y = fixed_point_max(FIXED_INT(GLADIO_STATUS_BAR_HEIGHT                    + 1), fixed_point_sub(state->player.base.position.y, speed_player_y)); }
+  if(input_state & BADGE_EVENT_KEY_DOWN ) { state->player.base.position.y = fixed_point_min(FIXED_INT(BADGE_DISPLAY_HEIGHT - GLADIO_PLAYER_HEIGHT - 1), fixed_point_add(state->player.base.position.y, speed_player_y)); }
+  if(input_state & BADGE_EVENT_KEY_LEFT ) { state->player.base.position.x = fixed_point_max(FIXED_INT(                                              1), fixed_point_sub(state->player.base.position.x, speed_player_x)); }
+  if(input_state & BADGE_EVENT_KEY_RIGHT) { state->player.base.position.x = fixed_point_min(FIXED_INT(BADGE_DISPLAY_WIDTH  - GLADIO_PLAYER_WIDTH  - 1), fixed_point_add(state->player.base.position.x, speed_player_x)); }
 
   if(state->tick_minor == 3
      && state->player.charge < GLADIO_PLAYER_MAX_CHARGE
