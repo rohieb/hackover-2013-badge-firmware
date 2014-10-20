@@ -8,28 +8,6 @@ static vec2d gladio_enemy_snout(gladio_enemy *self) {
   return vec2d_add(self->base.position, gladio_enemy_type_get(self)->snout);
 }
 
-/*
-static vec2d gladio_enemy_snout_left(gladio_enemy *self) {
-  rectangle hitbox = gladio_enemy_hitbox(self);
-  return vec2d_new(rectangle_left(&hitbox), rectangle_mid_y(&hitbox));
-}
-
-static vec2d gladio_enemy_snout_right(gladio_enemy *self) {
-  rectangle hitbox = gladio_enemy_hitbox(self);
-  return vec2d_new(rectangle_right(&hitbox), rectangle_mid_y(&hitbox));
-}
-
-static vec2d gladio_enemy_snout_top(gladio_enemy *self) {
-  rectangle hitbox = gladio_enemy_hitbox(self);
-  return vec2d_new(rectangle_mid_x(&hitbox), rectangle_top(&hitbox));
-}
-
-static vec2d gladio_enemy_snout_bottom(gladio_enemy *self) {
-  rectangle hitbox = gladio_enemy_hitbox(self);
-  return vec2d_new(rectangle_mid_x(&hitbox), rectangle_bottom(&hitbox));
-}
-*/
-
 static void tick_move_straight_ahead(gladio_enemy *self, gladio_game_state *state) {
   (void) state;
 
@@ -88,6 +66,18 @@ static void tick_move_zigzag_up(gladio_enemy *self, gladio_game_state *state) {
 static void tick_move_backstabber(gladio_enemy *self, gladio_game_state *state) {
   (void) state;
   self->base.position.x = fixed_point_add(self->base.position.x, gladio_enemy_type_get(self)->move_speed);
+}
+
+static void tick_move_middleboss(gladio_enemy *self, gladio_game_state *state) {
+  (void) state;
+
+  if(self->move_counter < 128) {
+    self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_POINT(0, 200));
+  } else if(self->move_counter % 128 < 64) {
+    self->base.position.y = fixed_point_add(self->base.position.y, FIXED_POINT(0, 100));
+  } else {
+    self->base.position.y = fixed_point_sub(self->base.position.y, FIXED_POINT(0, 100));
+  }
 }
 
 static void tick_move_finalboss(gladio_enemy *self, gladio_game_state *state) {
@@ -160,11 +150,11 @@ static void tick_shoot_targeted(gladio_enemy *self, gladio_game_state *state) {
   self->cooldown = 48;
 }
 
-/*
 static void tick_shoot_targeted_with_pause(gladio_enemy *self, gladio_game_state *state) {
-
+  if((self->move_counter & 0xff) >= 96) {
+    tick_shoot_targeted(self, state);
+  }
 }
-*/
 
 static void tick_shoot_finalboss_topgun(gladio_enemy *self, gladio_game_state *state) {
   vec2d pos = gladio_enemy_snout(self);
@@ -474,15 +464,15 @@ static gladio_enemy_type const enemy_types[] = {
     { 27, 20, (uint8_t const *) "\x00\x40\x00\x00\x0e\x00\x70\x00\x80\x03\x00\x1c\x00\xe0\x00\x00\x07\x00\x38\x00\xc0\x01\x20\x0e\x00\x67\x00\x70\x06\x00\x67\x00\x60\x07\x00\x3c\x00\x80\x03\x00\x70\x00\x00\x0e\x00\xc0\x01\x00\x38\x00\x00\x07\x00\xe0\x00\x00\x1c\x00\x80\x03\x00\xf0\x03\x00\x7e\x00\x80\x0f" },
     { { FIXED_INT_I(5), FIXED_INT_I(4) }, { FIXED_INT_I(22), FIXED_INT_I(16) } },
     { { FIXED_INT_I(5), FIXED_INT_I(4) }, { FIXED_INT_I(22), FIXED_INT_I(16) } },
-    { FIXED_INT_I(0), FIXED_INT_I(0) },
+    { FIXED_INT_I(0), FIXED_INT_I(15) },
     500,
     32,
     32, 32,
     FIXED_POINT_I(0, 200),
     FIXED_POINT_I(0, 750),
     BADGE_DISPLAY_WIDTH,
-    tick_move_finalboss,
-    tick_shoot_not,
+    tick_move_middleboss,
+    tick_shoot_targeted_with_pause,
     collision_player_simple,
     collision_shots_simple
   }, {
@@ -497,8 +487,8 @@ static gladio_enemy_type const enemy_types[] = {
     FIXED_POINT_I(0, 200),
     FIXED_POINT_I(0, 750),
     BADGE_DISPLAY_WIDTH + 3,
-    tick_move_finalboss,
-    tick_shoot_not,
+    tick_move_middleboss,
+    tick_shoot_targeted_with_pause,
     collision_player_simple,
     collision_shots_simple
   }, {
@@ -506,15 +496,15 @@ static gladio_enemy_type const enemy_types[] = {
     { 26, 20, (uint8_t const *) "\x40\x00\x00\x0c\x00\xc0\x01\x00\x38\x00\x00\x07\x00\xe0\x00\x00\x1c\x00\x80\x03\x00\x70\x04\x00\xe6\x00\x60\x0e\x00\xe6\x00\xe0\x06\x00\x3c\x00\xc0\x01\x00\x0e\x00\x70\x00\x80\x03\x00\x1c\x00\xe0\x00\x00\x07\x00\x38\x00\xc0\x01\xc0\x0f\x00\x7e\x00\xf0\x01\x00" },
     { { FIXED_INT_I(5), FIXED_INT_I(5) }, { FIXED_INT_I(21), FIXED_INT_I(15) } },
     { { FIXED_INT_I(5), FIXED_INT_I(4) }, { FIXED_INT_I(21), FIXED_INT_I(15) } },
-    { FIXED_INT_I(0), FIXED_INT_I(0) },
+    { FIXED_INT_I(0), FIXED_INT_I(5) },
     500,
     32,
     32, 32,
     FIXED_POINT_I(0, 200),
     FIXED_POINT_I(0, 750),
     BADGE_DISPLAY_WIDTH,
-    tick_move_finalboss,
-    tick_shoot_not,
+    tick_move_middleboss,
+    tick_shoot_targeted_with_pause,
     collision_player_simple,
     collision_shots_simple
   }
