@@ -138,7 +138,7 @@ uint8_t gladio_play_level(char const *fname, gladio_game_state_persistent *persi
     case BADGE_EVENT_GAME_TICK:
       gladio_tick(&state);
     }
-  } while((state.flags & GLADIO_CONTINUATION_MASK) == GLADIO_PLAYING);
+  } while(state.player.status != GLADIO_PLAYER_LOST && !gladio_player_won(&state.player));
 
   return 0;
 }

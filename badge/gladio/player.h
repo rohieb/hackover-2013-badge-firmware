@@ -26,7 +26,8 @@ enum {
   GLADIO_PLAYER_NORMAL,
   GLADIO_PLAYER_INVULNERABLE,
   GLADIO_PLAYER_DYING,
-  GLADIO_PLAYER_WINNING
+  GLADIO_PLAYER_WINNING,
+  GLADIO_PLAYER_LOST
 };
 
 enum {
@@ -82,7 +83,7 @@ static inline uint8_t gladio_player_dead      (gladio_player const *p) {
 }
 
 static inline uint8_t gladio_player_playing   (gladio_player const *p) {
-  return p->status != GLADIO_PLAYER_WINNING;
+  return p->status != GLADIO_PLAYER_WINNING && p->status != GLADIO_PLAYER_LOST;
 }
 
 static inline uint8_t gladio_player_won       (gladio_player const *p) {
