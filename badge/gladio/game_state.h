@@ -21,7 +21,8 @@ enum {
   GLADIO_SCHEDULE_SHOT_SIDEGUN = 8,
   GLADIO_SCHEDULE_SHOT_MASK    = 0xc,
 
-  GLADIO_SCORE_MAX = 999999
+  GLADIO_SCORE_MAX = 999999,
+  GLADIO_SCORE_PER_LIFE = 1000
 };
 
 enum {
@@ -34,6 +35,7 @@ struct gladio_level;
 
 typedef struct gladio_game_state_persistent {
   uint32_t score;
+  uint32_t next_life;
   uint8_t lives;
 } gladio_game_state_persistent;
 

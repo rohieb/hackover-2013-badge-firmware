@@ -25,8 +25,9 @@ gladio_game_state gladio_game_state_new(gladio_game_state_persistent *persistent
 gladio_game_state_persistent gladio_game_state_persistent_new(void) {
   gladio_game_state_persistent persistent_state;
 
-  persistent_state.score = GLADIO_SCORE_MAX;
-  persistent_state.lives = 3;
+  persistent_state.score     = 0;
+  persistent_state.next_life = GLADIO_SCORE_PER_LIFE;
+  persistent_state.lives     = 3;
 
   return persistent_state;
 }
@@ -38,5 +39,12 @@ void gladio_score_add(gladio_game_state *state, uint32_t score) {
     state->persistent->score = GLADIO_SCORE_MAX;
   } else {
     state->persistent->score += score;
+  }
+
+  if(state->persistent->score >= state->persistent->next_life) {
+    if(state->persistent->lives < 99) {
+      ++state->persistent->lives;
+    }
+    state->persistent->next_life += GLADIO_SCORE_PER_LIFE;
   }
 }
