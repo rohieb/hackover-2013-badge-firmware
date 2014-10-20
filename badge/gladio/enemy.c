@@ -104,34 +104,36 @@ void gladio_enemy_tick(gladio_game_state *state) {
           continue;
         }
       } else {
-        vec2d hitbox_lr = vec2d_new(rectangle_right (&hitbox),
-                                    rectangle_bottom(&hitbox));
+        if(gladio_player_tangible(&state->player)) {
+          vec2d hitbox_lr = vec2d_new(rectangle_right (&hitbox),
+                                      rectangle_bottom(&hitbox));
 
-        uint8_t shot_ix = gladio_shot_lower_bound(hitbox.pos, state->shots_friendly, player_shot_count);
+          uint8_t shot_ix = gladio_shot_lower_bound(hitbox.pos, state->shots_friendly, player_shot_count);
 
-        while(!gladio_enemy_dying(e)      &&
-              shot_ix < player_shot_count &&
-              vec2d_xy_less(state->shots_friendly[shot_ix].base.position, hitbox_lr))
-        {
-          gladio_shot *shot = &state->shots_friendly[shot_ix];
+          while(!gladio_enemy_dying(e)      &&
+                shot_ix < player_shot_count &&
+                vec2d_xy_less(state->shots_friendly[shot_ix].base.position, hitbox_lr))
+          {
+            gladio_shot *shot = &state->shots_friendly[shot_ix];
 
-          if((shot->flags & GLADIO_SHOT_DESPAWNING) == 0) {
-            rectangle shotbox = gladio_shot_rectangle(shot);
-            if(rectangle_intersect(&hitbox, &shotbox)) {
-              gladio_enemy_type_get(e)->collision_shots(e, shot);
+            if((shot->flags & GLADIO_SHOT_DESPAWNING) == 0) {
+              rectangle shotbox = gladio_shot_rectangle(shot);
+              if(rectangle_intersect(&hitbox, &shotbox)) {
+                gladio_enemy_type_get(e)->collision_shots(e, shot);
 
-              if(gladio_enemy_dying(e)) {
-                gladio_score_add(state, gladio_enemy_type_get(e)->score);
+                if(gladio_enemy_dying(e)) {
+                  gladio_score_add(state, gladio_enemy_type_get(e)->score);
+                }
               }
             }
+            ++shot_ix;
           }
-          ++shot_ix;
-        }
 
-        rectangle collisionbox = gladio_enemy_collisionbox(e);
+          rectangle collisionbox = gladio_enemy_collisionbox(e);
 
-        if(gladio_enemy_active(e) && rectangle_intersect(&collisionbox, &box_player)) {
-          gladio_enemy_type_get(e)->collision_player(e, state);
+          if(gladio_enemy_active(e) && rectangle_intersect(&collisionbox, &box_player)) {
+            gladio_enemy_type_get(e)->collision_player(e, state);
+          }
         }
 
         if(e->cooldown == 0) {

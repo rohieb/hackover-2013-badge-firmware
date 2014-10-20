@@ -171,7 +171,7 @@ static void tick_shoot_finalboss_bottomgun(gladio_enemy *self, gladio_game_state
 
 static void collision_player_simple(gladio_enemy *self, gladio_game_state *state) {
   --self->hitpoints;
-  gladio_player_damage(&state->player, 1);
+  gladio_player_damage(state, 1);
 
   if(self->hitpoints == 0) {
     gladio_enemy_schedule_death(self);

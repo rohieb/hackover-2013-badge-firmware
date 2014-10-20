@@ -180,7 +180,7 @@ void gladio_shot_hostile_tick(struct gladio_game_state *state) {
 
       if(rectangle_intersect(&shotbox, &hitbox_player)) {
         gladio_shot_despawn(shot);
-        gladio_player_damage(&state->player, 1);
+        gladio_player_damage(state, 1);
       } else {
         shot->base.position = vec2d_add(shot->base.position, shot->inertia);
       }

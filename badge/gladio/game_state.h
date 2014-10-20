@@ -22,7 +22,7 @@ enum {
   GLADIO_SCHEDULE_SHOT_MASK    = 0xc,
 
   GLADIO_SCORE_MAX = 999999,
-  GLADIO_SCORE_PER_LIFE = 1000
+  GLADIO_SCORE_PER_LIFE = 1000,
 };
 
 enum {
@@ -42,10 +42,10 @@ typedef struct gladio_game_state_persistent {
 typedef struct gladio_game_state {
   gladio_game_state_persistent *persistent;
 
+  uint16_t             tick_major;
   uint8_t              tick_minor;
   uint8_t              flags;
 
-  uint16_t             tick_major;
   struct gladio_level *level;
 
   gladio_player        player;

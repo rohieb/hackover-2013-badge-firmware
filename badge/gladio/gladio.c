@@ -32,6 +32,10 @@ void gladio_render(gladio_game_state const *state) {
 }
 
 void gladio_handle_input(gladio_game_state *state) {
+  if(!gladio_player_moveable(&state->player)) {
+    return;
+  }
+
   uint8_t input_state = badge_event_current_input_state();
 
   if(input_state & BADGE_EVENT_KEY_UP   ) { state->player.base.position.y = fixed_point_max(FIXED_INT(GLADIO_STATUS_BAR_HEIGHT                    + 1), fixed_point_sub(state->player.base.position.y, speed_player_y)); }
@@ -82,6 +86,8 @@ void gladio_tick(gladio_game_state *state) {
   gladio_enemy_tick(state);
 
   if(state->tick_minor == 3) {
+    gladio_player_status_tick(state);
+
     state->tick_minor = 0;
 
     while(state->level->pos < state->level->len &&

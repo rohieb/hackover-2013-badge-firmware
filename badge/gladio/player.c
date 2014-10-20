@@ -1,16 +1,36 @@
 #include "player.h"
 
+#include "game_state.h"
 #include "status.h"
+#include "../common/explosion.h"
 #include "../ui/display.h"
 #include "../ui/sprite.h"
 
 static badge_sprite const gladio_player_sprite = { GLADIO_PLAYER_WIDTH, GLADIO_PLAYER_HEIGHT, (uint8_t const *) "\x29\xdf\xff\xaf\x5a\xb5\x6f\xdf\xb6\x6d\x51\xe0\xc0\x01\x01\x02\x04" };
 
 gladio_player gladio_player_new(void) {
-  return (gladio_player) { { { FIXED_INT(10), FIXED_INT(BADGE_DISPLAY_HEIGHT - GLADIO_STATUS_BAR_HEIGHT) }, }, GLADIO_PLAYER_MAX_HEALTH, 0, 0, 0 };
+  return (gladio_player) {
+      { { FIXED_INT(10), FIXED_INT(GLADIO_STATUS_BAR_HEIGHT + BADGE_DISPLAY_HEIGHT / 2) } },
+      GLADIO_PLAYER_MAX_HEALTH,
+      0, 0, 0,
+      GLADIO_PLAYER_INVULNERABILITY_DURATION,
+      GLADIO_PLAYER_INVULNERABLE
+    };
 }
 
 void gladio_player_render(badge_framebuffer *fb, gladio_player const *p) {
+  if(p->status == GLADIO_PLAYER_DYING) {
+    common_render_explosion(fb,
+                            fixed_point_cast_int(p->base.position.x),
+                            fixed_point_cast_int(p->base.position.y),
+                            EXPLOSION_TICKS / 3 - p->status_cooldown);
+    return;
+  }
+
+  if(p->status == GLADIO_PLAYER_INVULNERABLE && (p->status_cooldown & 1)) {
+    return;
+  }
+
   badge_framebuffer_blt(fb,
                         fixed_point_cast_int(p->base.position.x),
                         fixed_point_cast_int(p->base.position.y),
@@ -18,11 +38,14 @@ void gladio_player_render(badge_framebuffer *fb, gladio_player const *p) {
                         0);
 }
 
-void gladio_player_damage(gladio_player *p, uint8_t damage) {
-  if(p->health > damage) {
-    p->health -= damage;
-  } else {
-    p->health = 0;
+void gladio_player_damage(gladio_game_state *state, uint8_t damage) {
+  if(gladio_player_vulnerable(&state->player)) {
+    if(state->player.health > damage) {
+      state->player.health -= damage;
+    } else {
+      state->player.health = 0;
+      gladio_player_die(state);
+    }
   }
 }
 
@@ -31,5 +54,22 @@ void gladio_player_heal(gladio_player *p, uint8_t damage) {
     p->health += damage;
   } else {
     p->health = GLADIO_PLAYER_MAX_HEALTH;
+  }
+}
+
+void gladio_player_die(struct gladio_game_state *state) {
+  --state->persistent->lives;
+
+  state->player.status = GLADIO_PLAYER_DYING;
+  state->player.status_cooldown = EXPLOSION_TICKS / 3;
+}
+
+void gladio_player_status_tick(struct gladio_game_state *state) {
+  if(state->player.status_cooldown != 0) {
+    --state->player.status_cooldown;
+  } else if(state->player.status == GLADIO_PLAYER_INVULNERABLE) {
+    state->player.status = GLADIO_PLAYER_NORMAL;
+  } else if(state->player.status == GLADIO_PLAYER_DYING) {
+    state->player = gladio_player_new();
   }
 }
