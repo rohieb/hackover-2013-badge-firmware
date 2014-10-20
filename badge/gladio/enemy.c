@@ -131,7 +131,9 @@ void gladio_enemy_tick(gladio_game_state *state) {
 
           rectangle collisionbox = gladio_enemy_collisionbox(e);
 
-          if(gladio_enemy_active(e) && rectangle_intersect(&collisionbox, &box_player)) {
+          if(gladio_enemy_active(e) &&
+             rectangle_intersect(&collisionbox, &box_player) &&
+             state->tick_minor == 3) {
             gladio_enemy_type_get(e)->collision_player(e, state);
           }
         }
