@@ -6,6 +6,8 @@
 #include "../ui/display.h"
 #include "../ui/sprite.h"
 
+#include <stdio.h>
+
 static badge_sprite const gladio_player_sprite = { GLADIO_PLAYER_WIDTH, GLADIO_PLAYER_HEIGHT, (uint8_t const *) "\x29\xdf\xff\xaf\x5a\xb5\x6f\xdf\xb6\x6d\x51\xe0\xc0\x01\x01\x02\x04" };
 
 gladio_player gladio_player_new(void) {
@@ -65,11 +67,30 @@ void gladio_player_die(struct gladio_game_state *state) {
 }
 
 void gladio_player_status_tick(struct gladio_game_state *state) {
-  if(state->player.status_cooldown != 0) {
+  if(state->player.status == GLADIO_PLAYER_WINNING) {
+    if(state->player.status_cooldown > 32) {
+      fixed_point ticks = FIXED_INT(state->player.status_cooldown - 32);
+      fixed_point dx = fixed_point_div(                               state->player.base.position.x , ticks);
+      fixed_point dy = fixed_point_div(fixed_point_sub(FIXED_INT(25), state->player.base.position.y), ticks);
+
+      state->player.base.position.x = fixed_point_sub(state->player.base.position.x, dx);
+      state->player.base.position.y = fixed_point_add(state->player.base.position.y, dy);
+
+      --state->player.status_cooldown;
+    } else if(state->player.status_cooldown > 0) {
+      state->player.base.position.x = fixed_point_add(state->player.base.position.x, FIXED_INT(3));
+      --state->player.status_cooldown;
+    }
+  } else if(state->player.status_cooldown != 0) {
     --state->player.status_cooldown;
-  } else if(state->player.status == GLADIO_PLAYER_INVULNERABLE) {
-    state->player.status = GLADIO_PLAYER_NORMAL;
-  } else if(state->player.status == GLADIO_PLAYER_DYING) {
-    state->player = gladio_player_new();
+  } else {
+    switch(state->player.status) {
+    case GLADIO_PLAYER_INVULNERABLE:
+      state->player.status = GLADIO_PLAYER_NORMAL;
+      break;
+    case GLADIO_PLAYER_DYING:
+      state->player = gladio_player_new();
+      break;
+    }
   }
 }

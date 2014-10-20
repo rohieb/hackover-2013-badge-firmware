@@ -32,7 +32,7 @@ void gladio_enemy_spawn_at(struct gladio_game_state *state, uint8_t type, int8_t
 void gladio_enemy_spawn(struct gladio_game_state *state, uint8_t type, int8_t pos_y);
 void gladio_enemy_render(badge_framebuffer *fb, gladio_enemy const *enemy);
 
-void gladio_enemy_tick(struct gladio_game_state *state);
+uint8_t gladio_enemy_tick(struct gladio_game_state *state);
 
 void gladio_enemy_schedule_death(gladio_enemy *enemy);
 void gladio_enemy_despawn(gladio_enemy *enemy);

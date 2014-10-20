@@ -25,7 +25,8 @@ typedef struct gladio_player {
 enum {
   GLADIO_PLAYER_NORMAL,
   GLADIO_PLAYER_INVULNERABLE,
-  GLADIO_PLAYER_DYING
+  GLADIO_PLAYER_DYING,
+  GLADIO_PLAYER_WINNING
 };
 
 enum {
@@ -64,11 +65,28 @@ static inline rectangle gladio_player_hitbox(gladio_player const *p) {
                                  FIXED_INT(GLADIO_PLAYER_HEIGHT - 2)));
 }
 
-static inline uint8_t gladio_player_moveable  (gladio_player const *p) { return p->status != GLADIO_PLAYER_DYING; }
-static inline uint8_t gladio_player_vulnerable(gladio_player const *p) { return p->status == GLADIO_PLAYER_NORMAL; }
-static inline uint8_t gladio_player_tangible  (gladio_player const *p) { return p->status != GLADIO_PLAYER_DYING; }
+static inline uint8_t gladio_player_moveable  (gladio_player const *p) {
+  return p->status != GLADIO_PLAYER_DYING && p->status != GLADIO_PLAYER_WINNING;
+}
+
+static inline uint8_t gladio_player_vulnerable(gladio_player const *p) {
+  return p->status == GLADIO_PLAYER_NORMAL;
+}
+
+static inline uint8_t gladio_player_tangible  (gladio_player const *p) {
+  return p->status != GLADIO_PLAYER_DYING && p->status != GLADIO_PLAYER_WINNING;
+}
+
 static inline uint8_t gladio_player_dead      (gladio_player const *p) {
   return p->status == GLADIO_PLAYER_DYING && p->status_cooldown == 0;
+}
+
+static inline uint8_t gladio_player_playing   (gladio_player const *p) {
+  return p->status != GLADIO_PLAYER_WINNING;
+}
+
+static inline uint8_t gladio_player_won       (gladio_player const *p) {
+  return p->status == GLADIO_PLAYER_WINNING && p->status_cooldown == 0;
 }
 
 void gladio_player_status_tick(struct gladio_game_state *state);

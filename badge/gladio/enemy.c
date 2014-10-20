@@ -75,7 +75,8 @@ void gladio_enemy_render(badge_framebuffer *fb, gladio_enemy const *enemy) {
   }
 }
 
-void gladio_enemy_tick(gladio_game_state *state) {
+uint8_t gladio_enemy_tick(gladio_game_state *state) {
+  uint8_t r = 0;
   uint8_t player_shot_count;
   rectangle box_player = gladio_player_hitbox(&state->player);
 
@@ -89,6 +90,7 @@ void gladio_enemy_tick(gladio_game_state *state) {
     gladio_enemy *e = &state->active_enemies[i];
 
     if(gladio_enemy_active(e)) {
+      r = 1;
       rectangle hitbox = gladio_enemy_hitbox(e);
 
       if(gladio_object_off_playfield(hitbox)) {
@@ -148,4 +150,6 @@ void gladio_enemy_tick(gladio_game_state *state) {
       gladio_enemy_type_get(e)->tick_move(e, state);
     }
   }
+
+  return r;
 }

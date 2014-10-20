@@ -168,7 +168,8 @@ void gladio_shot_hostile_spawn(struct gladio_game_state *state, vec2d position, 
   }
 }
 
-void gladio_shot_hostile_tick(struct gladio_game_state *state) {
+uint8_t gladio_shot_hostile_tick(struct gladio_game_state *state) {
+  uint8_t r = 0;
   gladio_shot *shots = state->shots_hostile;
   rectangle hitbox_player = gladio_player_hitbox(&state->player);
 
@@ -176,6 +177,8 @@ void gladio_shot_hostile_tick(struct gladio_game_state *state) {
     gladio_shot *shot = &shots[i];
 
     if(gladio_shot_deadly(shot)) {
+      r = 1;
+
       rectangle shotbox = gladio_shot_rectangle(shot);
 
       if(rectangle_intersect(&shotbox, &hitbox_player)) {
@@ -188,6 +191,8 @@ void gladio_shot_hostile_tick(struct gladio_game_state *state) {
       gladio_shot_despawn(shot);
     }
   }
+
+  return r;
 }
 
 void gladio_shot_render(badge_framebuffer *fb, gladio_shot const *shot) {

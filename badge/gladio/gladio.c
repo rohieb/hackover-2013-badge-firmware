@@ -32,16 +32,14 @@ void gladio_render(gladio_game_state const *state) {
 }
 
 void gladio_handle_input(gladio_game_state *state) {
-  if(!gladio_player_moveable(&state->player)) {
-    return;
-  }
-
   uint8_t input_state = badge_event_current_input_state();
 
-  if(input_state & BADGE_EVENT_KEY_UP   ) { state->player.base.position.y = fixed_point_max(FIXED_INT(GLADIO_STATUS_BAR_HEIGHT                    + 1), fixed_point_sub(state->player.base.position.y, speed_player_y)); }
-  if(input_state & BADGE_EVENT_KEY_DOWN ) { state->player.base.position.y = fixed_point_min(FIXED_INT(BADGE_DISPLAY_HEIGHT - GLADIO_PLAYER_HEIGHT - 1), fixed_point_add(state->player.base.position.y, speed_player_y)); }
-  if(input_state & BADGE_EVENT_KEY_LEFT ) { state->player.base.position.x = fixed_point_max(FIXED_INT(                                              1), fixed_point_sub(state->player.base.position.x, speed_player_x)); }
-  if(input_state & BADGE_EVENT_KEY_RIGHT) { state->player.base.position.x = fixed_point_min(FIXED_INT(BADGE_DISPLAY_WIDTH  - GLADIO_PLAYER_WIDTH  - 1), fixed_point_add(state->player.base.position.x, speed_player_x)); }
+  if(gladio_player_moveable(&state->player)) {
+    if(input_state & BADGE_EVENT_KEY_UP   ) { state->player.base.position.y = fixed_point_max(FIXED_INT(GLADIO_STATUS_BAR_HEIGHT                    + 1), fixed_point_sub(state->player.base.position.y, speed_player_y)); }
+    if(input_state & BADGE_EVENT_KEY_DOWN ) { state->player.base.position.y = fixed_point_min(FIXED_INT(BADGE_DISPLAY_HEIGHT - GLADIO_PLAYER_HEIGHT - 1), fixed_point_add(state->player.base.position.y, speed_player_y)); }
+    if(input_state & BADGE_EVENT_KEY_LEFT ) { state->player.base.position.x = fixed_point_max(FIXED_INT(                                              1), fixed_point_sub(state->player.base.position.x, speed_player_x)); }
+    if(input_state & BADGE_EVENT_KEY_RIGHT) { state->player.base.position.x = fixed_point_min(FIXED_INT(BADGE_DISPLAY_WIDTH  - GLADIO_PLAYER_WIDTH  - 1), fixed_point_add(state->player.base.position.x, speed_player_x)); }
+  }
 
   if(state->tick_minor == 3
      && state->player.charge < GLADIO_PLAYER_MAX_CHARGE
@@ -54,15 +52,17 @@ void gladio_handle_input(gladio_game_state *state) {
     rectangle rp = gladio_player_rectangle(&state->player);
     uint8_t spawnmode = 0;
 
-    if((input_state & BADGE_EVENT_KEY_BTN_A) || (state->flags & GLADIO_SCHEDULE_SHOT_FRONT)) {
-      spawnmode |= GLADIO_SHOT_FRIENDLY_FRONT;
-      state->player.cooldown = GLADIO_PLAYER_COOLDOWN_PERIOD;
-    }
+    if(gladio_player_moveable(&state->player)) {
+      if((input_state & BADGE_EVENT_KEY_BTN_A) || (state->flags & GLADIO_SCHEDULE_SHOT_FRONT)) {
+        spawnmode |= GLADIO_SHOT_FRIENDLY_FRONT;
+        state->player.cooldown = GLADIO_PLAYER_COOLDOWN_PERIOD;
+      }
 
-    if(((input_state & BADGE_EVENT_KEY_BTN_B) || (state->flags & GLADIO_SCHEDULE_SHOT_SIDEGUN)) && state->player.charge >= GLADIO_PLAYER_CHARGE_UNIT) {
-      spawnmode |= GLADIO_SHOT_FRIENDLY_SIDEGUN;
-      state->player.cooldown = GLADIO_PLAYER_COOLDOWN_PERIOD;
-      state->player.charge -= GLADIO_PLAYER_CHARGE_UNIT;
+      if(((input_state & BADGE_EVENT_KEY_BTN_B) || (state->flags & GLADIO_SCHEDULE_SHOT_SIDEGUN)) && state->player.charge >= GLADIO_PLAYER_CHARGE_UNIT) {
+        spawnmode |= GLADIO_SHOT_FRIENDLY_SIDEGUN;
+        state->player.cooldown = GLADIO_PLAYER_COOLDOWN_PERIOD;
+        state->player.charge -= GLADIO_PLAYER_CHARGE_UNIT;
+      }
     }
 
     gladio_shot_friendly_spawn(state, spawnmode, vec2d_new(rectangle_right(&rp), rectangle_mid_y(&rp)));
@@ -81,9 +81,19 @@ void gladio_tick(gladio_game_state *state) {
   gladio_background_tick(&state->background, &state->rng);
 
   gladio_shot_friendly_move(state);
-  gladio_shot_hostile_tick(state);
 
-  gladio_enemy_tick(state);
+  uint8_t enemies_active = 0;
+
+  enemies_active |= gladio_shot_hostile_tick(state);
+  enemies_active |= gladio_enemy_tick(state);
+
+  if(!enemies_active &&
+     state->level->pos == state->level->len &&
+     state->player.status != GLADIO_PLAYER_WINNING)
+  {
+    state->player.status = GLADIO_PLAYER_WINNING;
+    state->player.status_cooldown = 48;
+  }
 
   if(state->tick_minor == 3) {
     gladio_player_status_tick(state);
