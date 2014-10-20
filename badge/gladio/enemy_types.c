@@ -247,6 +247,20 @@ static gladio_enemy_type const enemy_types[] = {
     collision_player_simple,
     collision_shots_instant_death
   }, {
+    { 12, 7, (uint8_t const *) "\xc9\xe4\xda\xc7\xf1\x89\x44\x36\x0e\x02\x01" },
+    { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(12), FIXED_INT_I(7) } },
+    { { FIXED_INT_I(1), FIXED_INT_I(1) }, { FIXED_INT_I(10), FIXED_INT_I(5) } },
+    10,
+    2,
+    255, 255,
+    FIXED_POINT_I(1, 0),
+    FIXED_POINT_I(0, 750),
+    -12,
+    tick_move_backstabber,
+    tick_shoot_not,
+    collision_player_simple,
+    collision_shots_instant_death
+  }, {
     { 11, 9, (uint8_t const *) "\x10\x20\xe0\xc0\xc1\xa6\xed\xff\xbe\x38\xa8\x18\x03" },
     { { FIXED_INT_I( 0), FIXED_INT_I(0) }, { FIXED_INT_I(11), FIXED_INT_I(9) } },
     { { FIXED_INT_I( 1), FIXED_INT_I(1) }, { FIXED_INT_I( 9), FIXED_INT_I(7) } },

@@ -1,3 +1,9 @@
+30 10 rocket_back
+30 20 rocket_back
+30 30 rocket_back
+30 40 rocket_back
+30 50 rocket_back
+
 #30 10 rocket
 #30 20 rocket
 #30 30 rocket
@@ -53,10 +59,10 @@
 #30 59 cannon_up
 #0 9  cannon_down
 #
-#30 30 tumbler
-#30 30 tumbler
-#30 30 tumbler
-#30 30 tumbler
+30 30 tumbler
+30 30 tumbler
+30 30 tumbler
+30 30 tumbler
 #
 #30 30 wfighter_down
 #30 30 wfighter_up

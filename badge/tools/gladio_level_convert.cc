@@ -18,6 +18,7 @@ struct enemy_type_parser {
       ("heart_full"          , GLADIO_ENEMY_ITEM_HEART_FULL       )
       ("heart_half"          , GLADIO_ENEMY_ITEM_HEART_HALF       )
       ("rocket"              , GLADIO_ENEMY_ROCKET                )
+      ("rocket_back"         , GLADIO_ENEMY_ROCKET_BACKWARDS     )
       ("kamikaze_sw"         , GLADIO_ENEMY_KAMIKAZE_SW           )
       ("kamikaze_nw"         , GLADIO_ENEMY_KAMIKAZE_NW           )
       ("fighter"             , GLADIO_ENEMY_FIGHTER               )
