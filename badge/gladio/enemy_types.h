@@ -33,8 +33,10 @@ struct gladio_hot;
 
 typedef struct gladio_enemy_type {
   badge_sprite sprite;
+
   rectangle    hitbox;
   rectangle    collisionbox;
+  vec2d        snout;
 
   uint32_t     score;
   uint8_t      hitpoints;

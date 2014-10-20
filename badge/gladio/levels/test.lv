@@ -4,73 +4,73 @@
 30 40 rocket_back
 30 50 rocket_back
 
-#30 10 rocket
-#30 20 rocket
-#30 30 rocket
-#30 40 rocket
-#30 50 rocket
-#30 60 rocket
-#
-#30  0 kamikaze_sw
-#30 65 kamikaze_nw
-#30  8 kamikaze_sw
-#30 57 kamikaze_nw
-#30 16 kamikaze_sw
-#30 49 kamikaze_nw
-#
-#30  0 kamikaze_sw
-#30 65 kamikaze_nw
-#30  8 kamikaze_sw
-#30 57 kamikaze_nw
-#30 16 kamikaze_sw
-#30 49 kamikaze_nw
-#
-#30 30 fighter
-#30 30 fighter
-#30 30 fighter
-#30 30 fighter
-#30 30 fighter
-#30 30 fighter
-#30 30 fighter
-#
-#30 30 heart_half
-#30 30 heart_full
-#
-#30 10 backstabber
-#30 50 backstabber
-#30 30 backstabber
-#30 10 backstabber
-#30 50 backstabber
-#30 30 backstabber
-#30 10 backstabber
-#
-#30 59 cannon_up
-#0 9  cannon_down
-#30 59 cannon_up
-#0 9  cannon_down
-#30 59 cannon_up
-#0 9  cannon_down
-#30 59 cannon_up
-#0 9  cannon_down
-#30 59 cannon_up
-#0 9  cannon_down
-#30 59 cannon_up
-#0 9  cannon_down
-#30 59 cannon_up
-#0 9  cannon_down
-#
-30 30 tumbler
-30 30 tumbler
-30 30 tumbler
-30 30 tumbler
-#
-#30 30 wfighter_down
-#30 30 wfighter_up
-#
-60 10 middleboss_topgun
-0 26 middleboss_body
-0 42 middleboss_bottomgun
+30 10 rocket
+30 20 rocket
+30 30 rocket
+30 40 rocket
+30 50 rocket
+30 60 rocket
 
-#60 7 finalboss_topgun
-#0 21 finalboss_body
-#0 32 finalboss_bottomgun
+30  0 kamikaze_sw
+30 65 kamikaze_nw
+30  8 kamikaze_sw
+30 57 kamikaze_nw
+30 16 kamikaze_sw
+30 49 kamikaze_nw
+
+30  0 kamikaze_sw
+30 65 kamikaze_nw
+30  8 kamikaze_sw
+30 57 kamikaze_nw
+30 16 kamikaze_sw
+30 49 kamikaze_nw
+
+30 30 fighter
+30 30 fighter
+30 30 fighter
+30 30 fighter
+30 30 fighter
+30 30 fighter
+30 30 fighter
+
+30 30 heart_half
+30 30 heart_full
+
+30 10 backstabber
+30 50 backstabber
+30 30 backstabber
+30 10 backstabber
+30 50 backstabber
+30 30 backstabber
+30 10 backstabber
+
+30 59 cannon_up
+0 9  cannon_down
+30 59 cannon_up
+0 9  cannon_down
+30 59 cannon_up
+0 9  cannon_down
+30 59 cannon_up
+0 9  cannon_down
+30 59 cannon_up
+0 9  cannon_down
+30 59 cannon_up
+0 9  cannon_down
+30 59 cannon_up
+0 9  cannon_down
+
+30 30 tumbler
+30 30 tumbler
+30 30 tumbler
+30 30 tumbler
+
+30 30 wfighter_down
+30 30 wfighter_up
+
+#60 10 middleboss_topgun
+#0 26 middleboss_body
+#0 42 middleboss_bottomgun
+
+60 7 finalboss_topgun
+0 21 finalboss_body
+0 32 finalboss_bottomgun
