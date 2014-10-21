@@ -198,15 +198,46 @@ static void tick_shoot_falcon_body(gladio_enemy *self, gladio_game_state *state)
 }
 
 static void tick_shoot_finalboss_topgun(gladio_enemy *self, gladio_game_state *state) {
-  vec2d pos = gladio_enemy_snout(self);
-  vec2d direction = vec2d_new(FIXED_POINT(0, -700), FIXED_POINT(0, 700));
-  gladio_shot_hostile_spawn(state, pos, direction);
+  if((self->move_counter & 0xff) < 96) {
+    return;
+  }
+
+  vec2d snout_upper = gladio_enemy_snout(self);
+  vec2d snout_lower = vec2d_add(snout_upper, vec2d_new(FIXED_INT(-4), FIXED_INT(4)));
+
+  vec2d direction = vec2d_new(FIXED_POINT(0, -894), FIXED_POINT(0, 447));
+
+  gladio_enemy_type const *type = gladio_enemy_type_get(self);
+
+  gladio_shot_hostile_spawn(state, snout_lower, vec2d_mul(direction, type->shot_speed));
+  tick_shoot_rockets(self, state);
+//  gladio_shot_hostile_spawn(state, snout_lower, vec2d_mul(vec2d_new(FIXED_INT(-1), FIXED_INT(0)), type->shot_speed));
 }
 
 static void tick_shoot_finalboss_bottomgun(gladio_enemy *self, gladio_game_state *state) {
-  vec2d pos = gladio_enemy_snout(self);
-  vec2d direction = vec2d_new(FIXED_POINT(0, -700), FIXED_POINT(0, -700));
-  gladio_shot_hostile_spawn(state, pos, direction);
+  if((self->move_counter & 0xff) < 96) {
+    return;
+  }
+
+  vec2d snout_lower = gladio_enemy_snout(self);
+  vec2d snout_upper = vec2d_add(snout_lower, vec2d_new(FIXED_INT(-4), FIXED_INT(-4)));
+
+  vec2d direction = vec2d_new(FIXED_POINT(0, -894), FIXED_POINT(0, -447));
+
+  gladio_enemy_type const *type = gladio_enemy_type_get(self);
+
+  gladio_shot_hostile_spawn(state, snout_upper, vec2d_mul(direction                             , type->shot_speed));
+  tick_shoot_rockets(self, state);
+
+//  gladio_shot_hostile_spawn(state, snout_lower, vec2d_mul(vec2d_new(FIXED_INT(-1), FIXED_INT(0)), type->shot_speed));
+}
+
+static void tick_shoot_finalboss_body(gladio_enemy *self, gladio_game_state *state) {
+  if((self->move_counter & 0xff) >= 96) {
+    return;
+  }
+
+  tick_shoot_targeted(self, state);
 }
 
 static void collision_player_simple(gladio_enemy *self, gladio_game_state *state) {
@@ -457,10 +488,10 @@ static gladio_enemy_type const enemy_types[] = {
     { 22, 25, (uint8_t const *) "\x80\x00\x00\x00\x01\x00\x00\x02\x00\x00\x0c\x00\x00\x38\x00\x00\xf0\x00\x00\xc1\x07\x00\x02\x7f\x00\x06\xce\x00\x0c\x0c\x01\x1c\x08\x06\x18\x10\x0f\x70\x20\xff\xc0\x43\xe3\x01\x8f\xd6\x3e\xb8\x8d\xf1\xe0\xf3\x81\x81\xcf\x81\x03\x3c\x80\x03\xe0\xf1\x03\x80\xf7\x03\x00\x7c" },
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(22), FIXED_INT_I(25) } },
     { { FIXED_INT_I(7), FIXED_INT_I(1) }, { FIXED_INT_I(12), FIXED_INT_I(18) } },
-    { FIXED_INT_I(3), FIXED_INT_I(4) },
+    { FIXED_INT_I(4), FIXED_INT_I(3) },
     500,
     32,
-    32, 32,
+    32, 96,
     FIXED_POINT_I(0, 200),
     FIXED_POINT_I(0, 750),
     BADGE_DISPLAY_WIDTH + 8,
@@ -471,17 +502,17 @@ static gladio_enemy_type const enemy_types[] = {
   }, {
     // finalboss_body
     { 25, 21, (uint8_t const *) "\x00\x04\x00\xc0\x01\x00\x6c\x00\xc0\x18\x00\xfe\x0f\xe0\xff\x03\x1e\xf0\xe0\x01\x3c\x9e\x3f\xcf\xf9\xcf\x9d\x83\xf3\x33\x60\x7e\xe6\xcc\xcf\x94\xf9\x99\x33\x3f\x03\xe6\xe7\xe0\xdc\xf9\xcf\x79\xfe\x3c\x1e\xc0\x83\x07\x3c\xe0\xff\x03\xf8\x3f\x00\xfc\x01\x00\x0e" },
-    { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(25), FIXED_INT_I(21) } },
-    { { FIXED_INT_I(3), FIXED_INT_I(3) }, { FIXED_INT_I(19), FIXED_INT_I(15) } },
+    { { FIXED_INT_I(10), FIXED_INT_I(0) }, { FIXED_INT_I(15), FIXED_INT_I(21) } },
+    { { FIXED_INT_I(13), FIXED_INT_I(3) }, { FIXED_INT_I(9), FIXED_INT_I(15) } },
     { FIXED_INT_I(0), FIXED_POINT_I(10, 500) },
     1000,
-    32,
-    32, 96,
+    96,
+    32, 32,
     FIXED_POINT_I(0, 200),
     FIXED_POINT_I(0, 750),
     BADGE_DISPLAY_WIDTH,
     tick_move_finalboss,
-    tick_shoot_rockets,
+    tick_shoot_finalboss_body,
     collision_player_simple,
     collision_shots_simple
   }, {
@@ -489,10 +520,10 @@ static gladio_enemy_type const enemy_types[] = {
     { 22, 24, (uint8_t const *) "\x00\x00\x01\x00\x00\x01\x00\x00\x01\x00\x80\x01\x00\xc0\x01\x00\xe0\x01\x00\xf8\x20\x00\x7e\x20\x80\x73\x60\x80\x61\x60\x80\x41\xe0\xc0\x47\xc0\xf8\x4f\xe0\xf8\x58\x78\xd8\x5a\x3c\xc7\xd8\x0e\x81\xcf\x07\x03\xe7\x03\x07\xf0\x00\x7e\x3c\x00\xfc\x1e\x00\xc0\x07" },
     { { FIXED_INT_I(0), FIXED_INT_I(0) }, { FIXED_INT_I(22), FIXED_INT_I(24) } },
     { { FIXED_INT_I(8), FIXED_INT_I(4) }, { FIXED_INT_I(12), FIXED_INT_I(17) } },
-    { FIXED_INT_I(3), FIXED_INT_I(20) },
+    { FIXED_INT_I(4), FIXED_INT_I(20) },
     500,
     32,
-    16, 32,
+    16, 96,
     FIXED_POINT_I(0, 200),
     FIXED_POINT_I(0, 750),
     BADGE_DISPLAY_WIDTH + 8,
