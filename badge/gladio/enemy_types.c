@@ -99,6 +99,27 @@ static void tick_move_finalboss(gladio_enemy *self, gladio_game_state *state) {
   }
 }
 
+static void tick_move_falcon(gladio_enemy *self, gladio_game_state *state) {
+  (void) state;
+
+  if(self->move_counter < 128) {
+    self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_POINT(0, 200));
+  } else {
+    uint16_t main_tick = (self->move_counter - 128) % 768;
+    self->move_counter = main_tick + 128;
+
+    if(main_tick < 128) {
+      self->base.position.x = fixed_point_sub(self->base.position.x, FIXED_POINT(0, 500));
+      self->base.position.y = fixed_point_sub(self->base.position.y, FIXED_POINT(0, 100));
+    } else if(main_tick < 384) {
+      self->base.position.y = fixed_point_add(self->base.position.y, FIXED_POINT(0, 100));
+    } else if(main_tick < 512) {
+      self->base.position.x = fixed_point_add(self->base.position.x, FIXED_POINT(0, 500));
+      self->base.position.y = fixed_point_sub(self->base.position.y, FIXED_POINT(0, 100));
+    }
+  }
+}
+
 static void tick_shoot_not(gladio_enemy *self, gladio_game_state *state) {
   (void) self;
   (void) state;
@@ -153,6 +174,26 @@ static void tick_shoot_targeted(gladio_enemy *self, gladio_game_state *state) {
 static void tick_shoot_targeted_with_pause(gladio_enemy *self, gladio_game_state *state) {
   if((self->move_counter & 0xff) >= 96) {
     tick_shoot_targeted(self, state);
+  }
+}
+
+static void tick_shoot_falcon_body(gladio_enemy *self, gladio_game_state *state) {
+  if(self->move_counter < 128) {
+    return;
+  } else {
+    uint16_t main_tick = (self->move_counter - 128) % 768;
+
+    if(main_tick < 128 || main_tick >= 384) {
+      tick_shoot_targeted(self, state);
+    } else {
+      rectangle hitbox = gladio_enemy_hitbox(self);
+      vec2d snout_back = vec2d_new(rectangle_right(&hitbox), rectangle_mid_y(&hitbox));
+      fixed_point speed = gladio_enemy_type_get(self)->shot_speed;
+
+      gladio_shot_hostile_spawn(state, snout_back, vec2d_mul(vec2d_new(FIXED_POINT(0, 707), FIXED_POINT(0, -707)), speed));
+      gladio_shot_hostile_spawn(state, snout_back, vec2d_mul(vec2d_new(FIXED_INT  (1)     , FIXED_INT  (0      )), speed));
+      gladio_shot_hostile_spawn(state, snout_back, vec2d_mul(vec2d_new(FIXED_POINT(0, 707), FIXED_POINT(0,  707)), speed));
+    }
   }
 }
 
@@ -507,6 +548,28 @@ static gladio_enemy_type const enemy_types[] = {
     tick_shoot_targeted_with_pause,
     collision_player_simple,
     collision_shots_simple
+  }, {
+    // falcon_body
+    { 26, 15, (uint8_t const *) "\x80\x00\xe0\x00\xd8\x20\xc6\x18\x49\x8c\x2e\x6e\xb5\x9f\xf2\x7e\x3f\x1c\x07\x56\x03\x7d\x81\xf7\xe0\xff\xf0\x7f\xf8\x3f\xfc\x1f\xfe\x0f\xff\x87\xff\xc3\xff\xa1\xa4\xc0\x18\xc0\x06\xc0\x01\x40\x00" },
+    { { FIXED_INT_I(3), FIXED_INT_I(2) }, { FIXED_INT_I(21), FIXED_INT_I(11) } },
+    { { FIXED_INT_I(4), FIXED_INT_I(3) }, { FIXED_INT_I(20), FIXED_INT_I( 9) } },
+    { FIXED_INT_I(0), FIXED_POINT_I(7, 500) },
+    1000,
+    32,
+    32, 32,
+    FIXED_POINT_I(0, 200),
+    FIXED_POINT_I(0, 750),
+    BADGE_DISPLAY_WIDTH,
+    tick_move_falcon,
+    tick_shoot_falcon_body,
+    collision_player_simple,
+    collision_shots_simple
+/*
+  }, {
+    { 15, 13, (uint8_t const *) "\x78\x80\x07\x58\x80\x0d\xb0\x03\xed\xb0\xfb\xe7\xff\xfc\x1f\xff\xe3\x4c\x38\x0c\xce\x81\x1f\xe0\x01" },
+  }, {
+    { 15, 12, (uint8_t const *) "\xe0\x01\x3c\x80\x06\xd8\xc0\x1d\x6e\x7f\xf7\x3f\xff\xf3\x1f\xcc\x11\x0e\x73\xf0\x03\x1e\x00" },
+*/
   }
 };
 

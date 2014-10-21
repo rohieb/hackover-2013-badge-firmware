@@ -34,6 +34,9 @@ struct enemy_type_parser {
       ("middleboss_topgun"   , GLADIO_ENEMY_MIDDLE_BOSS_TOP_GUN   )
       ("middleboss_body"     , GLADIO_ENEMY_MIDDLE_BOSS_BODY      )
       ("middleboss_bottomgun", GLADIO_ENEMY_MIDDLE_BOSS_BOTTOM_GUN)
+      ("falcon_body"         , GLADIO_ENEMY_FALCON_BODY           )
+      ("falcon_topwing"      , GLADIO_ENEMY_FALCON_TOP_WING       )
+      ("falcon_bottomwing"   , GLADIO_ENEMY_FALCON_BOTTOM_WING    )
       ;
   }
 
