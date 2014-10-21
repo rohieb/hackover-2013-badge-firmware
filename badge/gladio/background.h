@@ -19,8 +19,10 @@ typedef struct gladio_background {
   gladio_background_star stars[GLADIO_BACKGROUND_STARS];
 } gladio_background;
 
-gladio_background gladio_background_new   (                       badge_rng *rng);
-void              gladio_background_tick  (gladio_background *bg, badge_rng *rng);
+struct gladio_game_state;
+
+gladio_background gladio_background_new   (badge_rng *rng);
+void              gladio_background_tick  (struct gladio_game_state *state);
 void              gladio_background_render(badge_framebuffer *fb, gladio_background const *bg);
 
 #endif

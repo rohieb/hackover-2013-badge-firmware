@@ -1,4 +1,5 @@
 #include "background.h"
+#include "game_state.h"
 #include "status.h"
 
 static gladio_background_star gladio_background_star_new(badge_rng *rng, uint8_t i) {
@@ -26,7 +27,10 @@ gladio_background gladio_background_new(badge_rng *rng) {
   return bg;
 }
 
-void gladio_background_tick(gladio_background *bg, badge_rng *rng) {
+void gladio_background_tick(gladio_game_state *state) {
+  gladio_background *bg  = &state->persistent->background;
+  badge_rng         *rng = &state->persistent->rng;
+
   for(uint8_t i = 0; i < GLADIO_BACKGROUND_STARS; ++i) {
     bg->stars[i].x = fixed_point_sub(bg->stars[i].x, bg->stars[i].dx);
 

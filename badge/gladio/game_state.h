@@ -34,9 +34,12 @@ enum {
 struct gladio_level;
 
 typedef struct gladio_game_state_persistent {
-  uint32_t score;
-  uint32_t next_life;
-  uint8_t lives;
+  badge_rng         rng;
+  gladio_background background;
+
+  uint32_t          score;
+  uint32_t          next_life;
+  uint8_t           lives;
 } gladio_game_state_persistent;
 
 typedef struct gladio_game_state {
@@ -54,9 +57,6 @@ typedef struct gladio_game_state {
   // active at a time for this, possibly consisting of multiple parts that need
   // common data for special actions.
   uint32_t             boss_data;
-
-  badge_rng            rng;
-  gladio_background    background;
 
   gladio_shot          shots_hostile [GLADIO_MAX_SHOTS_HOSTILE ];
   gladio_shot          shots_friendly[GLADIO_MAX_SHOTS_FRIENDLY];

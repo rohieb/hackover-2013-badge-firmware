@@ -60,7 +60,9 @@ void gladio_player_heal(gladio_player *p, uint8_t damage) {
 }
 
 void gladio_player_die(struct gladio_game_state *state) {
-  --state->persistent->lives;
+  if(state->persistent->lives > 0) {
+    --state->persistent->lives;
+  }
 
   state->player.status = GLADIO_PLAYER_DYING;
   state->player.status_cooldown = EXPLOSION_TICKS / 3;
@@ -89,7 +91,11 @@ void gladio_player_status_tick(struct gladio_game_state *state) {
       state->player.status = GLADIO_PLAYER_NORMAL;
       break;
     case GLADIO_PLAYER_DYING:
-      state->player = gladio_player_new();
+      if(state->persistent->lives > 0) {
+        state->player = gladio_player_new();
+      } else {
+        state->player.status = GLADIO_PLAYER_LOST;
+      }
       break;
     }
   }

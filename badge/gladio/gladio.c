@@ -5,6 +5,7 @@
 
 #include "../ui/display.h"
 #include "../ui/event.h"
+#include "../ui/font.h"
 
 static fixed_point const speed_player_y = FIXED_POINT_I(1, 500);
 static fixed_point const speed_player_x = FIXED_POINT_I(1, 500);
@@ -12,7 +13,7 @@ static fixed_point const speed_player_x = FIXED_POINT_I(1, 500);
 void gladio_render(gladio_game_state const *state) {
   badge_framebuffer fb = { { { 0 } } };
 
-  gladio_background_render(&fb, &state->background);
+  gladio_background_render(&fb, &state->persistent->background);
 
   for(uint8_t i = 0; i < GLADIO_MAX_ENEMIES; ++i) {
     gladio_enemy const *e = &state->active_enemies[i];
@@ -78,7 +79,7 @@ void gladio_tick(gladio_game_state *state) {
   }
 
   gladio_handle_input(state);
-  gladio_background_tick(&state->background, &state->rng);
+  gladio_background_tick(state);
 
   gladio_shot_friendly_move(state);
 
@@ -113,6 +114,38 @@ void gladio_tick(gladio_game_state *state) {
   }
 }
 
+void gladio_game_over(gladio_game_state *state) {
+  uint16_t i = 750;
+
+  do {
+    badge_event_t ev;
+
+    ev = badge_event_wait();
+
+    switch(badge_event_type(ev)) {
+    case BADGE_EVENT_USER_INPUT:
+      if(i < 700 && badge_event_new_buttons(ev)) {
+        i = 0;
+      }
+      break;
+    case BADGE_EVENT_GAME_TICK:
+      {
+        badge_framebuffer fb = { { { 0 } } };
+
+        gladio_background_tick(state);
+
+        gladio_background_render(&fb, &state->persistent->background);
+        gladio_status_render(&fb, state);
+
+        badge_framebuffer_render_text(&fb, 16, 31, "GAME OVER");
+
+        badge_framebuffer_flush(&fb);
+        --i;
+      }
+    }
+  } while(i != 0);
+}
+
 uint8_t gladio_play_level(char const *fname, gladio_game_state_persistent *persistent_state) {
   // Nur zum Testen. Dateifoo kommt später.
   gladio_level lv;
@@ -140,10 +173,18 @@ uint8_t gladio_play_level(char const *fname, gladio_game_state_persistent *persi
     }
   } while(state.player.status != GLADIO_PLAYER_LOST && !gladio_player_won(&state.player));
 
-  return 0;
+  if(GLADIO_PLAYER_LOST) {
+    gladio_game_over(&state);
+  }
+
+  return state.player.status;
 }
 
 void gladio_play(void) {
   gladio_game_state_persistent persistent_state = gladio_game_state_persistent_new();
-  gladio_play_level("../badge/gladio/levels/test.lvl", &persistent_state);
+  uint8_t status;
+
+  do {
+    status = gladio_play_level("../badge/gladio/levels/test.lvl", &persistent_state);
+  } while(status != GLADIO_PLAYER_LOST);
 }

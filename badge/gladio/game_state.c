@@ -5,17 +5,12 @@
 #include <string.h>
 
 gladio_game_state gladio_game_state_new(gladio_game_state_persistent *persistent) {
-  badge_rng rng = badge_rng_init(12345);
-  gladio_background bg = gladio_background_new(&rng);
-
   gladio_game_state state;
 
   memset(&state, 0, sizeof(state));
 
   state.player     = gladio_player_new();
   state.flags      = GLADIO_PLAYING;
-  state.rng        = rng;
-  state.background = bg;
 
   state.persistent = persistent;
 
@@ -25,9 +20,14 @@ gladio_game_state gladio_game_state_new(gladio_game_state_persistent *persistent
 gladio_game_state_persistent gladio_game_state_persistent_new(void) {
   gladio_game_state_persistent persistent_state;
 
-  persistent_state.score     = 0;
-  persistent_state.next_life = GLADIO_SCORE_PER_LIFE;
-  persistent_state.lives     = 3;
+  badge_rng         rng = badge_rng_init(12345);
+  gladio_background bg  = gladio_background_new(&rng);
+
+  persistent_state.rng        = rng;
+  persistent_state.background = bg;
+  persistent_state.score      = 0;
+  persistent_state.next_life  = GLADIO_SCORE_PER_LIFE;
+  persistent_state.lives      = 3;
 
   return persistent_state;
 }
