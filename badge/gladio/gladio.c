@@ -173,7 +173,7 @@ uint8_t gladio_play_level(char const *fname, gladio_game_state_persistent *persi
     }
   } while(state.player.status != GLADIO_PLAYER_LOST && !gladio_player_won(&state.player));
 
-  if(GLADIO_PLAYER_LOST) {
+  if(state.player.status == GLADIO_PLAYER_LOST) {
     gladio_game_over(&state);
   }
 
