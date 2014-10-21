@@ -555,7 +555,7 @@ static gladio_enemy_type const enemy_types[] = {
     { { FIXED_INT_I(4), FIXED_INT_I(3) }, { FIXED_INT_I(20), FIXED_INT_I( 9) } },
     { FIXED_INT_I(0), FIXED_POINT_I(7, 500) },
     1000,
-    32,
+    96,
     32, 32,
     FIXED_POINT_I(0, 200),
     FIXED_POINT_I(0, 750),
@@ -581,6 +581,7 @@ static gladio_enemy_type const enemy_types[] = {
     collision_player_simple,
     collision_shots_simple
   }, {
+    // falcon_bottomwing
     { 15, 12, (uint8_t const *) "\xe0\x01\x3c\x80\x06\xd8\xc0\x1d\x6e\x7f\xf7\x3f\xff\xf3\x1f\xcc\x11\x0e\x73\xf0\x03\x1e\x00" },
     { { FIXED_INT_I(4), FIXED_INT_I(0) }, { FIXED_INT_I(9), FIXED_INT_I(13) } },
     { { FIXED_INT_I(6), FIXED_INT_I(0) }, { FIXED_INT_I(7), FIXED_INT_I(10) } },
