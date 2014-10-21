@@ -564,9 +564,23 @@ static gladio_enemy_type const enemy_types[] = {
     tick_shoot_falcon_body,
     collision_player_simple,
     collision_shots_simple
-/*
   }, {
+    // falcon_topwing
     { 15, 13, (uint8_t const *) "\x78\x80\x07\x58\x80\x0d\xb0\x03\xed\xb0\xfb\xe7\xff\xfc\x1f\xff\xe3\x4c\x38\x0c\xce\x81\x1f\xe0\x01" },
+    { { FIXED_INT_I(4), FIXED_INT_I(0) }, { FIXED_INT_I(9), FIXED_INT_I(13) } },
+    { { FIXED_INT_I(6), FIXED_INT_I(2) }, { FIXED_INT_I(7), FIXED_INT_I(10) } },
+    { FIXED_INT_I(0), FIXED_POINT_I(4, 500) },
+    500,
+    32,
+    32, 96,
+    FIXED_POINT_I(0, 200),
+    FIXED_POINT_I(0, 750),
+    BADGE_DISPLAY_WIDTH + 10,
+    tick_move_falcon,
+    tick_shoot_rockets,
+    collision_player_simple,
+    collision_shots_simple
+/*
   }, {
     { 15, 12, (uint8_t const *) "\xe0\x01\x3c\x80\x06\xd8\xc0\x1d\x6e\x7f\xf7\x3f\xff\xf3\x1f\xcc\x11\x0e\x73\xf0\x03\x1e\x00" },
 */
