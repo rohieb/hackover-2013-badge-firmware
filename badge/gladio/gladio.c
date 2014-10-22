@@ -216,13 +216,13 @@ uint8_t gladio_get_next_level_from_fd(char *dest_fname, gladio_level_number *las
   for(uint8_t i = 1; i < last_level->world; ++i) {
     do {
       if(!f_gets(dest_fname, 12, fd)) { return GLADIO_ERROR; }
-    } while(dest_fname[0] != '\0');
+    } while(dest_fname[0] != '\n');
   }
 
-  for(uint8_t i = 0; i <= lvnum->level; ++i) {
+  for(uint8_t i = 0; i <= last_level->level; ++i) {
     if(!f_gets(dest_fname, 12, fd)) { return GLADIO_ERROR; }
 
-    if(dest_fname[0] == '\0') {
+    if(dest_fname[0] == '\n') {
       ++last_level->world;
       last_level->level = 0;
 
@@ -257,7 +257,7 @@ void gladio_play(void) {
   gladio_level_number lvnum = { 1, 0 };
   char fname[12];
 
-  while(status != GLADIO_PLAYER_LOST && gladio_get_next_level(fname, &lvnum)) {
+  while(status != GLADIO_PLAYER_LOST && 0 == gladio_get_next_level(fname, &lvnum)) {
     status = gladio_play_level(fname, &persistent_state, &lvnum);
   }
 }
