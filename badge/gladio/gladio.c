@@ -185,6 +185,6 @@ void gladio_play(void) {
   uint8_t status;
 
   do {
-    status = gladio_play_level("../badge/gladio/levels/test.lvl", &persistent_state);
+    status = gladio_play_level("test.lvl", &persistent_state);
   } while(status != GLADIO_PLAYER_LOST);
 }

@@ -38,11 +38,20 @@ uint8_t badge_input_raw(void) {
   if (gpioGetValue(RB_HB1 ) == 0) { result |= BADGE_EVENT_KEY_BTN_B ; }
 #else
   if (gpioGetValue(HOB_PORT(HOB_BTN_UP    ), HOB_PIN(HOB_BTN_UP    )) == 0) { result |= BADGE_EVENT_KEY_UP    ; }
+
+  // Fuckup 2014: Runter ist ISP-Enable
+
+  HOB_SET_PIN_FUNC(HOB_BTN_DOWN, GPIO);
+  gpioSetDir(HOB_PORT(HOB_BTN_DOWN), HOB_PIN(HOB_BTN_DOWN), gpioDirection_Input);
+  gpioSetPullup(&HOB_IOCON(HOB_BTN_DOWN), gpioPullupMode_PullUp);
   if (gpioGetValue(HOB_PORT(HOB_BTN_DOWN  ), HOB_PIN(HOB_BTN_DOWN  )) == 0) { result |= BADGE_EVENT_KEY_DOWN  ; }
+  HOB_SET_PIN_FUNC(HOB_LCD_BACKLIGHT, CLKOUT);
+
   if (gpioGetValue(HOB_PORT(HOB_BTN_LEFT  ), HOB_PIN(HOB_BTN_LEFT  )) == 0) { result |= BADGE_EVENT_KEY_LEFT  ; }
   if (gpioGetValue(HOB_PORT(HOB_BTN_RIGHT ), HOB_PIN(HOB_BTN_RIGHT )) == 0) { result |= BADGE_EVENT_KEY_RIGHT ; }
   if (gpioGetValue(HOB_PORT(HOB_BTN_A     ), HOB_PIN(HOB_BTN_A     )) == 0) { result |= BADGE_EVENT_KEY_BTN_A ; }
   if (gpioGetValue(HOB_PORT(HOB_BTN_B     ), HOB_PIN(HOB_BTN_B     )) == 0) { result |= BADGE_EVENT_KEY_BTN_B ; }
+
 #endif
 
   return result;

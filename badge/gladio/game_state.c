@@ -1,7 +1,6 @@
 #include "game_state.h"
 #include "gladio.h"
 
-#include <assert.h>
 #include <string.h>
 
 gladio_game_state gladio_game_state_new(gladio_game_state_persistent *persistent) {
@@ -33,8 +32,6 @@ gladio_game_state_persistent gladio_game_state_persistent_new(void) {
 }
 
 void gladio_score_add(gladio_game_state *state, uint32_t score) {
-  assert(state->persistent->score <= GLADIO_SCORE_MAX);
-
   if(score > GLADIO_SCORE_MAX - state->persistent->score) {
     state->persistent->score = GLADIO_SCORE_MAX;
   } else {

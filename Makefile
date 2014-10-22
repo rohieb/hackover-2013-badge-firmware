@@ -37,6 +37,7 @@ SRCS = \
   badge/backlight.c \
   badge/init.c \
   badge/main.c \
+  badge/common/explosion.c \
   badge/jumpnrun/collision.c \
   badge/jumpnrun/enemies.c \
   badge/jumpnrun/game_state.c \
@@ -55,7 +56,21 @@ SRCS = \
   badge/ui/font.c \
   badge/ui/menu.c \
   badge/ui/sprite.c \
-  badge/ui/vanity.c
+  badge/ui/vanity.c \
+  badge/util/random.c \
+  badge/gladio/background.c \
+  badge/gladio/enemy.c \
+  badge/gladio/enemy_types.c \
+  badge/gladio/game_state.c \
+  badge/gladio/gladio.c \
+  badge/gladio/level.c \
+  badge/gladio/object.c \
+  badge/gladio/player.c \
+  badge/gladio/shot.c \
+  badge/gladio/status.c \
+  badge/2048/2048.c \
+  badge/2048/game.c \
+  badge/2048/render.c
 
 SRCS += \
   dataflash/iobase.c \
@@ -321,8 +336,8 @@ ifeq (TRUE,$(DEBUGBUILD))
   CFLAGS  = -c -g -O0 $(INCLUDE_PATHS) -Wall -mthumb -ffunction-sections -fdata-sections -fmessage-length=0 -mcpu=$(CPU_TYPE) -DTARGET=$(TARGET) -fno-builtin $(OPTDEFINES) -std=c99
   ASFLAGS = -c -g -O0 $(INCLUDE_PATHS) -Wall -mthumb -ffunction-sections -fdata-sections -fmessage-length=0 -mcpu=$(CPU_TYPE) -D__ASSEMBLY__ -x assembler-with-cpp
 else
-  CFLAGS  = -c -g -Os $(INCLUDE_PATHS) -Wall -mthumb -ffunction-sections -fdata-sections -fmessage-length=0 -mcpu=$(CPU_TYPE) -DTARGET=$(TARGET) -fno-builtin $(OPTDEFINES) -std=c99
-  ASFLAGS = -c -g -Os $(INCLUDE_PATHS) -Wall -mthumb -ffunction-sections -fdata-sections -fmessage-length=0 -mcpu=$(CPU_TYPE) -D__ASSEMBLY__ -x assembler-with-cpp
+  CFLAGS  = -c -Os $(INCLUDE_PATHS) -Wall -mthumb -ffunction-sections -fdata-sections -fmessage-length=0 -mcpu=$(CPU_TYPE) -DTARGET=$(TARGET) -fno-builtin $(OPTDEFINES) -std=c99
+  ASFLAGS = -c -Os $(INCLUDE_PATHS) -Wall -mthumb -ffunction-sections -fdata-sections -fmessage-length=0 -mcpu=$(CPU_TYPE) -D__ASSEMBLY__ -x assembler-with-cpp
 endif
 
 LDFLAGS = -nostartfiles -mthumb -mcpu=$(CPU_TYPE) -Wl,--gc-sections

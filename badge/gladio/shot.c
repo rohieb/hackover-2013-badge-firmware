@@ -2,7 +2,6 @@
 
 #include "game_state.h"
 
-#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 

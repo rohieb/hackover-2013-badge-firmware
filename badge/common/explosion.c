@@ -2,8 +2,6 @@
 
 #include "../ui/sprite.h"
 
-#include <assert.h>
-
 static badge_sprite const anim_explosion[EXPLOSION_FRAMES] = {
   { EXPLOSION_WIDTH, EXPLOSION_HEIGHT, (uint8_t const *) "\x00\x28\xa0\x00" },
   { EXPLOSION_WIDTH, EXPLOSION_HEIGHT, (uint8_t const *) "\x51\x29\xa0\x54\x04" },
@@ -15,8 +13,6 @@ void common_render_explosion(badge_framebuffer *fb,
                              int8_t x,
                              int8_t y,
                              uint8_t tick) {
-  assert(tick < EXPLOSION_TICKS_PER_FRAME * EXPLOSION_FRAMES);
-
   badge_sprite const *sprite = &anim_explosion[tick / EXPLOSION_TICKS_PER_FRAME];
 
   badge_framebuffer_blt(fb,
