@@ -146,7 +146,34 @@ void gladio_game_over(gladio_game_state *state) {
   } while(i != 0);
 }
 
-uint8_t gladio_play_level(char const *fname, gladio_game_state_persistent *persistent_state) {
+static void gladio_level_intro(gladio_game_state *state, gladio_level_number const *lvnum) {
+  char msg[4] = " - ";
+  msg[0] = '0' + lvnum->world;
+  msg[2] = '0' + lvnum->level;
+  uint8_t i = 75;
+
+  do {
+    badge_event_t ev = badge_event_wait();
+
+    if(badge_event_type(ev) == BADGE_EVENT_GAME_TICK) {
+      badge_framebuffer fb = { { { 0 } } };
+
+      gladio_background_tick(state);
+
+      gladio_background_render(&fb, &state->persistent->background);
+      gladio_status_render(&fb, state);
+
+      badge_framebuffer_render_text(&fb, 33, 28, "Stage");
+      badge_framebuffer_render_text(&fb, 36, 37, msg);
+
+      badge_framebuffer_flush(&fb);
+
+      --i;
+    }
+  } while(i != 0);
+}
+
+uint8_t gladio_play_level(char const *fname, gladio_game_state_persistent *persistent_state, gladio_level_number const *lvnum) {
   // Nur zum Testen. Dateifoo kommt später.
   gladio_level lv;
 
@@ -155,6 +182,8 @@ uint8_t gladio_play_level(char const *fname, gladio_game_state_persistent *persi
   gladio_game_state state = gladio_game_state_new(persistent_state);
   state.level = &lv;
   state.tick_major = 0;
+
+  gladio_level_intro(&state, lvnum);
 
   do {
     badge_event_t ev = badge_event_wait();
@@ -180,11 +209,57 @@ uint8_t gladio_play_level(char const *fname, gladio_game_state_persistent *persi
   return state.player.status;
 }
 
+#ifdef __thumb__
+
+uint8_t gladio_get_next_level_from_fd(char *dest_fname, gladio_level_number *last_level, FIL *fd) {
+  // skip finished worlds.
+  for(uint8_t i = 1; i < last_level->world; ++i) {
+    do {
+      if(!f_gets(dest_fname, 12, fd)) { return GLADIO_ERROR; }
+    } while(dest_fname[0] != '\0');
+  }
+
+  for(uint8_t i = 0; i <= lvnum->level; ++i) {
+    if(!f_gets(dest_fname, 12, fd)) { return GLADIO_ERROR; }
+
+    if(dest_fname[0] == '\0') {
+      ++last_level->world;
+      last_level->level = 0;
+
+      if(!f_gets(dest_fname, 12, fd)) { return GLADIO_ERROR; }
+      break;
+    }
+  }
+
+  ++last_level->level;
+  return GLADIO_SUCCESS;
+}
+
+uint8_t gladio_get_next_level(char *dest_fname, gladio_level_number *last_level) {
+  FIL fd;
+
+  if(FR_OK != f_chdir(GLADIO_PATH) ||
+     FR_OK != f_open(&fd, "gld_lvls.lst", FA_OPEN_EXISTING | FA_READ)) {
+    return GLADIO_ERROR;
+  }
+
+  uint8_t err = gladio_get_next_level_from_fd(dest_fname, last_level, &fd);
+
+  f_close(&fd);
+
+  return err;
+}
+
 void gladio_play(void) {
   gladio_game_state_persistent persistent_state = gladio_game_state_persistent_new();
-  uint8_t status;
+  uint8_t status = 0;
 
-  do {
-    status = gladio_play_level("test.lvl", &persistent_state);
-  } while(status != GLADIO_PLAYER_LOST);
+  gladio_level_number lvnum = { 1, 0 };
+  char fname[12];
+
+  while(status != GLADIO_PLAYER_LOST && gladio_get_next_level(fname, &lvnum)) {
+    status = gladio_play_level(fname, &persistent_state, &lvnum);
+  }
 }
+
+#endif

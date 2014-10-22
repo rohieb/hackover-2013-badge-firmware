@@ -73,7 +73,9 @@ void gladio_loop(void) {
     char lvname[256];
     sprintf(lvname, GLD_PATH_PREFIX "%s.lvl", menu[choice]);
 
-    gladio_play_level(lvname, &persistent_state);
+    gladio_level_number lvnum = { 1, 1 };
+
+    gladio_play_level(lvname, &persistent_state, &lvnum);
   }
 }
 

@@ -36,7 +36,7 @@ void gladio_background_tick(gladio_game_state *state) {
 
     if(fixed_point_lt(bg->stars[i].x, FIXED_INT(0))) {
       bg->stars[i] = gladio_background_star_new(rng, i);
-      bg->stars[i].x = FIXED_INT(BADGE_DISPLAY_WIDTH);
+      bg->stars[i].x = FIXED_INT(BADGE_DISPLAY_WIDTH - 1);
     }
   }
 }
