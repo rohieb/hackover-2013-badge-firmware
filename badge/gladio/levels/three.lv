@@ -63,8 +63,8 @@
 40 55 wfighter_up
 0 10 backstabber
 
-30 30 rocket
-20 20 rocket
-0 40 rocket
-20 10 rocket
+30 20 rocket
+10 10 rocket
+0 30 rocket
+10 10 rocket
 0 50 rocket
