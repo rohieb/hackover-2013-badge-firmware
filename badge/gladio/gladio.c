@@ -203,6 +203,14 @@ void gladio_play(void) {
   while(status != GLADIO_PLAYER_LOST && 0 == gladio_get_next_level(fname, &lvnum)) {
     status = gladio_play_level(fname, &persistent_state, &lvnum);
   }
+
+  gladio_game_state state = gladio_game_state_new(persistent_state);
+
+  if(status != GLADIO_PLAYER_LOST) {
+    gladio_screen_awesome(&state);
+  }
+
+  gladio_screen_scores(&state);
 }
 
 #endif
