@@ -150,7 +150,7 @@ void gladio_screen_scores(gladio_game_state *state) {
         gladio_background_render(&fb, &state->persistent->background);
         gladio_status_render(&fb, state);
 
-        badge_framebuffer_render_text(&fb, 18, 10, "Your Score");
+        badge_framebuffer_render_text(&fb, 48, 10, "Score");
         gladio_render_score(&fb, state->persistent->score, 20);
 
         badge_framebuffer_render_text(&fb, 18, 30, "Highscores");

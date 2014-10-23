@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
-#include "../../core/systick/systick.h"
+#include <core/systick/systick.h>
+#include "../util/random.h"
 
 #include "game.h"
 #include "render.h"
@@ -210,15 +211,15 @@ void move(uint8_t grid[GRID_SIZE][GRID_SIZE], uint8_t direction, game_2048_state
     state->spawn_flag = SPAWN_TRUE;
 }
 
-void spawn_number(uint8_t grid[GRID_SIZE][GRID_SIZE], game_2048_state *state) {
+void spawn_number(uint8_t grid[GRID_SIZE][GRID_SIZE], game_2048_state *state, badge_rng *rng) {
   uint8_t x_grid, y_grid, value;
 
   for(;;) {
-    x_grid = rand() % 4;
-    y_grid = rand() % 4;
+    x_grid = badge_rng_u8(rng) % 4;
+    y_grid = badge_rng_u8(rng) % 4;
 
     if(grid[x_grid][y_grid] == 0) {
-      value = rand() % 100;
+      value = badge_rng_u32(rng) % 100;
       if(value < 90)
         grid[x_grid][y_grid] = 1;
       else
@@ -248,7 +249,7 @@ void new_2048(void) {
   uint8_t grid[GRID_SIZE][GRID_SIZE] = { { 0 } };
   game_2048_state state = { 0, 0, 0, 0 };
 
-  srand(systickGetTicks());
+  badge_rng rng = badge_rng_init(systickGetTicks());
 
   render_intro(&fb);
 
@@ -263,7 +264,7 @@ void new_2048(void) {
 
   do {
     if(state.spawn_flag)
-      spawn_number(grid, &state);
+      spawn_number(grid, &state, &rng);
 
     show_frame(&fb);
     show_grid(&fb, grid);
@@ -273,7 +274,7 @@ void new_2048(void) {
         ev = badge_event_wait();
         if(badge_event_type(ev) == BADGE_EVENT_GAME_TICK)
           i++;
-        if(i % 25 == 0)
+        if(i % 25 == 0);
           invert_framebuffer(&fb);
       }
       state.reached_flag = NOT_REACHED_2048;

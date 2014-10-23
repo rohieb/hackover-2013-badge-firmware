@@ -217,17 +217,18 @@ static uint16_t const number_glyphs[][FIELD_SIZE] = {
   }
 };
 
-void render_intro(badge_framebuffer * fb) { 
+void render_intro(badge_framebuffer * fb) {
+  (void) fb;
   badge_event_t ev;
 
   badge_framebuffer_clear(fb);
   badge_framebuffer_render_text(fb, 2 * BADGE_FONT_WIDTH, BADGE_DISPLAY_HEIGHT / 2 - BADGE_FONT_HEIGHT,
-				"A oder B zum");
+                                "A oder B zum");
   badge_framebuffer_render_text(fb, BADGE_FONT_WIDTH / 2, BADGE_DISPLAY_HEIGHT / 2,
-				"Beenden drücken");
+                                "Beenden drücken");
 
   badge_framebuffer_render_text(fb, 3 * BADGE_FONT_WIDTH, BADGE_DISPLAY_HEIGHT / 2 + 2 * BADGE_FONT_HEIGHT,
-				"by lykaner");
+                                "by lykaner");
 
   badge_framebuffer_flush((badge_framebuffer const *) fb);
 
@@ -239,20 +240,19 @@ void render_intro(badge_framebuffer * fb) {
 }
 
 void invert_framebuffer(badge_framebuffer * fb) {
-  for(uint8_t x = 0; x < BADGE_DISPLAY_WIDTH; x++) {
-    for(uint8_t y = 0; y < BADGE_DISPLAY_HEIGHT; y++)
-      badge_framebuffer_pixel_flip(fb, x, y);
+  for(size_t i = 0; i < sizeof(fb->data); ++i) {
+    fb->data[0][i] ^= 0xff;
   }
 
   badge_framebuffer_flush((badge_framebuffer const *) fb);
 }
 
-void render_lost(badge_framebuffer * fb) { 
+void render_lost(badge_framebuffer * fb) {
   badge_event_t ev;
 
   badge_framebuffer_clear(fb);
   badge_framebuffer_render_text(fb, 10, BADGE_DISPLAY_HEIGHT / 2 - BADGE_FONT_HEIGHT,
-				"YOU LOST");
+                                "YOU LOST");
   badge_framebuffer_flush((badge_framebuffer const *) fb);
 
   for(uint8_t i = 0; i < 100;) {
@@ -297,7 +297,7 @@ void render_score(badge_framebuffer * fb, uint32_t score) {
 void show_grid(badge_framebuffer * fb, uint8_t grid[GRID_SIZE][GRID_SIZE]) {
   for(uint8_t x_grid = 0; x_grid < 4; x_grid++) {
     for(uint8_t y_grid = 0; y_grid < 4; y_grid++) {
-	render_number(fb, grid[x_grid][y_grid], x_grid, y_grid);
+        render_number(fb, grid[x_grid][y_grid], x_grid, y_grid);
     }
   }
 
@@ -308,10 +308,9 @@ void render_number(badge_framebuffer * fb, uint8_t number, uint8_t x_grid, uint8
   for(uint8_t y = 11 + y_grid * 15; y < 11 + y_grid * 15 + 13; y++) {
     for(uint8_t x = 21 + x_grid * 15; x < 21 + x_grid * 15 + 13; x++) {
       if((number_glyphs[number][(y - (11 + y_grid * 15))] >> (21 + x_grid * 15 + 12 - x)) & 1)
-	 badge_framebuffer_pixel_on(fb, x - x_grid, y - y_grid);
+         badge_framebuffer_pixel_on(fb, x - x_grid, y - y_grid);
       else
-	 badge_framebuffer_pixel_off(fb, x - x_grid, y - y_grid);
+         badge_framebuffer_pixel_off(fb, x - x_grid, y - y_grid);
     }
   }
 };
-

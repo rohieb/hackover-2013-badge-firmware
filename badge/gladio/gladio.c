@@ -204,7 +204,7 @@ void gladio_play(void) {
     status = gladio_play_level(fname, &persistent_state, &lvnum);
   }
 
-  gladio_game_state state = gladio_game_state_new(persistent_state);
+  gladio_game_state state = gladio_game_state_new(&persistent_state);
 
   if(status != GLADIO_PLAYER_LOST) {
     gladio_screen_awesome(&state);
