@@ -15,10 +15,10 @@
 */
 
 // 2014, weil Fuckup
-#define HOB_BTN_UP        (1,  7)
-#define HOB_BTN_LEFT      (1,  5)
-#define HOB_BTN_RIGHT     (1,  6)
-#define HOB_BTN_DOWN      (0,  1)
+#define HOB_BTN_DOWN      (1,  7)
+#define HOB_BTN_RIGHT     (1,  5)
+#define HOB_BTN_LEFT      (1,  6)
+#define HOB_BTN_UP        (0,  1)
 
 #define HOB_BTN_B         (1,  8)
 #define HOB_BTN_A         (1,  9)
