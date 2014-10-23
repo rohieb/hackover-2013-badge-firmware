@@ -14,9 +14,9 @@ static void u32_sort(uint32_t *lhs, uint32_t *rhs) {
 }
 
 static void highscores_sort(gladio_highscores *hs) {
-  u32_sort(hs.scores + 0, hs.scores + 1);
-  u32_sort(hs.scores + 0, hs.scores + 2);
-  u32_sort(hs.scores + 1, hs.scores + 2);
+  u32_sort(hs->scores + 0, hs->scores + 1);
+  u32_sort(hs->scores + 0, hs->scores + 2);
+  u32_sort(hs->scores + 1, hs->scores + 2);
 }
 
 gladio_highscores gladio_highscores_load(void) {
@@ -41,7 +41,7 @@ gladio_highscores gladio_highscores_load(void) {
 void gladio_highscores_update(gladio_highscores *hs, uint32_t new_score) {
   if(hs->scores[2] < new_score) {
     hs->scores[2] = new_score;
-    hiscores_sort(hs);
+    highscores_sort(hs);
   }
 }
 

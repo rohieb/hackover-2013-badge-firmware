@@ -130,7 +130,7 @@ static void gladio_render_score(badge_framebuffer *fb, uint32_t score, int8_t po
 }
 
 void gladio_screen_scores(gladio_game_state *state) {
-#ifdef __tumb__
+#ifdef __thumb__
   gladio_highscores hs = gladio_highscores_load();
   gladio_highscores_update(&hs, state->persistent->score);
   gladio_highscores_save(&hs);
