@@ -14,8 +14,8 @@ static void u32_sort(uint32_t *lhs, uint32_t *rhs) {
 }
 
 static void highscores_sort(gladio_highscores *hs) {
+  u32_sort(hs->scores + 1, hs->scores + 2);
   u32_sort(hs->scores + 0, hs->scores + 1);
-  u32_sort(hs->scores + 0, hs->scores + 2);
   u32_sort(hs->scores + 1, hs->scores + 2);
 }
 
