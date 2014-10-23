@@ -1,0 +1,121 @@
+0 10 rocket
+10 10 rocket
+20 30 rocket
+10 30 rocket
+20 50 rocket
+10 50 rocket
+
+50 10 fighter
+15 10 fighter
+20 30 fighter
+10 30 backstabber
+0 30 fighter
+20 50 fighter
+15 50 fighter
+
+40 60 tumbler
+10 40 tumbler
+10 20 tumbler
+
+30 30 heart_full
+
+20 58 cannon_up
+60 9 cannon_down
+
+20 20 tumbler
+10 40 tumbler
+10 60 tumbler
+
+30 59 cannon_up
+0 9  cannon_down
+20 59 cannon_up
+0 9  cannon_down
+20 59 cannon_up
+0 9  cannon_down
+
+20 30 heart_half
+30 30 rocket_back
+
+60 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+30 10 rocket
+0 20 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+30 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 60 rocket
+
+30 10 rocket
+0 20 rocket
+0 30 rocket
+0 30 heart_half
+0 50 rocket
+0 60 rocket
+
+30  0 kamikaze_sw
+7 65 kamikaze_nw
+7  8 kamikaze_sw
+7 57 kamikaze_nw
+7 16 kamikaze_sw
+7 49 kamikaze_nw
+
+60 30 rocket_back
+
+50 10 rocket_back
+0  20 rocket_back
+
+40 10 rocket_back
+0  20 rocket_back
+0  30 rocket_back
+
+30 10 rocket_back 
+0 20 rocket_back 
+0 30 rocket_back 
+0 40 rocket_back 
+0 50 rocket_back 
+
+30 20 rocket_back 
+0 30 rocket_back 
+0 40 rocket_back 
+0 50 rocket_back 
+0 60 rocket_back 
+
+30 10 rocket_back 
+0 20 rocket_back 
+0 40 rocket_back 
+0 50 rocket_back 
+0 60 rocket_back 
+
+30 59 cannon_up
+0 9  cannon_down
+30 59 cannon_up
+0 9  cannon_down
+30 59 cannon_up
+0 9  cannon_down
+
+30  0 kamikaze_sw
+7 65 kamikaze_nw
+7  8 kamikaze_sw
+3 30 fighter
+4 57 kamikaze_nw
+7 16 kamikaze_sw
+7 49 kamikaze_nw
+
+30 10 rocket
+0 55 rocket
+20 20 rocket
+0 45 rocket
+20 35 tumbler
+
+60 10 middleboss_topgun
+0 26 middleboss_body
+0 42 middleboss_bottomgun

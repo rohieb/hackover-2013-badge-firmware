@@ -1,0 +1,131 @@
+# a few single
+20 30 rocket
+25 10 rocket
+00 20 rocket
+40 30 rocket
+37 50 rocket
+30 20 rocket
+00 50 rocket
+# a few walls
+100 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+20 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+20 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 fighter 
+0 50 rocket
+0 60 rocket
+
+20 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+20 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+20 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 fighter
+
+20 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+100 10 fighter
+0  60 fighter
+20 20 fighter
+0 50 fighter
+100 30 fighter
+0   40 fighter
+
+100 30 heart_full
+
+100 10 rocket
+0 30 rocket
+0 50 rocket
+50 20 rocket
+20 30 rocket
+20 45 rocket
+20 10 rocket
+0 30 rocket
+0 50 rocket
+40 15 rocket
+10 30 rocket
+10 45 rocket
+
+100 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+20 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+20 10 rocket
+0 20 rocket
+0 30 fighter
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+20 10 rocket
+0 20 rocket
+0 30 fighter
+0 40 rocket
+0 50 fighter
+0 60 rocket
+
+20 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+20 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 fighter
+
+20 10 rocket
+0 20 rocket
+0 30 fighter
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+100 20 heart_half
+30 55 backstabber
