@@ -1,5 +1,9 @@
 #include "explosion.h"
 
+#ifndef __thumb__
+#include <assert.h>
+#endif
+
 #include "../ui/sprite.h"
 
 static badge_sprite const anim_explosion[EXPLOSION_FRAMES] = {
@@ -13,6 +17,10 @@ void common_render_explosion(badge_framebuffer *fb,
                              int8_t x,
                              int8_t y,
                              uint8_t tick) {
+#ifndef __thumb__
+  assert(tick < EXPLOSION_TICKS);
+#endif
+
   badge_sprite const *sprite = &anim_explosion[tick / EXPLOSION_TICKS_PER_FRAME];
 
   badge_framebuffer_blt(fb,

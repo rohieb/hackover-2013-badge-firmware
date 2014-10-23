@@ -25,7 +25,7 @@ void gladio_player_render(badge_framebuffer *fb, gladio_player const *p) {
     common_render_explosion(fb,
                             fixed_point_cast_int(p->base.position.x),
                             fixed_point_cast_int(p->base.position.y),
-                            EXPLOSION_TICKS / 3 - p->status_cooldown);
+                            (EXPLOSION_TICKS / 3 - p->status_cooldown - 1) * 3);
     return;
   }
 
