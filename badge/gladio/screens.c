@@ -118,15 +118,25 @@ void gladio_screen_awesome(gladio_game_state *state) {
 static void gladio_render_score(badge_framebuffer *fb, uint32_t score, int8_t pos_y) {
   uint8_t pos_x = 72;
 
-  do {
-    badge_framebuffer_render_char(fb, pos_x, pos_y, score % 10 + '0');
-    pos_x -= 6;
-    score /= 10;
-  } while(score != 0);
+  if(score > GLADIO_SCORE_MAX) {
+    badge_framebuffer_render_text(fb, 30, pos_y, "Cheater!");
+  } else {
+    do {
+      badge_framebuffer_render_char(fb, pos_x, pos_y, score % 10 + '0');
+      pos_x -= 6;
+      score /= 10;
+    } while(score != 0);
+  }
 }
 
 void gladio_screen_scores(gladio_game_state *state) {
-  uint32_t highscores[] = { 123456, 12345, 1234 };
+#ifdef __tumb__
+  gladio_highscores hs = gladio_highscores_load();
+  gladio_highscores_update(&hs, state->persistent->score);
+  gladio_highscores_save(&hs);
+#else
+  gladio_highscores hs = { { 1234567, 12345, 1234 } };
+#endif
 
   uint16_t i = 750;
 
@@ -154,9 +164,9 @@ void gladio_screen_scores(gladio_game_state *state) {
         gladio_render_score(&fb, state->persistent->score, 20);
 
         badge_framebuffer_render_text(&fb, 18, 30, "Highscores");
-        gladio_render_score(&fb, highscores[0], 40);
-        gladio_render_score(&fb, highscores[1], 49);
-        gladio_render_score(&fb, highscores[2], 58);
+        gladio_render_score(&fb, hs.scores[0], 40);
+        gladio_render_score(&fb, hs.scores[1], 49);
+        gladio_render_score(&fb, hs.scores[2], 58);
 
         badge_framebuffer_flush(&fb);
         --i;

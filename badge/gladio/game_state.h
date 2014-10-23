@@ -64,9 +64,17 @@ typedef struct gladio_game_state {
   gladio_enemy         active_enemies[GLADIO_MAX_ENEMIES];
 } gladio_game_state;
 
+typedef struct gladio_highscores {
+  uint32_t scores[3];
+} gladio_highscores;
+
 gladio_game_state gladio_game_state_new(gladio_game_state_persistent *persistent);
 gladio_game_state_persistent gladio_game_state_persistent_new(void);
 
 void gladio_score_add(gladio_game_state *state, uint32_t score);
+
+gladio_highscores gladio_highscores_load(void);
+void gladio_highscores_update(gladio_highscores *hs, uint32_t new_score);
+void gladio_highscores_save(gladio_highscores const *hs);
 
 #endif

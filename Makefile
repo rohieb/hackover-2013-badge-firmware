@@ -63,6 +63,7 @@ SRCS = \
   badge/gladio/enemy_types.c \
   badge/gladio/game_state.c \
   badge/gladio/gladio.c \
+  badge/gladio/highscores.c \
   badge/gladio/level.c \
   badge/gladio/object.c \
   badge/gladio/player.c \
