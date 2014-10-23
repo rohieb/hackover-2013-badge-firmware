@@ -66,6 +66,7 @@ SRCS = \
   badge/gladio/level.c \
   badge/gladio/object.c \
   badge/gladio/player.c \
+  badge/gladio/screens.c \
   badge/gladio/shot.c \
   badge/gladio/status.c \
   badge/2048/2048.c \

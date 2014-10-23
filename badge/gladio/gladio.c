@@ -1,7 +1,9 @@
 #include "gladio.h"
-#include "level.h"
-#include "shot.h"
+
 #include "enemy_types.h"
+#include "level.h"
+#include "screens.h"
+#include "shot.h"
 
 #include "../ui/display.h"
 #include "../ui/event.h"
@@ -114,65 +116,6 @@ void gladio_tick(gladio_game_state *state) {
   }
 }
 
-void gladio_game_over(gladio_game_state *state) {
-  uint16_t i = 750;
-
-  do {
-    badge_event_t ev;
-
-    ev = badge_event_wait();
-
-    switch(badge_event_type(ev)) {
-    case BADGE_EVENT_USER_INPUT:
-      if(i < 700 && badge_event_new_buttons(ev)) {
-        i = 0;
-      }
-      break;
-    case BADGE_EVENT_GAME_TICK:
-      {
-        badge_framebuffer fb = { { { 0 } } };
-
-        gladio_background_tick(state);
-
-        gladio_background_render(&fb, &state->persistent->background);
-        gladio_status_render(&fb, state);
-
-        badge_framebuffer_render_text(&fb, 16, 31, "GAME OVER");
-
-        badge_framebuffer_flush(&fb);
-        --i;
-      }
-    }
-  } while(i != 0);
-}
-
-static void gladio_level_intro(gladio_game_state *state, gladio_level_number const *lvnum) {
-  char msg[4] = " - ";
-  msg[0] = '0' + lvnum->world;
-  msg[2] = '0' + lvnum->level;
-  uint8_t i = 75;
-
-  do {
-    badge_event_t ev = badge_event_wait();
-
-    if(badge_event_type(ev) == BADGE_EVENT_GAME_TICK) {
-      badge_framebuffer fb = { { { 0 } } };
-
-      gladio_background_tick(state);
-
-      gladio_background_render(&fb, &state->persistent->background);
-      gladio_status_render(&fb, state);
-
-      badge_framebuffer_render_text(&fb, 33, 28, "Stage");
-      badge_framebuffer_render_text(&fb, 36, 37, msg);
-
-      badge_framebuffer_flush(&fb);
-
-      --i;
-    }
-  } while(i != 0);
-}
-
 uint8_t gladio_play_level(char const *fname, gladio_game_state_persistent *persistent_state, gladio_level_number const *lvnum) {
   // Nur zum Testen. Dateifoo kommt später.
   gladio_level lv;
@@ -183,7 +126,7 @@ uint8_t gladio_play_level(char const *fname, gladio_game_state_persistent *persi
   state.level = &lv;
   state.tick_major = 0;
 
-  gladio_level_intro(&state, lvnum);
+  gladio_screen_level_intro(&state, lvnum);
 
   do {
     badge_event_t ev = badge_event_wait();
@@ -203,7 +146,7 @@ uint8_t gladio_play_level(char const *fname, gladio_game_state_persistent *persi
   } while(state.player.status != GLADIO_PLAYER_LOST && !gladio_player_won(&state.player));
 
   if(state.player.status == GLADIO_PLAYER_LOST) {
-    gladio_game_over(&state);
+    gladio_screen_game_over(&state);
   }
 
   return state.player.status;

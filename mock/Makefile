@@ -42,6 +42,7 @@ BADGE_FAROBJS = ui/font.o \
                 gladio/level.o \
                 gladio/object.o \
                 gladio/player.o \
+                gladio/screens.o \
                 gladio/shot.o \
                 gladio/status.o
 
