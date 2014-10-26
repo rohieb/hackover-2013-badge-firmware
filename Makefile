@@ -27,7 +27,7 @@ DEBUGBUILD = FALSE
 
 OPTDEFINES = -D__NEWLIB__
 
-OPTDEFINES += -DHOB_2013
+#OPTDEFINES += -DHOB_2013
 #OPTDEFINES += -DR0KET
 #OPTDEFINES += -DUSBONLY
 ##########################################################################
