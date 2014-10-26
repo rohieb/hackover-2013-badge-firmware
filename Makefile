@@ -26,6 +26,8 @@ DEBUGBUILD = FALSE
 ##########################################################################
 
 OPTDEFINES = -D__NEWLIB__
+
+#OPTDEFINES += -DHOB_2013
 #OPTDEFINES += -DR0KET
 #OPTDEFINES += -DUSBONLY
 ##########################################################################
@@ -346,12 +348,9 @@ LDFLAGS = -nostartfiles -mthumb -mcpu=$(CPU_TYPE) -Wl,--gc-sections
 LDLIBS  = -lm
 OCFLAGS = --strip-unneeded
 
-LEVEL_CONVERTER = badge/tools/level-converter
-MKTITLEIMG      = badge/tools/mktitleimg
+normal: dep size $(OUTFILE).bin $(OUTFILE).hex
 
-normal: dep size $(OUTFILE).bin $(OUTFILE).hex $(LEVEL_CONVERTER) mock
-
-all: normal $(MKTITLEIMG)
+all: normal tools mock
 
 dep: $(DEPS)
 
@@ -407,11 +406,8 @@ $(LPCRC_OBJS): %.o : %.c
 $(LPCRC):  $(LPCRC_OBJS)
 	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) -o $@ $+ $(LDLIBS_FOR_BUILD)
 
-$(LEVEL_CONVERTER):
-	$(MAKE) -C badge/tools $$(basename $@)
-
-$(MKTITLEIMG):
-	$(MAKE) -C badge/tools $$(basename $@)
+tools:
+	$(MAKE) -C badge/tools
 
 mock:
 	$(MAKE) -C mock
@@ -422,4 +418,4 @@ play:
 html:
 	$(MAKE) -C browser
 
-.PHONY: all dep size clean distclean $(LEVEL_CONVERTER) $(MKTITLEIMG) mock play html
+.PHONY: all dep size clean distclean mock play html tools

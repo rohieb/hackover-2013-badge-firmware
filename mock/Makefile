@@ -100,11 +100,12 @@ GLD_CONVERT = ../badge/tools/gladio_level_convert
 GLD_LEVELS  = ../badge/gladio/levels/*.lv
 
 play: all
-	$(MAKE) -C ../badge/tools
+	$(MAKE) -C ../badge/tools $$(basename $(CONVERTER))
+	$(MAKE) -C ../badge/tools $$(basename $(GLD_CONVERT))
 	echo > $(LEVELLIST)
-	ls $(LEVELS) | xargs -n1 basename | cut -d . -f 1 > $(LEVELLIST)
-	$(CONVERTER) $(LEVELS)
 	echo > $(GLD_LEVELLIST)
+	ls $(LEVELS)     | xargs -n1 basename | cut -d . -f 1 > $(LEVELLIST)
 	ls $(GLD_LEVELS) | xargs -n1 basename | cut -d . -f 1 > $(GLD_LEVELLIST)
+	$(CONVERTER)   $(LEVELS)
 	$(GLD_CONVERT) $(GLD_LEVELS)
 	./$(BADGE)
