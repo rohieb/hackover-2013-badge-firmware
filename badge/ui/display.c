@@ -120,9 +120,12 @@ void badge_display_init(void) {
    * 10: set x address (upper bits): X[6-4] = 0
    */
   static uint8_t const initseq[]= { 0xE2, 0xAF, // Display ON
-                                    //0xA1,       // Mirror-X
+#ifdef HOB_2013
+                                    0xA1,       // Mirror-X
+#else
                                     0xa0,
                                     0xc8, // mirror-y
+#endif
                                     0xa7, // invert (1 = black)
                                     0xA4, 0x2F,
                                     // 0x9f, 0x24
