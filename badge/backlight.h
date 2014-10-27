@@ -5,4 +5,6 @@ void badge_backlight_init(void);
 void badge_backlight_enable(void);
 void badge_backlight_disable(void);
 
+void backlight_app(void);
+
 #endif

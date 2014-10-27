@@ -211,7 +211,8 @@ uint8_t main_menu_show(uint8_t selected) {
     "Gladio",
     "2048",
     "Fahrplan",
-    "USB-Modus"
+    "USB-Modus",
+    "Backlight"
   };
 
   f_chdir("/");
@@ -230,6 +231,7 @@ void main_menu(void) {
     case 3: play_2048        (); break;
     case 4: badge_fahrplan   (); break;
     case 5: usbmode          (); break;
+    case 6: backlight_app    (); break;
     }
   }
 }
@@ -241,14 +243,15 @@ int main(void)
 
   pmuInit();
   // adcInit();
+
+  FATFS fs;
+  f_mount(0, &fs);
+
 #ifdef R0KET
   rbInit();
 #else
   badge_init();
 #endif
-
-  FATFS fs;
-  f_mount(0, &fs);
 
 #ifdef USBONLY
   if(badge_input_raw() & BADGE_EVENT_KEY_LEFT) {
