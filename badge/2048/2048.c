@@ -18,7 +18,7 @@ uint8_t show_menu(uint8_t * selected) {
 }
 
 void play_2048(void) {
-  uint8_t selected;
+  uint8_t selected = 0;
 
   do {
     selected = show_menu(&selected);
