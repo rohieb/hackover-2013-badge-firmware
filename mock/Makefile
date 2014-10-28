@@ -23,6 +23,7 @@ BADGE_FAROBJS = ui/font.o \
                 ui/sprite.o \
                 util/random.o \
                 common/explosion.o \
+                common/sprites.o \
                 jumpnrun/collision.o \
                 jumpnrun/enemies.o \
                 jumpnrun/game_state.o \
