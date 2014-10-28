@@ -40,6 +40,7 @@ SRCS = \
   badge/init.c \
   badge/main.c \
   badge/common/explosion.c \
+  badge/common/sprites.c \
   badge/jumpnrun/collision.c \
   badge/jumpnrun/enemies.c \
   badge/jumpnrun/game_state.c \

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-badge_sprite const gladio_shot_sprite = { 3, 3, (uint8_t const *) "\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff" };
+badge_sprite const gladio_shot_sprite = { 3, 3, (uint8_t const *) "\xff\xff" };
 
 rectangle gladio_shot_rectangle(gladio_shot const *shot) {
   vec2d upper_left = vec2d_new(fixed_point_sub(shot->base.position.x, fixed_point_div(FIXED_INT(gladio_shot_sprite.width), FIXED_INT(2))),

@@ -6,16 +6,11 @@
 
 #include <stdbool.h>
 
+#include "../common/sprites.h"
+
 enum {
-  MENU_ARROW_UP,
-  MENU_ARROW_DOWN,
-
-  MENU_SCROLL_TICKS = 25
-};
-
-static badge_sprite const arrows[] = {
-  { 5, 7, (uint8_t const *) "\x04\xc3\xdf\x40" },
-  { 5, 7, (uint8_t const *) "\x10\xd8\x1f\x06\x01" }
+  MENU_SCROLL_TICKS = 25,
+  MENU_SCROLL_TICKS_TURBO = 10
 };
 
 enum {
@@ -73,8 +68,8 @@ void badge_menu_show(char const *const *menu,
   }
 
   badge_framebuffer_render_char(&fb, MENU_MARGIN_LEFT, MENU_MARGIN_TOP + MENU_ENTRIES_HEIGHT * (selected - *first_visible + first_used_row), selector);
-  if(arrow_up  ) { badge_framebuffer_blt(&fb, MENU_MARGIN_LEFT, MENU_MARGIN_TOP,                                                    &arrows[MENU_ARROW_UP  ], 0); }
-  if(arrow_down) { badge_framebuffer_blt(&fb, MENU_MARGIN_LEFT, MENU_MARGIN_TOP + (MENU_ENTRIES_VISIBLE - 1) * MENU_ENTRIES_HEIGHT, &arrows[MENU_ARROW_DOWN], 0); }
+  if(arrow_up  ) { badge_framebuffer_blt(&fb, MENU_MARGIN_LEFT, MENU_MARGIN_TOP,                                                    common_sprite(BADGE_COMMON_SPRITE_ARROW_UP  ), 0); }
+  if(arrow_down) { badge_framebuffer_blt(&fb, MENU_MARGIN_LEFT, MENU_MARGIN_TOP + (MENU_ENTRIES_VISIBLE - 1) * MENU_ENTRIES_HEIGHT, common_sprite(BADGE_COMMON_SPRITE_ARROW_DOWN), 0); }
 
   badge_framebuffer_flush(&fb);
 }
@@ -97,7 +92,7 @@ uint8_t badge_menu(char const *const *menu,
 
       badge_menu_show(menu, n, first_visible, selected, '*');
 
-      scroll_ticks = MENU_SCROLL_TICKS;
+      scroll_ticks = (badge_event_current_input_state() & BADGE_EVENT_KEY_BTN_B) ? MENU_SCROLL_TICKS_TURBO : MENU_SCROLL_TICKS;
     }
 
     badge_event_t ev;
@@ -110,13 +105,13 @@ uint8_t badge_menu(char const *const *menu,
       uint8_t new_state = badge_event_new_input_state(ev);
       uint8_t new_buttons = new_state & (old_state ^ new_state);
 
-      if(new_buttons & (BADGE_EVENT_KEY_BTN_A | BADGE_EVENT_KEY_BTN_B)) {
+      if((new_buttons & BADGE_EVENT_KEY_BTN_A)) {
         return selected;
       } else if((new_buttons & BADGE_EVENT_KEY_UP  )) {
         scroll_direction = -1;
       } else if((new_buttons & BADGE_EVENT_KEY_DOWN)) {
         scroll_direction =  1;
-      } else {
+      } else if(old_state != (new_state ^ BADGE_EVENT_KEY_BTN_B)) {
         scroll_direction =  0;
       }
 

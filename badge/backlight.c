@@ -2,6 +2,7 @@
 #include "pinconfig.h"
 #include <lpc134x.h>
 
+#include "common/sprites.h"
 #include "ui/display.h"
 #include "ui/event.h"
 #include "ui/font.h"
@@ -55,11 +56,6 @@ void badge_backlight_init(void) {
   badge_backlight_load();
 }
 
-static badge_sprite const arrows[] = {
-  { 5, 7, (uint8_t const *) "\x04\xc3\xdf\x40" },
-  { 5, 7, (uint8_t const *) "\x10\xd8\x1f\x06\x01" }
-};
-
 void backlight_app(void) {
   unsigned scroll_ticks     = 25;
   int      scroll_direction = 0;
@@ -79,12 +75,12 @@ void backlight_app(void) {
       badge_framebuffer_render_text  (&fb, 27, 18, "f\xfcr die");
       badge_framebuffer_render_text  (&fb, 21, 26, "Ladepumpe");
 
-      badge_framebuffer_blt          (&fb, 45, 36, &arrows[0], 0);
+      badge_framebuffer_blt          (&fb, 45, 36, common_sprite(BADGE_COMMON_SPRITE_ARROW_UP  ), 0);
       badge_framebuffer_render_number(&fb, 39, 44, backlight_clkdiv_user);
-      badge_framebuffer_blt          (&fb, 45, 52, &arrows[1], 0);
+      badge_framebuffer_blt          (&fb, 45, 52, common_sprite(BADGE_COMMON_SPRITE_ARROW_DOWN), 0);
       badge_framebuffer_flush        (&fb);
 
-      scroll_ticks = 25;
+      scroll_ticks = (badge_event_current_input_state() & BADGE_EVENT_KEY_BTN_B) ? 10 : 25;
     }
 
     badge_event_t ev = badge_event_wait();
@@ -92,16 +88,18 @@ void backlight_app(void) {
     switch(badge_event_type(ev)) {
     case BADGE_EVENT_USER_INPUT:
       {
-        uint8_t new_buttons = badge_event_new_buttons(ev);
+        uint8_t old_state = badge_event_old_input_state(ev);
+        uint8_t new_state = badge_event_new_input_state(ev);
+        uint8_t new_buttons = new_state & (old_state ^ new_state);
 
-        if(new_buttons & (BADGE_EVENT_KEY_BTN_A | BADGE_EVENT_KEY_BTN_B)) {
+        if((new_buttons & BADGE_EVENT_KEY_BTN_A)) {
           badge_backlight_save();
           return;
         } else if((new_buttons & BADGE_EVENT_KEY_UP  )) {
           scroll_direction =  1;
         } else if((new_buttons & BADGE_EVENT_KEY_DOWN)) {
           scroll_direction = -1;
-        } else {
+        } else if (old_state != (new_state ^ BADGE_EVENT_KEY_BTN_B)) {
           scroll_direction = 0;
         }
 

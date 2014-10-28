@@ -6,8 +6,6 @@
 
 #include "../common/explosion.h"
 
-static badge_sprite const anim_dummy = { 11, 9, (uint8_t const *) "\x10\x20\x40\xc0\x81\x83\x4d\xdb\xff\xff\xd9\xa0\x00" };
-
 rectangle gladio_enemy_hitbox(gladio_enemy const *enemy) {
   rectangle r = gladio_enemy_type_get(enemy)->hitbox;
   rectangle_move_rel(&r, enemy->base.position);
