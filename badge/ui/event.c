@@ -42,14 +42,9 @@ uint8_t badge_input_raw(void) {
   if (gpioGetValue(HOB_PORT(HOB_BTN_UP    ), HOB_PIN(HOB_BTN_UP    )) == 0) { result |= BADGE_EVENT_KEY_UP    ; }
 #else
   // Fuckup 2014: Rauf ist ISP-Enable
-
-  HOB_SET_PIN_FUNC(HOB_BTN_UP, GPIO);
-  gpioSetDir(HOB_PORT(HOB_BTN_UP), HOB_PIN(HOB_BTN_UP), gpioDirection_Input);
-  gpioSetPullup(&HOB_IOCON(HOB_BTN_UP), gpioPullupMode_PullUp);
-
+  badge_backlight_disable();
   if (gpioGetValue(HOB_PORT(HOB_BTN_UP    ), HOB_PIN(HOB_BTN_UP    )) == 0) { result |= BADGE_EVENT_KEY_UP    ; }
-
-  HOB_SET_PIN_FUNC(HOB_LCD_BACKLIGHT, CLKOUT);
+  badge_backlight_enable();
 #endif
 
   if (gpioGetValue(HOB_PORT(HOB_BTN_DOWN  ), HOB_PIN(HOB_BTN_DOWN  )) == 0) { result |= BADGE_EVENT_KEY_DOWN  ; }
