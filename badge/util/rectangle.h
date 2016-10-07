@@ -2,35 +2,8 @@
 #define INCLUDED_RECTANGLE_H
 
 #include "fixed_point.h"
-
-typedef struct {
-  fixed_point x;
-  fixed_point y;
-} vec2d;
-
-static inline vec2d vec2d_add(vec2d v1, vec2d v2) {
-  vec2d r = {
-    fixed_point_add(v1.x, v2.x),
-    fixed_point_add(v1.y, v2.y)
-  };
-  return r;
-}
-
-static inline vec2d vec2d_sub(vec2d v1, vec2d v2) {
-  vec2d r = {
-    fixed_point_sub(v1.x, v2.x),
-    fixed_point_sub(v1.y, v2.y)
-  };
-  return r;
-}
-
-static inline vec2d vec2d_neg(vec2d v) {
-  vec2d r = {
-    fixed_point_neg(v.x),
-    fixed_point_neg(v.y)
-  };
-  return r;
-}
+#include "vec2d.h"
+#include "../ui/display.h"
 
 typedef struct {
   vec2d pos;
@@ -65,6 +38,26 @@ static inline bool rectangle_intersect(rectangle const *r1,
           fixed_point_gt(rectangle_bottom(r1), rectangle_top   (r2)) &&
           fixed_point_lt(rectangle_left  (r1), rectangle_right (r2)) &&
           fixed_point_gt(rectangle_right (r1), rectangle_left  (r2)));
+}
+
+static inline uint8_t rectangle_onscreen(rectangle const *r) {
+  return
+    1
+    && fixed_point_ge(rectangle_right (r), FIXED_INT(0))
+    && fixed_point_ge(rectangle_bottom(r), FIXED_INT(0))
+    && fixed_point_le(rectangle_left  (r), FIXED_INT(BADGE_DISPLAY_WIDTH + 1))
+    && fixed_point_le(rectangle_top   (r), FIXED_INT(BADGE_DISPLAY_WIDTH + 1))
+    ;
+}
+
+static inline uint8_t rectangle_contains(rectangle const *r, vec2d p) {
+  return
+    1
+    && fixed_point_ge(p.x, rectangle_left  (r))
+    && fixed_point_le(p.x, rectangle_right (r))
+    && fixed_point_ge(p.y, rectangle_top   (r))
+    && fixed_point_le(p.y, rectangle_bottom(r))
+    ;
 }
 
 #endif

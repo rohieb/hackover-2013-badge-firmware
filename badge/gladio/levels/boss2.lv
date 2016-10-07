@@ -1,0 +1,70 @@
+21 24 tumbler
+0 59 tumbler
+21 34 tumbler
+0 49 tumbler
+21 41 tumbler
+
+30 10 rocket
+0 20 rocket
+0 45 rocket
+0 55 rocket
+
+20 32 fighter
+
+30 10 rocket
+0 20 rocket
+0 45 rocket
+0 55 rocket
+
+30 10 rocket
+0 20 rocket
+
+30 45 rocket
+0 55 rocket
+
+30 28 fighter
+0 38 fighter
+
+30 41 tumbler
+21 34 tumbler
+0 49 tumbler
+21 24 tumbler
+0 59 tumbler
+
+30  0 kamikaze_sw
+7 65 kamikaze_nw
+7  8 kamikaze_sw
+3 30 fighter
+4 57 kamikaze_nw
+7 16 kamikaze_sw
+7 49 kamikaze_nw
+
+50 10 rocket_back
+0 55 rocket_back
+
+30 50 backstabber
+30 30 backstabber
+30 10 backstabber
+
+30 50 backstabber
+30 30 backstabber
+30 10 backstabber
+
+30 50 backstabber
+30 30 backstabber
+0 10 wfighter_down
+30 10 backstabber
+
+30 50 backstabber
+30 30 backstabber
+30 10 backstabber
+
+0 20 heart_full
+
+30 50 backstabber
+30 30 backstabber
+30 10 backstabber
+
+60 7 finalboss_topgun
+0 21 finalboss_body
+0 32 finalboss_bottomgun

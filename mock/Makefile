@@ -7,6 +7,7 @@ LDLIBS        = $$(pkg-config --libs gtkmm-3.0)
 
 BADGE         = badge
 LEVELLIST     = levels.txt
+GLD_LEVELLIST = gladio_levels.txt
 
 GLADEFILES    = lcd-display.glade
 
@@ -20,6 +21,9 @@ BADGE_CSRCS   = badge_main_loop.c
 BADGE_FAROBJS = ui/font.o \
                 ui/menu.o \
                 ui/sprite.o \
+                util/random.o \
+                common/explosion.o \
+                common/sprites.o \
                 jumpnrun/collision.o \
                 jumpnrun/enemies.o \
                 jumpnrun/game_state.o \
@@ -30,7 +34,18 @@ BADGE_FAROBJS = ui/font.o \
                 jumpnrun/render.o \
                 jumpnrun/shots.o \
                 jumpnrun/stats.o \
-                jumpnrun/tiles.o
+                jumpnrun/tiles.o \
+                gladio/background.o \
+                gladio/enemy.o \
+                gladio/enemy_types.o \
+                gladio/game_state.o \
+                gladio/gladio.o \
+                gladio/level.o \
+                gladio/object.o \
+                gladio/player.o \
+                gladio/screens.o \
+                gladio/shot.o \
+                gladio/status.o
 
 BADGE_CXXOBJS = $(BADGE_CXXSRCS:%.cc=%.o)
 BADGE_COBJS   = $(BADGE_CSRCS:%.c=%.o)
@@ -79,12 +94,19 @@ clean:
 distclean: clean
 	$(RM) $(DEPS) $(wildcard *~)
 
-CONVERTER = ../badge/tools/level-converter
-LEVELS    = ../badge/jumpnrun/levels/*.lv
+CONVERTER  = ../badge/tools/level-converter
+LEVELS     = ../badge/jumpnrun/levels/*.lv
+
+GLD_CONVERT = ../badge/tools/gladio_level_convert
+GLD_LEVELS  = ../badge/gladio/levels/*.lv
 
 play: all
-	$(MAKE) -C ../badge/tools
+	$(MAKE) -C ../badge/tools $$(basename $(CONVERTER))
+	$(MAKE) -C ../badge/tools $$(basename $(GLD_CONVERT))
 	echo > $(LEVELLIST)
-	ls $(LEVELS) | xargs -n1 basename | cut -d . -f 1 > $(LEVELLIST)
-	$(CONVERTER) $(LEVELS)
+	echo > $(GLD_LEVELLIST)
+	ls $(LEVELS)     | xargs -n1 basename | cut -d . -f 1 > $(LEVELLIST)
+	ls $(GLD_LEVELS) | xargs -n1 basename | cut -d . -f 1 > $(GLD_LEVELLIST)
+	$(CONVERTER)   $(LEVELS)
+	$(GLD_CONVERT) $(GLD_LEVELS)
 	./$(BADGE)

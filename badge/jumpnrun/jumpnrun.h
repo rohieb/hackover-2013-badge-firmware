@@ -2,11 +2,13 @@
 #define INCLUDED_BADGE2013_JUMPNRUN_H
 
 #include "enemies.h"
+#include "game_state.h"
 #include "items.h"
 #include "levels.h"
 #include "shots.h"
 #include "tiles.h"
 
+#include "../ui/event.h"
 #include "../ui/sprite.h"
 #include "../util/util.h"
 
@@ -32,5 +34,10 @@ badge_sprite const *jumpnrun_hacker_symbol(void);
 
 uint8_t jumpnrun_play_level(char const *lvname);
 void jumpnrun_play(void);
+
+void jumpnrun_handle_input_event(badge_event_t event,
+                                 jumpnrun_game_state *state);
+void jumpnrun_level_tick(jumpnrun_level      *lv,
+                         jumpnrun_game_state *state);
 
 #endif

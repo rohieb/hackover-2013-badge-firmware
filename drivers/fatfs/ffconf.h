@@ -27,7 +27,7 @@
 /  f_truncate and useless f_getfree. */
 
 
-#define _FS_MINIMIZE    1       /* 0, 1, 2 or 3 */
+#define _FS_MINIMIZE    2       /* 0, 1, 2 or 3 */
 /* The _FS_MINIMIZE option defines minimization level to remove some functions.
 /
 /   0: Full function.
@@ -37,7 +37,7 @@
 /   3: f_lseek is removed in addition to level 2. */
 
 
-#define _USE_STRFUNC    1       /* 0, 1 or 2 */
+#define _USE_STRFUNC    2       /* 0, 1 or 2 */
 /* To enable string functions, set _USE_STRFUNC to 1 or 2. */
 
 

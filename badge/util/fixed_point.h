@@ -11,6 +11,7 @@ static inline fixed_point fixed_point_add(fixed_point x, fixed_point y) { fixed_
 static inline fixed_point fixed_point_sub(fixed_point x, fixed_point y) { fixed_point r = { x.data - y.data         }; return r; }
 static inline fixed_point fixed_point_mul(fixed_point x, fixed_point y) { fixed_point r = { x.data * y.data / 256   }; return r; }
 static inline fixed_point fixed_point_div(fixed_point x, fixed_point y) { fixed_point r = { (x.data * 256) / y.data }; return r; }
+static inline fixed_point fixed_point_mod(fixed_point x, fixed_point y) { fixed_point r = { x.data % y.data         }; return r; }
 
 static inline fixed_point fixed_point_neg(fixed_point x) { fixed_point r = { -x.data                       }; return r; }
 static inline fixed_point fixed_point_abs(fixed_point x) { fixed_point r = { x.data < 0 ? -x.data : x.data }; return r; }

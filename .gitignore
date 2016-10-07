@@ -7,5 +7,9 @@
 *.lvl
 lpcrc
 badge/tools/level-converter
+badge/tools/mktitleimg
 mock/badge
 mock/levels.txt
+browser/badge.html
+browser/badge.js
+browser/badge.data

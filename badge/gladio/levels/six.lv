@@ -1,0 +1,142 @@
+30 30 rocket_back
+
+30 10 rocket_back
+5 20 rocket_back
+5 30 rocket_back
+5 40 rocket_back
+5 50 rocket_back
+
+5 10 rocket
+5 20 rocket
+5 30 rocket
+5 40 rocket
+5 50 rocket
+5 60 rocket
+
+30 10 rocket_back
+5 20 rocket_back
+5 40 rocket_back
+5 50 rocket_back
+5 60 rocket_back
+
+5 10 rocket
+5 20 rocket
+5 30 rocket
+5 40 rocket
+5 50 rocket
+5 60 rocket
+
+30 20 rocket_back
+5 30 rocket_back
+5 40 rocket_back
+5 50 rocket_back
+5 60 rocket_back
+
+5 10 rocket
+5 20 rocket
+5 30 rocket
+5 40 rocket
+5 50 rocket
+5 60 rocket
+
+30 30 wfighter_down
+15 30 wfighter_up
+15 40 wfighter_down
+
+30 20 fighter
+0 30 fighter
+10 40 rocket_back
+
+30 40 fighter
+0 50 fighter
+10 20 rocket_back
+
+30 20 fighter
+0 30 fighter
+10 40 rocket_back
+
+30 40 fighter
+0 50 fighter
+10 20 rocket_back
+
+30 30 tumbler
+5  20 tumbler
+
+30 40 tumbler
+5  30 tumbler
+
+30 50 tumbler
+5  40 tumbler
+
+30 60 tumbler
+5  50 tumbler
+
+30 30 tumbler
+5  20 tumbler
+
+10 20 cannon_up
+0  25 cannon_down
+
+10 35 cannon_up
+0  40 cannon_down
+
+10 50 cannon_up
+0  55 cannon_down
+
+60 10 rocket_back
+5 20 rocket_back
+5 30 rocket_back
+5 40 rocket_back
+5 50 rocket_back
+
+5 10 rocket
+5 20 rocket
+5 30 rocket
+5 40 rocket
+5 50 rocket
+5 60 rocket
+
+30 10 rocket_back
+5 20 rocket_back
+5 40 rocket_back
+5 50 rocket_back
+5 60 rocket_back
+
+30  0 kamikaze_sw
+7 65 kamikaze_nw
+7  8 kamikaze_sw
+3 30 fighter
+4 57 kamikaze_nw
+7 16 kamikaze_sw
+7 49 kamikaze_nw
+
+20 32 heart_full
+
+30 30 tumbler
+5  20 tumbler
+
+30 40 tumbler
+5  30 tumbler
+
+30 50 tumbler
+5  40 tumbler
+
+30 60 tumbler
+5  50 tumbler
+
+30 30 tumbler
+5  20 tumbler
+
+60 10 backstabber
+10  0 kamikaze_sw
+30 20 backstabber
+10 65 kamikaze_nw
+30 30 backstabber
+10  8 kamikaze_sw
+30 40 backstabber
+10 57 kamikaze_nw
+30 50 backstabber
+0 59 cannon_up
+10 16 kamikaze_sw
+20 59 cannon_up
+30 59 cannon_up

@@ -63,6 +63,9 @@
 #include "ui/sprite.h"
 #include "ui/vanity.h"
 #include "util/util.h"
+
+#include "2048/2048.h"
+#include "gladio/gladio.h"
 #include "jumpnrun/jumpnrun.h"
 
 #include "dataflash/at45db041d.h"
@@ -205,8 +208,11 @@ uint8_t main_menu_show(uint8_t selected) {
   char const *const menu[] = {
     "Titelbild",
     "Super Hackio",
+    "Gladio",
+    "2048",
     "Fahrplan",
-    "USB-Modus"
+    "USB-Modus",
+    "Backlight"
   };
 
   f_chdir("/");
@@ -221,8 +227,11 @@ void main_menu(void) {
     switch(selected) {
     case 0: badge_vanity_show(); break;
     case 1: jumpnrun_play    (); break;
-    case 2: badge_fahrplan   (); break;
-    case 3: usbmode          (); break;
+    case 2: gladio_play      (); break;
+    case 3: play_2048        (); break;
+    case 4: badge_fahrplan   (); break;
+    case 5: usbmode          (); break;
+    case 6: backlight_app    (); break;
     }
   }
 }
@@ -234,14 +243,15 @@ int main(void)
 
   pmuInit();
   // adcInit();
+
+  FATFS fs;
+  f_mount(0, &fs);
+
 #ifdef R0KET
   rbInit();
 #else
   badge_init();
 #endif
-
-  FATFS fs;
-  f_mount(0, &fs);
 
 #ifdef USBONLY
   if(badge_input_raw() & BADGE_EVENT_KEY_LEFT) {

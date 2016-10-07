@@ -1,0 +1,27 @@
+Super Hackio
+Credits
+------------
+
+Engine
+------
+Wintermute
+
+Sprites
+-------
+0717
+Ambro
+Wintermute
+
+Level
+-----
+Lubiana
+McSilver
+SpilkZ
+Wintermute
+Wolfpro
+
+Browser-Port
+------------
+Wintermute
+The Emscripten
+Project

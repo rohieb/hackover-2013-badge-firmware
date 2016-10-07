@@ -13,7 +13,7 @@ typedef enum {
 
 typedef size_t UINT;
 
-FRESULT f_read (FIL *fd, void *buf, UINT bufsize, UINT *bytes) {
+static FRESULT f_read (FIL *fd, void *buf, UINT bufsize, UINT *bytes) {
   *bytes = fread(buf, 1, bufsize, fd);
   return *bytes == 0 ? FR_SOME_ERROR : FR_OK;
 }

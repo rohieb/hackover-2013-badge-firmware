@@ -6,6 +6,7 @@
 
 #include <core/wdt/wdt.h>
 #include <core/gpio/gpio.h>
+#include <drivers/fatfs/ff.h>
 
 void badge_init(void) {
 #define INPUT_PIN_CONFIG(spec, mode) do {                               \
@@ -38,6 +39,6 @@ void badge_init(void) {
 
 #undef OUTPUT_PIN_CONFIG
 
-  badge_backlight_init();
   badge_display_init();
+  badge_backlight_init();
 }

@@ -1,0 +1,98 @@
+30 35 wfighter_down
+30 35 wfighter_up
+
+50 30 fighter
+0 10 rocket
+0 60 rocket
+
+100 10 kamikaze_sw
+0 60 kamikaze_nw
+0 30 rocket
+
+100 10 fighter
+0 20 fighter
+
+30 10 wfighter_down
+30 60 wfighter_up
+30 30 wfighter_down
+30 35 wfighter_up
+
+100 60 fighter
+0 10 wfighter_down
+
+40 0 kamikaze_sw
+0 55 wfighter_up
+10 0 kamikaze_sw
+10 0 kamikaze_sw
+
+# a few walls
+100 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+20 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+20 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 fighter 
+0 50 rocket
+0 60 rocket
+
+40 55 backstabber
+
+50 10 wfighter_down
+
+50 55 backstabber
+0 10 wfighter_down
+
+30 55 backstabber
+0 35 wfighter_up
+
+30 55 backstabber
+0 30 wfighter_down
+
+40 55 wfighter_up
+0 10 backstabber
+
+30 20 rocket
+10 10 rocket
+0 30 rocket
+10 10 rocket
+0 40 rocket
+
+50 48 rocket
+10 38 rocket
+0 58 rocket
+10 28 rocket
+0 58 rocket
+
+50 30 fighter
+0 40 fighter
+
+20 20 tumbler
+0  58 tumbler
+
+30  0 kamikaze_sw
+7 65 kamikaze_nw
+7  8 kamikaze_sw
+7 57 kamikaze_nw
+7 16 kamikaze_sw
+7 49 kamikaze_nw
+
+60 10 backstabber
+30 50 backstabber
+30 30 backstabber
+30 10 backstabber
+0 50 wfighter_up
+30 50 backstabber
+30 30 backstabber
+30 10 backstabber

@@ -1,0 +1,98 @@
+30  0 kamikaze_sw
+30 65 kamikaze_nw
+30  8 kamikaze_sw
+15 30 rocket
+15 57 kamikaze_nw
+30 16 kamikaze_sw
+30 49 kamikaze_nw
+
+#wall of rockets
+10 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+60 10 backstabber
+10  0 kamikaze_sw
+30 20 backstabber
+10 65 kamikaze_nw
+30 30 backstabber
+10  8 kamikaze_sw
+30 40 backstabber
+10 57 kamikaze_nw
+30 50 backstabber
+10 16 kamikaze_sw
+
+30  0 kamikaze_sw
+0 65 kamikaze_nw
+30  8 kamikaze_sw
+0 57 kamikaze_nw
+30 16 kamikaze_sw
+0 49 kamikaze_nw
+
+60 10 backstabber
+10  0 kamikaze_sw
+30 20 backstabber
+10 65 kamikaze_nw
+30 30 backstabber
+10  8 kamikaze_sw
+30 40 backstabber
+10 57 kamikaze_nw
+30 50 backstabber
+10 16 kamikaze_sw
+
+30 30 heart_full
+
+20 60 rocket_back
+
+#yes, this is like asshole
+50 10 fighter
+10 20 fighter
+30 30 fighter
+10 40 fighter
+30 50 fighter
+10 58 fighter
+
+#wall of rockets
+60 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+60 10 rocket
+0 20 rocket
+0 30 rocket
+0 40 rocket
+0 50 rocket
+0 60 rocket
+
+#rocket stairs
+30 10 rocket
+5 20 rocket
+5 40 tumbler
+5 50 rocket
+5 60 rocket
+
+30  0 kamikaze_sw
+30 65 kamikaze_nw
+30  8 kamikaze_sw
+15 30 rocket_back
+15 57 kamikaze_nw
+30 16 kamikaze_sw
+30 49 kamikaze_nw
+
+60 10 rocket
+0 60 rocket
+15 20 rocket
+0 50 rocket
+
+30  0 kamikaze_sw
+30 65 kamikaze_nw
+30  8 kamikaze_sw
+30 57 kamikaze_nw
+30 16 kamikaze_sw
+30 49 kamikaze_nw

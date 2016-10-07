@@ -29,34 +29,34 @@ extern "C" {
     memset(fb, 0, sizeof(*fb));
   }
 
-  static inline uint8_t badge_framebuffer_pixel(badge_framebuffer *fb,
-						uint8_t x,
-						uint8_t y) {
+  static inline uint8_t badge_framebuffer_pixel(badge_framebuffer const *fb,
+                                                uint8_t x,
+                                                uint8_t y) {
     return fb->data[y / BADGE_DISPLAY_STRIPE_HEIGHT][x] >> (y % BADGE_DISPLAY_STRIPE_HEIGHT) & 1;
   }
 
   static inline void badge_framebuffer_pixel_on(badge_framebuffer *fb,
-						uint8_t x,
-						uint8_t y) {
+                                                uint8_t x,
+                                                uint8_t y) {
     fb->data[y / BADGE_DISPLAY_STRIPE_HEIGHT][x] |= 1 << (y % BADGE_DISPLAY_STRIPE_HEIGHT);
   }
 
   static inline void badge_framebuffer_pixel_off(badge_framebuffer *fb,
-						 uint8_t x,
-						 uint8_t y) {
+                                                 uint8_t x,
+                                                 uint8_t y) {
     fb->data[y / BADGE_DISPLAY_STRIPE_HEIGHT][x] &= ~(1 << (y % BADGE_DISPLAY_STRIPE_HEIGHT));
   }
 
   static inline void badge_framebuffer_pixel_flip(badge_framebuffer *fb,
-						  uint8_t x,
-						  uint8_t y) {
+                                                  uint8_t x,
+                                                  uint8_t y) {
     fb->data[y / BADGE_DISPLAY_STRIPE_HEIGHT][x] ^= 1 << (y % BADGE_DISPLAY_STRIPE_HEIGHT);
   }
 
   static inline void badge_framebuffer_pixel_set(badge_framebuffer *fb,
-						 uint8_t x,
-						 uint8_t y,
-						 uint8_t val) {
+                                                 uint8_t x,
+                                                 uint8_t y,
+                                                 uint8_t val) {
     if(val) {
       badge_framebuffer_pixel_on (fb, x, y);
     } else {

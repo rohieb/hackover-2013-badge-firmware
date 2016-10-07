@@ -11,4 +11,10 @@ uint8_t badge_menu(char const *const * menu,
 
 void badge_scroll_text(char const *const *lines, uint8_t n);
 
+void badge_menu_show(char const *const *menu,
+                     uint8_t n,
+                     uint8_t *first_visible,
+                     uint8_t selected,
+                     char   selector);
+
 #endif
