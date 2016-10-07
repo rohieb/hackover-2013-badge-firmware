@@ -1,0 +1,110 @@
+Sat, 16:00
+Raum 1.7
+
+Der Bubicon
+ist
+überschritten
+
+How to fail
+hard when
+building
+secure
+messengers
+--------------
+nexus
+
+Track: Default
+
+Mit dem
+Messenger
+namens Bubcon
+versuchte ein
+deutsches
+Start-Up
+nichts weniger
+als
+Martkführer zu
+werden. Neben
+einem
+innovativen
+Design - wie
+es der
+Hersteller
+nannte  -
+versuchte man
+mit
+versprechen
+einer sicheren
+"Ende-zu-Ende-
+Verschlüsselun
+g" und
+"Technologie
+Made in
+Germany" auf
+Kundenfang zu
+gehen. Eine
+kurze Sicherhe
+itsanalyse
+zeigte: Die
+versprochenen
+Sicherheits-
+und Datenschut
+zvorkehrungen
+waren nicht
+mehr als heiße
+PR-Luft.  Ein
+Teil der
+Befunde wurde
+bereits unter 
+http://hannove
+r.ccc.de/~nexu
+s/bubcon/bubco
+n.html veröffe
+ntlicht. Neben
+diesen
+Befunden wird
+es in dem
+Vortrag vor
+allem darum
+gehen zu
+Beschreiben,
+warum das
+Konzept an
+sich nicht
+standhalten
+kann.
+Weiterhin wird
+es ein wenig
+darum gehen,
+wie das hinter
+Bubcon
+stehende
+Unternehmen
+auf die Veröff
+entlichung der
+Schwachstellen
+reagiert hat
+und warum dies
+für diese
+Branche
+typisch
+erscheint.
+Dazu wird es
+vor allem um
+einen
+Vergleich zu
+dem vor ein
+paar Jahren
+analysierten
+Messenger
+whistle.im und
+vor allem
+darum gehen,
+warum man
+einfach kein
+Start-Up
+gründet um
+noch einen
+sicheren
+Messenger zu
+bauen.

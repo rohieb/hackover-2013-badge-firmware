@@ -1,0 +1,46 @@
+Sat, 22:00
+Raum 1.7
+
+Fucked up,
+aber nicht
+grundlos
+
+Internes vom
+Atari 2600 VCS
+--------------
+SvOlli
+
+Track: Default
+
+Oppa erzählt
+aus dem Schütz
+engraben. Oder
+so ähnlich.
+Beim Coden für
+das Atari 2600
+VCS hatte ich
+so machen WTF-
+Moment beim
+Lesen der
+Dokumentation.
+In vielen
+Fällen konnte
+ich später in
+Erfahrung
+bringen, warum
+das Design von
+der Kiste so
+gewählt wurde.
+Einiges davon
+habe ich mal
+in ein paar
+Slides
+verpackt.
+This talk will
+be in German,
+the English
+version is
+planned for
+the 33C3 self
+organized
+talks.

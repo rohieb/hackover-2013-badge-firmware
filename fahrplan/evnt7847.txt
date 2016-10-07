@@ -1,0 +1,66 @@
+Sat, 11:00
+Raum 1.4
+
+Pixel-Art
+Workshop
+
+Wir malen
+sehr, sehr
+kleine Bilder
+--------------
+blinry
+
+Track: Default
+
+Ihr erhaltet
+eine kurze
+Einführung in
+die Techniken
+und Prinzipien
+der Pixel-Art,
+sowie
+praktische
+Tipps,
+Lernressourcen
+und Softwareem
+pfehlungen.
+Anschließend
+malen wir
+zusammen ein
+paar 16x16
+Pixel große
+Bilder. Wenn
+ihr Twitter
+benutzt,
+werdet ihr
+auch dieses
+Format mögen
+:)  Am besten
+installiert
+ihr euch zur
+Vorbereitung
+schon mal ein
+geeignetes
+Programm.
+Gegen GIMP ist
+nichts
+einzuwenden,
+meine
+Empfehlung ist
+jedoch das auf
+Pixel-Art
+spezialisierte
+<a href="http:
+//www.aseprite
+.org/">Aseprit
+e</a>. Das ist
+leider seit
+September
+keine freie
+Software mehr,
+aber ihr
+solltet die
+GPL-Versionen
+noch in euren
+Repositories
+finden.

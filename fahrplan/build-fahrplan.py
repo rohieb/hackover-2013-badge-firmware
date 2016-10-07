@@ -20,14 +20,9 @@ from datetime import datetime
 LINE_LENGTH = 14
 MAX_LINES = 250
 SHORT_ROOMS = {
-    "Saal 1": "S.1",
-    "Saal 17": "S.17",
-    "Saal 2": "S.2",
-    "Saal 6": "S.6",
-    "Saal G": "S.G",
-    "Villa Straylight": "Vlla",
-    "Wordlounge": "Wdlg",
-    "Lounge": "Lnge"
+    "Goldschmiede 3.10": ("Raum 3.10", "3.10"),
+    "Vortragsraum 1.7":  ("Raum 1.7", "1.7"),
+    "Workshopraum 1.4":  ("Raum 1.4", "1.4"),
 }
 
 wr = textwrap.TextWrapper(width=LINE_LENGTH, expand_tabs=False)
@@ -38,7 +33,8 @@ root = doc.getroot()
 def sanitize(s):
     s = s.replace(u"„",'"').replace(u"”",'"').replace(u"“",'"'). \
         replace(u"–","-").replace(u"—","-").replace(u"…","..."). \
-        replace(u"‚","'").replace(u"‘","'").replace(u"’","'")
+        replace(u"‚","'").replace(u"‘","'").replace(u"’","'"). \
+        replace(u"³", "^3")
     s = s.encode("latin1", errors="replace")
 
     if len(s) > MAX_LINES*LINE_LENGTH:
@@ -53,7 +49,7 @@ def write_index(filename, events):
     f = open(filename, "w")
     for e in events:
         f.write("%s %s|evnt%d.txt\n" % (datetime.strftime(e[1], "%a %H:%M"),
-            SHORT_ROOMS[e[2]], int(e[0])))
+            SHORT_ROOMS[e[2]][1], int(e[0])))
     f.close()
 
 for event in root.iter("event"):
@@ -73,9 +69,9 @@ for event in root.iter("event"):
     rawfile = open("evnt%d.txt" % int(id), "wb")
     f = codecs.EncodedFile(rawfile, "latin1")
 
-    f.write(sanitize(datetime.strftime(date, "%b %d, %H:%M")))
+    f.write(sanitize(datetime.strftime(date, "%a, %H:%M")))
     f.write("\n")
-    f.write(sanitize(room))
+    f.write(sanitize(SHORT_ROOMS[room][0]))
     f.write("\n\n")
     f.write(wr.fill(sanitize(title)))
     f.write("\n")
@@ -109,13 +105,4 @@ for event in root.iter("event"):
     events.append((id, date, room))
 
 # split into two index files so badge does not crash when reading > 4KB
-events1 = []
-events2 = []
-for e in events:
-    if e[1].day in (27, 28):
-        events1.append(e)
-    elif e[1].day in (29, 30):
-        events2.append(e)
-
-write_index("fahrplan.lst", events1)
-write_index("fahrpla2.lst", events2)
+write_index("fahrplan.lst", events)

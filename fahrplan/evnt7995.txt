@@ -1,0 +1,38 @@
+Sat, 13:30
+Raum 1.7
+
+System Level
+Design
+--------------
+jaeger
+
+Track: Default
+
+Wenn Sie in
+Ihrem Business
+im Internet of
+Things (IoT)
+und Smart-
+Home-Bereich
+durchstarten
+wollen, ist
+dieser Vortrag
+Pflichtprogram
+m für Sie.
+Hier wird in
+einem
+einstündigen
+Vortrag der
+neuste Trend
+im Embedded
+System Design
+vorgestellt.
+Des Weiteren
+wird diese
+neue Ebene der
+Abstraktion
+anhand der
+C++-Library
+SystemC kurz v
+eranschaulicht
+.

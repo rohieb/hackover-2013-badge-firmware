@@ -1,7 +1,7 @@
-30c3 Fahrplan for the Hackover 2013 Badge
+Fahrplan for the Hackover 2013 Badge
 =================
 
-This directory contains the Fahrplan for 30c3, converted for the Hackover 2013
+This directory contains the Fahrplan, converted for the Hackover 2013
 Badge, as well as the script to do the conversion from a Frab XML export.
 
 1. Drop all the `evnt*.txt` files into the `fahrplan/` directory on the FAT
