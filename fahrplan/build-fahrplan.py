@@ -18,6 +18,7 @@ import string
 from datetime import datetime
 
 LINE_LENGTH = 14
+MAX_LINES = 250
 SHORT_ROOMS = {
     "Saal 1": "S.1",
     "Saal 17": "S.17",
@@ -39,6 +40,11 @@ def sanitize(s):
         replace(u"–","-").replace(u"—","-").replace(u"…","..."). \
         replace(u"‚","'").replace(u"‘","'").replace(u"’","'")
     s = s.encode("latin1", errors="replace")
+
+    if len(s) > MAX_LINES*LINE_LENGTH:
+        s = s[0:(MAX_LINES*LINE_LENGTH)]
+        s += "[...]"
+
     return s.strip()
 
 def write_index(filename, events):
